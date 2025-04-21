@@ -1,0 +1,1 @@
+# shop_nextjs_v2
