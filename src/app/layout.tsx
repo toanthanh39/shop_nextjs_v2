@@ -56,6 +56,7 @@ export default async function RootLayout({
 	const { lang } = await getSetingSite();
 	return (
 		<html lang={lang}>
+			<meta charSet="utf-8"></meta>
 			<body
 				className={`${inter.variable} ${notoSans.variable} ${notoSerifDisplay.variable} antialiased  font-inter w-screen overflow-x-hidden dark:bg-black`}>
 				<RootProvider>

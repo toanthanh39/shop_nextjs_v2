@@ -8,6 +8,9 @@ type Props = ShopProviderProps & RootProviderProps & {};
 
 export default function ShopProvider({ children }: Props) {
 	useLayoutEffect(() => {
+		if (window.location.pathname !== "/") {
+			return;
+		}
 		const handleScroll = () => {
 			const currentScrollY = window.scrollY;
 			const headerMid = document.getElementById("headerMid");

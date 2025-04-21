@@ -15,9 +15,11 @@ type Props = ComProps & {
 };
 async function getData() {
 	try {
-		const res = await new VideoRepo({
-			accessMode: BaseAccessMode.PUBLIC_SERVER,
-		}).getAll({ limit: 20, page: 1, order: "date" });
+		const res = await new VideoRepo().getAll({
+			limit: 20,
+			page: 1,
+			order: "date",
+		});
 		return res.items;
 	} catch (error) {}
 }

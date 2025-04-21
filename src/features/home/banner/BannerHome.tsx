@@ -1,13 +1,13 @@
 import { SettingConst } from "@/common/constants/setting";
-import { getSettingServer } from "@/services/api/setting/server";
 import { BannerHomeData } from "@/types/Home.type";
 import { detectTimeServer } from "@/utils/detectServer";
 import { checkActiveDate } from "@/utils/utils";
 import BannerSlider from "./BannerSlider";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 
 async function customFunction() {
 	try {
-		const res = await getSettingServer<BannerHomeData[]>(
+		const res = await new SettingRepo().getOne<BannerHomeData[]>(
 			SettingConst.home.banner_home
 		);
 

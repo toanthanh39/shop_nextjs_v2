@@ -1,22 +1,18 @@
-import Main from "@/components/layouts/main";
 import { CustomImage, Flex, LinkElement, Money, Text } from "@/components/ui";
 import Heading from "@/components/ui/Heading";
 import { CartItemPrice } from "@/features/cart/list";
 import InvoiceRepo from "@/services/api/repositories/InvoiceRepo";
-import OrderRepo from "@/services/api/repositories/OrderRepo";
 import CartCalculator from "@/services/utils/CartCalculator";
-import { BaseAccessMode } from "@/types/Base.type";
 import { notFound } from "next/navigation";
 
 const getInvoiceServer = async (token: string) => {
 	const InvoiceInstance = InvoiceRepo.getInstance({
-		accessMode: BaseAccessMode.PUBLIC_SERVER,
+		accessMode: "PUBLIC",
 	});
 	try {
 		const invoice = await InvoiceInstance.getOne(token);
 		return invoice;
 	} catch (error) {
-		console.log("🚀 ~ getInvoiceServer ~ error:", error);
 		notFound();
 	}
 };
@@ -41,9 +37,11 @@ export default async function Page({
 					namperfume
 				</Text>
 				. Mã đơn hàng của bạn là{" "}
-				<span className="font-bold">{invoice.code}</span>. Chúng tôi đã nhận
-				được đơn đặt hàng và sẽ gửi cho bạn trong thời gian sớm nhất. Mời bạn
-				theo dõi đơn hàng{" "}
+				<Text as="span" className="font-bold">
+					{invoice.code}
+				</Text>
+				. Chúng tôi đã nhận được đơn đặt hàng và sẽ gửi cho bạn trong thời gian
+				sớm nhất. Mời bạn theo dõi đơn hàng{" "}
 				<a href="#" className="text-blue-500">
 					tại đây
 				</a>
@@ -123,7 +121,7 @@ export default async function Page({
 					</Flex>
 				</Flex>
 			</div>
-			<div className="flex justify-center mt-6">
+			<Flex justify="center" className="mt-6">
 				<LinkElement
 					variant="none"
 					href="/"
@@ -133,7 +131,7 @@ export default async function Page({
 				<button className="bg-white border border-red-500 text-red-500 py-2 px-4 rounded-md">
 					Liên hệ hỗ trợ
 				</button>
-			</div>
+			</Flex>
 		</section>
 	);
 }

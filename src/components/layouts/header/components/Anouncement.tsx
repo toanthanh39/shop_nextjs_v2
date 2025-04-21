@@ -1,7 +1,7 @@
 import LinkElement from "@/components/ui/Link";
 import Text from "@/components/ui/Text";
 import { translations } from "@/lib/data/locales";
-import { getMultiSettingServer } from "@/services/api/setting/server";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 import { detectKeyFromSetting } from "@/utils/detectSetting";
 
 const keyTranslates = [...Object.values(translations.header.announcement)];
@@ -9,7 +9,7 @@ const keyTranslates = [...Object.values(translations.header.announcement)];
 async function getDataServer() {
 	const keys = keyTranslates.join(",");
 	try {
-		const data = await getMultiSettingServer<string>(keys);
+		const data = await new SettingRepo().getAll<string>(keys);
 
 		return data.items;
 	} catch (error) {

@@ -1,7 +1,6 @@
 import { SettingConst } from "@/common/constants/setting";
 import { ProductCollection } from "@/features/product/list";
 import ProductListSkeleton from "@/features/product/list/ProductListSkeleton";
-import { getSettingServer } from "@/services/api/setting/server";
 import { SectionJson } from "@/types/Home.type";
 import { detectTimeServer } from "@/utils/detectServer";
 import { notFound } from "next/navigation";
@@ -14,11 +13,12 @@ import SectionCategory from "./SectionCategory";
 import NamperfumeTV from "@/features/channels/youtube/NamperfumeTv";
 import NmagazineList from "@/features/nmagazine/list/NmagazineList";
 import YoutubeListSkeleton from "@/features/channels/youtube/YoutubeListSkeleton";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 const keySettings = SettingConst.home.settings_website_namperfume_net;
 
 async function getDataServer() {
 	try {
-		const data = await getSettingServer<SectionJson[]>(keySettings);
+		const data = await new SettingRepo().getOne<SectionJson[]>(keySettings);
 
 		return data;
 	} catch (error) {

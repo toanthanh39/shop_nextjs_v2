@@ -1,18 +1,18 @@
 import { translations } from "@/lib/data/locales";
-import { getMultiSettingServer } from "@/services/api/setting/server";
 import { detectKeyFromSetting } from "@/utils/detectSetting";
 import { notFound } from "next/navigation";
 import HeaderTopLeft from "./HeaderTopLeft";
 import HeaderTopRignt from "./HeaderTopRignt";
 import Flex from "@/components/ui/Flex";
 import { cn } from "@/utils/utils";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 
 const keyTranslates = [...Object.values(translations.header.top)];
 
 async function getDataServer() {
 	const keys = keyTranslates.join(",");
 	try {
-		const data = await getMultiSettingServer<string>(keys);
+		const data = await new SettingRepo().getAll<string>(keys);
 
 		return data.items;
 	} catch (error) {

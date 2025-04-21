@@ -3,18 +3,15 @@ import CustomImage from "@/components/ui/CustomImage";
 import Flex from "@/components/ui/Flex";
 import LinkElement from "@/components/ui/Link";
 import Text from "@/components/ui/Text";
-import { getSettingServer } from "@/services/api/setting/server";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 import { CommunicationJson } from "@/types/Header.type";
 
 const getDataServer = async () => {
 	try {
-		const res = await getSettingServer<CommunicationJson[]>(
+		const res = await new SettingRepo().getOne<CommunicationJson[]>(
 			SettingConst.header.communication,
 			{
 				cache: "force-cache",
-				next: {
-					revalidate: false,
-				},
 			}
 		);
 		return res.value;

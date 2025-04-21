@@ -5,6 +5,7 @@ import { VideoFilter, VideoJson } from "@/types/Video.type";
 import { SettingFilter, SettingJson } from "@/types/Setting.type";
 import server, { Config } from "@/lib/core/server";
 import { AxiosConfig } from "@/lib/core/client";
+import { detectLangForServer } from "@/utils/detectServer";
 
 const DOMAIN = process.env.NEXT_PUBLIC_API_BASE_DOMAIN;
 const CACHE_TIME = 60 * 60;
@@ -25,11 +26,19 @@ class SettingRepo extends BaseRepository<SettingJson<string>> {
 
 	// ... existing code ...
 	async getAll<D>(
-		filter: SettingFilter,
-		config?: Partial<AxiosConfig & RequestInit>
+		keys: SettingFilter["keys"],
+		config?: Partial<AxiosConfig & RequestInit>,
+		isRoot?: boolean
 	) {
+		const langServer = !isRoot ? await detectLangForServer() : undefined;
+		const params = {
+			domain: DOMAIN,
+			keys: keys,
+			lang: langServer,
+		};
+
 		const baseConfig = {
-			params: Helper.convertParams({ ...filter, domain: DOMAIN }),
+			params: Helper.convertParams(params),
 			cache: "no-cache" as const,
 			next: {
 				revalidate: CACHE_TIME,
@@ -43,15 +52,17 @@ class SettingRepo extends BaseRepository<SettingJson<string>> {
 	}
 	// ... existing code ...
 
-	async getOne<D>(id: string) {
+	async getOne<D>(id: string, config?: Partial<AxiosConfig & RequestInit>) {
+		const baseConfig = {
+			cache: "no-cache" as const,
+			next: {
+				revalidate: CACHE_TIME,
+			},
+		};
+
 		return this.getClientOrServer().get<SettingJson<D>>(
 			this.pathname + "/" + id,
-			{
-				cache: "no-cache",
-				next: {
-					revalidate: CACHE_TIME,
-				},
-			}
+			{ ...baseConfig, ...config }
 		);
 	}
 }

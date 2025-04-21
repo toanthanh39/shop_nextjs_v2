@@ -1,11 +1,11 @@
 import { SettingConst } from "@/common/constants/setting";
-import { getMultiSettingServer } from "@/services/api/setting/server";
 import { BrandHomeData } from "@/types/Home.type";
 import detectSetting from "@/utils/detectSetting";
 import BrandSlider from "./BrandSlider";
 import BrandGrid from "./BrandGrid";
 import Heading from "@/components/ui/Heading";
 import Flex from "@/components/ui/Flex";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 
 const keys = [
 	SettingConst.home.section_brand_namperfume,
@@ -15,7 +15,7 @@ const keys = [
 
 async function getDataBrands() {
 	try {
-		const res = await getMultiSettingServer<unknown>(
+		const res = await new SettingRepo().getAll<unknown>(
 			keys.join(","),
 			undefined,
 			true
@@ -40,7 +40,7 @@ export default async function BrandHome() {
 	const title = detectSetting<string>("brand_title", data)?.value;
 	return (
 		<section className="w-full ">
-			<Heading className="bloc mb-4" variant={"productCollection"} level={1}>
+			<Heading className="block mb-4" variant={"productCollection"} level={1}>
 				{title && title}
 			</Heading>
 			<Flex className="">

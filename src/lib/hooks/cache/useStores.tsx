@@ -16,7 +16,7 @@ function useStores({ filters, staleTime, enabled = true }: Props) {
 		queryFn: async () => {
 			try {
 				return await new StoreRepo({
-					accessMode: BaseAccessMode.PUBLIC_CLIENT,
+					accessMode: "PUBLIC",
 				}).getAll(filters);
 			} catch (error) {
 				throw BaseApi.handleError(error);

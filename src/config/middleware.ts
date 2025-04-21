@@ -1,7 +1,6 @@
 import { SystemConst } from "@/common/constants/system";
-import CustomerRepo from "@/services/api/repositories/CustomerRepo";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 import SiteServerRepo from "@/services/api/repositories/SiteServerRepo";
-import { getSettingServer } from "@/services/api/setting/server";
 import { SystemSetting } from "@/types/Shop.type";
 import Helper from "@/utils/helper";
 import { cookies } from "next/headers";
@@ -19,7 +18,7 @@ export const initSiteSetting = async (
 		const replaceDomainSetting = Helper.validateKey(domain);
 		const key = `${replaceDomainSetting}_config`;
 
-		const dataSetting = await getSettingServer<SystemSetting>(key);
+		const dataSetting = await new SettingRepo().getOne<SystemSetting>(key);
 		const customer_token =
 			_header.get("customer_token") ??
 			(await new SiteServerRepo().getCustomerTokenServer());
@@ -46,9 +45,6 @@ export const initSiteSetting = async (
 				"id_ecomplatforms_for_web",
 				dataSetting.value.id_ecomplatforms_for_web.toString()
 			);
-		// console.log("🚀 ~ customer_token:", customer_token);
-
-		// console.log("🚀 ~ _header:", response.headers?.get("customer_token"));
 
 		return response;
 	} catch (error) {

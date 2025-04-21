@@ -5,13 +5,15 @@ import Flex from "@/components/ui/Flex";
 import Grid from "@/components/ui/Grid";
 import Heading from "@/components/ui/Heading";
 import LinkElement from "@/components/ui/Link";
-import { getSettingServer } from "@/services/api/setting/server";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 import { HomeMenu } from "@/types/Header.type";
 import { detectTimeServer } from "@/utils/detectServer";
 import { checkActiveDate, cn } from "@/utils/utils";
 
 async function getDataServer() {
-	const data = await getSettingServer<HomeMenu[]>(SettingConst.menu.menu_home);
+	const data = await new SettingRepo().getOne<HomeMenu[]>(
+		SettingConst.menu.menu_home
+	);
 
 	return data;
 }

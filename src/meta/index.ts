@@ -1,7 +1,5 @@
 import { SettingConst } from "@/common/constants/setting";
-import { SiteConst } from "@/common/constants/site";
-import { getSettingServer } from "@/services/api/setting/server";
-import { CollectionJson } from "@/types/Collection.type";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 import { Metadata } from "next";
 
 export const metadataNotFound = function (): Metadata {
@@ -11,7 +9,9 @@ export const metadataNotFound = function (): Metadata {
 };
 export async function generateMetadataSite() {
 	try {
-		const res = await getSettingServer<Metadata>(SettingConst.metadata.site);
+		const res = await new SettingRepo().getOne<Metadata>(
+			SettingConst.metadata.site
+		);
 		return res.value;
 	} catch (error) {
 		return metadataNotFound();

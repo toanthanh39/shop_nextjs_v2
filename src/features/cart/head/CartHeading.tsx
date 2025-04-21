@@ -1,5 +1,4 @@
 import { Heading, Text } from "@/components/ui";
-import { getSettingServer } from "@/services/api/setting/server";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";

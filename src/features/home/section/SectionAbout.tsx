@@ -1,11 +1,11 @@
 import { SettingConst } from "@/common/constants/setting";
-import { getMultiSettingServer } from "@/services/api/setting/server";
 import { AboutSettingJson } from "@/types/Home.type";
 import detectSetting from "@/utils/detectSetting";
 import AboutTabs from "./abount/AboutTabs";
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";
 import { translations } from "@/lib/data/locales";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 
 type Props = ComProps;
 const keys = [
@@ -16,7 +16,7 @@ const keys = [
 
 async function getData() {
 	try {
-		const response = await getMultiSettingServer<unknown>(keys);
+		const response = await new SettingRepo().getAll<unknown>(keys);
 
 		return response.items;
 	} catch (error) {

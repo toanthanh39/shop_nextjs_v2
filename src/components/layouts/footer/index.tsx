@@ -1,12 +1,12 @@
 import { SettingConst } from "@/common/constants/setting";
 import CustomImage from "@/components/ui/CustomImage";
 import LinkElement from "@/components/ui/Link";
-import { getMultiSettingServer } from "@/services/api/setting/server";
 import BaseApi from "@/lib/axios/BaseApi";
 import { FooterBottom, FooterMenu } from "@/types/Footer.type";
 import detectSetting from "@/utils/detectSetting";
 import { replaceSingleKey } from "@/utils/markdown";
 import { Text, Heading, Grid, Flex } from "@/components/ui";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
 
 const keys = [
 	SettingConst.footer.footer_bottom,
@@ -16,7 +16,7 @@ const keys = [
 ];
 async function getDataServer() {
 	try {
-		const res = await getMultiSettingServer<unknown>(keys.join(","));
+		const res = await new SettingRepo().getAll<unknown>(keys.join(","));
 		return res.items;
 	} catch (error) {
 		throw BaseApi.handleError(error);
