@@ -1,0 +1,16 @@
+import { Suspense } from "react";
+import { BannerHome } from "../banner";
+import { SectionHome } from "../section";
+import SectionAbout from "../section/SectionAbout";
+
+export default function Body() {
+	return (
+		<>
+			<BannerHome />
+			<SectionHome />
+			<Suspense>
+				<SectionAbout />
+			</Suspense>
+		</>
+	);
+}

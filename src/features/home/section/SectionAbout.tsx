@@ -1,0 +1,54 @@
+import { SettingConst } from "@/common/constants/setting";
+import { getMultiSettingServer } from "@/services/api/setting/server";
+import { AboutSettingJson } from "@/types/Home.type";
+import detectSetting from "@/utils/detectSetting";
+import AboutTabs from "./abount/AboutTabs";
+import { ComProps } from "@/types/Component";
+import { cn } from "@/utils/utils";
+import { translations } from "@/lib/data/locales";
+
+type Props = ComProps;
+const keys = [
+	SettingConst.home.about_namperfume_first,
+	SettingConst.home.about_namperfume_second,
+	translations.main.sections.about_namperfume,
+].join(",");
+
+async function getData() {
+	try {
+		const response = await getMultiSettingServer<unknown>(keys);
+
+		return response.items;
+	} catch (error) {
+		return [];
+	}
+}
+
+export default async function SectionAbout({ className }: Props) {
+	const data = await getData();
+
+	const dataTabFirst = detectSetting<AboutSettingJson[]>(
+		SettingConst.home.about_namperfume_first,
+		data
+	);
+	const dataTabSecond = detectSetting<AboutSettingJson[]>(
+		SettingConst.home.about_namperfume_second,
+		data
+	);
+
+	const title = detectSetting<string>(
+		translations.main.sections.about_namperfume,
+		data
+	)?.value;
+
+	return (
+		<section className={cn("mt-8", className)}>
+			{dataTabFirst && (
+				<AboutTabs title={title} dataSource={dataTabFirst.value}></AboutTabs>
+			)}
+			{dataTabSecond && (
+				<AboutTabs title={title} dataSource={dataTabSecond.value}></AboutTabs>
+			)}
+		</section>
+	);
+}

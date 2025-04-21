@@ -1,0 +1,133 @@
+"use client";
+import { Button, CustomImage, Flex, Grid, Text } from "@/components/ui";
+import CartItemPrice from "./CartItemPrice";
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
+
+import { CartItemProps } from "@/types/Cart.type";
+import { ComProps } from "@/types/Component";
+import { cn, debounce } from "@/utils/utils";
+import CartItemQuantity from "./CartItemQuantity";
+import CartItemImage from "./CartItemImage";
+import CartItemName from "./CartItemName";
+import CartItemAction from "./CartItemAction";
+import ProgressBar from "@/components/ui/ProgressBar";
+import CartItemVariant from "./CartItemVariant";
+import CartItemIsUse from "./CartItemIsUse";
+import { IsUse } from "@/types/Global.type";
+import { useMemo } from "react";
+
+type Props = ComProps & CartItemProps & {};
+export default function CartItem({ item, className }: Props) {
+	const { updateCart, removeCartItem, isUpdating } = useCartGlobal({
+		enabled: false,
+	});
+
+	const onUpdateQuantity = debounce(async (quantity: number) => {
+		try {
+			await updateCart({
+				action: "quantity",
+				data: {
+					id: item.id,
+					quantity: quantity,
+					product_id: item.product_id + 123,
+				},
+			});
+		} catch (error) {
+			console.log("🚀 ~ onUpdateQuantity ~ error:", error);
+		}
+	}, 1000);
+
+	const onDeleteItem = async (id: number) => {
+		try {
+			await removeCartItem({ ids: [id] });
+		} catch (error) {}
+	};
+
+	const updateVariant = async (pId: number) => {
+		try {
+			await updateCart({
+				action: "variant",
+				data: {
+					variant_id: pId,
+					id: item.id,
+					quantity: item.item_quantity,
+				},
+			});
+		} catch (error) {}
+	};
+
+	const updateIsUse = async (use: boolean) => {
+		try {
+			await updateCart({
+				action: "use",
+				data: [
+					{
+						id: item.id,
+						is_use: use ? IsUse.USE : IsUse.NOT_USE,
+						product_id: item.product_id,
+					},
+				],
+			});
+		} catch (error) {
+			console.log("🚀 ~ updateIsUse ~ error:", error);
+		}
+	};
+	//////////////////////////////////////////////////
+	const disabled = useMemo(() => {
+		return item.product_json.quantity <= 0;
+	}, [item.product_json.quantity]);
+	return (
+		<Flex
+			key={item.id}
+			direction="row"
+			gap={16}
+			className={cn(
+				"relative py-4 not-first:border-t border-colors-gray-3",
+				className,
+				{
+					"opacity-50": disabled,
+				}
+			)}>
+			{disabled && (
+				<Text variant="default" className="absolute top-0 left-0 z-2">
+					Hết hàng
+				</Text>
+			)}
+			<ProgressBar isLoading={isUpdating}></ProgressBar>
+			<CartItemIsUse onChange={updateIsUse} item={item}></CartItemIsUse>
+			<CartItemImage item={item} />
+			<Flex gap={32} className="relative w-full max-md:flex-col max-md:gap-2">
+				<Flex
+					gap={32}
+					justify="between"
+					className="basis-1/2 max-md:flex-col max-md:gap-2">
+					<CartItemName item={item} className="max-w-[190px]" />
+					<CartItemPrice
+						item={item}
+						className="flex-auto w-fit md:shrink-0 md:basis-20 "
+					/>
+				</Flex>
+				<Flex gap={32} className="basis-1/2 max-md:flex-col max-md:gap-2">
+					<CartItemQuantity
+						disabled={isUpdating}
+						item={item}
+						onQuantityChange={onUpdateQuantity}
+						className="flex-1 w-fit"
+					/>
+					<CartItemVariant
+						item={item}
+						onChange={updateVariant}
+						disabled={isUpdating}
+						className=" w-fit"
+					/>
+				</Flex>
+				<CartItemAction
+					item={item}
+					onDeleteItem={onDeleteItem}
+					disabled={isUpdating}
+					className="w-fit "
+				/>
+			</Flex>
+		</Flex>
+	);
+}

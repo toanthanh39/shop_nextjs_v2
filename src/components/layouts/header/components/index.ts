@@ -1,0 +1,12 @@
+export { default as Anouncement } from "./Anouncement";
+export { default as HeaderCart } from "./HeaderCart";
+export { default as HeaderMid } from "./HeaderMid";
+export { default as HeaderSearch } from "./HeaderSearch";
+export { default as HeaderTop } from "./HeaderTop";
+export { default as HeaderTopLeft } from "./HeaderTopLeft";
+export { default as HeaderTopRignt } from "./HeaderTopRignt";
+export { default as Menu } from "./Menu";
+export { default as Namperfume } from "./Namperfume";
+export { default as Notification } from "./Notification";
+export { default as HeaderNmagazine } from "./HeaderNmagazine";
+export { default as HeaderAuthen } from "./HeaderAuthen";

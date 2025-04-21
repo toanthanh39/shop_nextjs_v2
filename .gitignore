@@ -1,0 +1,22 @@
+# Common patterns for both shop and wiki
+**/node_modules
+**/.pnp
+**/.pnp.js
+**/.DS_Store
+**/*.pem
+**/coverage
+**/.next/
+**/out/
+**/build/
+**/dist/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/.env*
+**/.vercel
+**/yarn.lock
+**/package-lock.json
+
+# Specific patterns
+# If there's anything specific for shop or wiki, add them here.
+**/ecosystem.config.js

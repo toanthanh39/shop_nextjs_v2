@@ -1,0 +1,82 @@
+[
+  {
+    "nav": {
+      "icon": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171430-259801739419956-1739419956.png",
+      "title": "8 Cửa hàng toàn quốc"
+    },
+    "body": {
+      "title": "Hệ Thống Cửa Hàng",
+      "content": [
+        "420/6 Lê Văn Sỹ P.14, Q.3, TP. Hồ Chí Minh",
+        "366A18 Phan Văn Trị, P.5, Q.Gò Vấp, TP. Hồ Chí Minh",
+        "1379-1381 Đường 3/2, P.16, Q.11, TP. Hồ Chí Minh",
+        "45-47 Cách Mạng Tháng 8, P.Bến Thành, Q.1, TP. Hồ Chí Minh",
+        "8 Nguyễn Gia Trí, P.25, Q.Bình Thạnh, TP. Hồ Chí Minh",
+        "252 Nguyễn Thị Thập, P.Tân Quy, Q.7, TP. Hồ Chí Minh",
+        "123-125 Võ Thị Sáu, P.Thống Nhất, TP. Biên Hòa, T.Đồng Nai",
+        "86 Mậu Thân, P.An Hòa, Q.Ninh Kiều, Cần Thơ"
+      ],
+      "btnLabel": "TÌM HIỂU THÊM",
+      "btnLink": "/pages/he-thong-cua-hang"
+    }
+  },
+  {
+    "nav": {
+      "icon": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171431-670741739420043-1739420043.png",
+      "title": "Tư vấn Online"
+    },
+    "body": {
+      "title": "Chuyên Viên Tư vấn Nước hoa namperfume",
+      "content": [
+        "Các chuyên viên tư vấn nước hoa của namperfume luôn sẵn sàng hỗ trợ khách hàng từ hotline, tin nhắn website và email một cách nhanh nhất"
+      ],
+      "btnLabel": "gọi ngay 19000129/ Chat với chúng tôi",
+      "btnLink": "tel:19000129"
+    }
+  },
+  {
+    "nav": {
+      "icon": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171432-414991739420060-1739420060.png",
+      "title": "Freeship toàn quốc"
+    },
+    "body": {
+      "title": "Ship Nhanh Miễn Phí",
+      "content": [
+        "<strong>Tp Hcm</strong>",
+        "Đơn hàng sẽ được đóng gói cẩn thận và ship tới khách hàng trong vòng 2h nội thành từ 9h sáng tới 21h tối.",
+        "<strong>Toàn Quốc</strong>",
+        "Đơn hàng sẽ được đóng gói cẩn thận bằng nhiều lớp chống sốc kèm hộp đựng của namperfume được dán tem niêm phong, đảm bảo sự an toàn cho sản phẩm trong quá trình vận chuyển từ 2-4 ngày khi đến tay khách hàng."
+      ],
+      "btnLabel": "LIÊN HỆ NGAY",
+      "btnLink": "/pages/chinh-sach-doi-tra"
+    }
+  },
+  {
+    "nav": {
+      "icon": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171433-724931739420071-1739420071.png",
+      "title": "Dịch vụ quà tặng"
+    },
+    "body": {
+      "title": "Gửi Gắm Sự Tận Tâm",
+      "content": [
+        "namperfume cung cấp dịch vụ tư vấn hộp quà, viết thiệp và đóng gói để món quà của bạn trở nên thật ý nghĩa"
+      ],
+      "btnLabel": "TÌM HIỂU THÊM",
+      "btnLink": "#"
+    }
+  },
+  {
+    "nav": {
+      "icon": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171434-368761739420079-1739420079.png",
+      "title": "Đổi trả miễn phí"
+    },
+    "body": {
+      "title": "Bạn đổi ý? Không sao cả",
+      "content": [
+        "Với những sản phẩm chưa bung seal và sử dụng, bạn có thể dễ dàng đổi trả miễn phí trong vòng 7 ngày. Tìm hiểu thêm về quy trình đổi trả hàng hoá tại phần câu hỏi thường gặp."
+      ],
+      "btnLabel": "TÌM HIỂU THÊM",
+      "btnLink": "/pages/chinh-sach-doi-tra"
+    }
+  }
+]

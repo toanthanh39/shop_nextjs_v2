@@ -1,0 +1,268 @@
+[
+  {
+    "dataSource": {
+      "params": {
+        "collection_id": "sinhnhat11",
+        "limit": 20,
+        "page": 1,
+        "parent_id": 0,
+        "store_id": 411209,
+        "sort_by": "display_order",
+        "sort_type": "DESC"
+      }
+    },
+    "from_time": 1712136268,
+    "handle": "promotion-go3973",
+    "id": 1004120518,
+    "link": "/pages/sinh-nhat-11-nam",
+    "link_more": "/pages/sinh-nhat-11-nam",
+    "title": "BIRTHDAY 11 YEARS",
+    "title_more": "Xem thêm",
+    "to_time": 1725123599,
+    "type": "collection"
+  },
+  {
+    "dataSource": {
+      "params": {
+        "collection_id": "tuan-le-thuong-hieu",
+        "limit": 20,
+        "page": 1,
+        "parent_id": 0,
+        "store_id": 181189,
+        "sort_by": "display_order",
+        "sort_type": "DESC"
+      }
+    },
+    "from_time": 1712831589,
+    "handle": "tuan-le-thuong-hieu",
+    "id": 0,
+    "link": "/collections/tuan-le-thuong-hieu",
+    "link_more": "/collections/tuan-le-thuong-hieu",
+    "title": "Tuần Lễ Thương Hiệu",
+    "title_more": "Xem thêm",
+    "to_time": 1739638800,
+    "type": "collection"
+  },
+  {
+    "dataSource": {
+      "params": {
+        "collection_id": 1004122752,
+        "limit": 20,
+        "page": 1,
+        "parent_id": 0,
+        "store_id": 181189,
+        "sort_by": "display_order",
+        "sort_type": "DESC"
+      }
+    },
+    "from_time": 1729011609,
+    "handle": "deal-thom-10",
+    "id": 1004122752,
+    "link": "/collections/deal-thom",
+    "link_more": "/collections/deal-thom",
+    "title": "Deal Thơm",
+    "title_more": "Xem thêm",
+    "to_time": 1739120385,
+    "type": "collection"
+  },
+  {
+    "dataSource": {
+      "params": {
+        "collection_id": "nuoc-hoa-moi",
+        "limit": 8,
+        "page": 1,
+        "parent_id": 0,
+        "store_id": 181189,
+        "sort_by": "display_order",
+        "sort_type": "DESC"
+      }
+    },
+    "from_time": 1712136268,
+    "handle": "nuoc-hoa-moi",
+    "id": 0,
+    "link": "collections/nuoc-hoa-moi",
+    "link_more": "collections/nuoc-hoa-moi",
+    "title": "New Arrivals",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "collection"
+  },
+  {
+    "dataSource": {
+      "params": {
+        "collection_id": "yeu-thich-nhat",
+        "limit": 8,
+        "page": 1,
+        "parent_id": 0,
+        "store_id": 181189,
+        "sort_by": "display_order",
+        "sort_type": "DESC"
+      }
+    },
+    "from_time": 1712136268,
+    "handle": "bestsellers",
+    "id": 0,
+    "link": "collections/yeu-thich-nhat",
+    "link_more": "collections/yeu-thich-nhat",
+    "title": "Bestsellers",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "collection"
+  },
+  {
+    "from_time": 1712136268,
+    "handle": "banner_nnn",
+    "id": 0,
+    "link": "",
+    "link_more": "",
+    "title": "",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "section_banner",
+    "data": [
+      {
+        "id": 1,
+        "title": "Nước hoa nữ",
+        "title_color": "#3a393a",
+        "image_desktop": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171306-105371738897217-1738897217.jpg",
+        "image_mobile": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171301-274511738897054-1738897054.jpg",
+        "alt": "Nước hoa nữ",
+        "width": 0,
+        "height": 0,
+        "link": "/collections/nuoc-hoa-nu"
+      },
+      {
+        "id": 2,
+        "title": "Nước hoa nam",
+        "title_color": "#3a393a",
+        "image_desktop": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171302-634211738897066-1738897066.jpg",
+        "image_mobile": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171303-952661738897073-1738897073.jpg",
+        "alt": "Nước hoa nam",
+        "width": 0,
+        "height": 0,
+        "link": "/collections/nuoc-hoa-nam"
+      },
+      {
+        "id": 3,
+        "title": "Nước hoa niche",
+        "title_color": "#3a393a",
+        "image_desktop": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171304-771231738897082-1738897082.jpg",
+        "image_mobile": "https://asset.namefragrance.vn/uploads/filecloud/10308/2025/February/171305-688051738897090-1738897090.jpg",
+        "alt": "Nước hoa niche",
+        "width": 0,
+        "height": 0,
+        "link": "/collections/nuoc-hoa-niche"
+      }
+    ]
+  },
+  {
+    "dataSource": {
+      "params": {
+        "collection_id": "nuoc-hoa-mini",
+        "limit": 8,
+        "page": 1,
+        "parent_id": 0,
+        "store_id": 181189,
+        "sort_by": "display_order",
+        "sort_type": "DESC"
+      }
+    },
+    "from_time": 1712136268,
+    "handle": "nuoc-hoa-mini",
+    "id": 0,
+    "link": "collections/nuoc-hoa-mini",
+    "link_more": "collections/nuoc-hoa-mini",
+    "title": "Mini & Travel Size",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "collection"
+  },
+  {
+    "dataSource": {
+      "params": {
+        "collection_id": "giftset-nuoc-hoa",
+        "limit": 8,
+        "page": 1,
+        "parent_id": 0,
+        "store_id": 181189,
+        "sort_by": "display_order",
+        "sort_type": "DESC"
+      }
+    },
+    "from_time": 1712136268,
+    "handle": "giftset-nuoc-hoa",
+    "id": 0,
+    "link": "collections/giftset-nuoc-hoa",
+    "link_more": "collections/giftset-nuoc-hoa",
+    "title": "Giftset",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "collection"
+  },
+  {
+    "dataSource": {
+      "params": {
+        "collection_id": "bodycare-homecare",
+        "limit": 8,
+        "page": 1,
+        "parent_id": 0,
+        "store_id": 181189,
+        "sort_by": "display_order",
+        "sort_type": "DESC"
+      }
+    },
+    "from_time": 1712136268,
+    "handle": "bodycare-homecare",
+    "id": 0,
+    "link": "collections/bodycare-homecare",
+    "link_more": "collections/bodycare-homecare",
+    "title": "Bodycare & Homecare",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "collection"
+  },
+  {
+    "from_time": 1712136268,
+    "handle": "",
+    "id": 0,
+    "link": "",
+    "link_more": "",
+    "title": "namperfume TV",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "namperfumetv"
+  },
+  {
+    "from_time": 1712136268,
+    "handle": "brand_nmagazine",
+    "id": 509,
+    "link": "",
+    "link_more": "",
+    "title": "Nmagazine",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "nmagazine"
+  },
+  {
+    "from_time": 1712136268,
+    "handle": "about_namperfume_1",
+    "id": 0,
+    "link": "",
+    "link_more": "",
+    "title": "Về namperfume",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "section_about"
+  },
+  {
+    "from_time": 1712136268,
+    "handle": "about_namperfume_2",
+    "id": 0,
+    "link": "",
+    "link_more": "",
+    "title": "Về namperfume",
+    "title_more": "Xem thêm",
+    "to_time": 0,
+    "type": "section_about"
+  }
+]

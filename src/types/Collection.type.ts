@@ -1,0 +1,42 @@
+import { DataLanguageCacheJson } from "./Language.type";
+
+export type CollectionJson = {
+	id: number;
+	item_ids: string;
+	item_type: string;
+	image: number;
+	banner_desktop: string;
+	banner_mobile: string;
+	title: string;
+	description: string;
+	keyword: string;
+	present: string;
+	detail: string;
+	quote: string;
+	handle: string;
+	show: number;
+	creator_id: number;
+	parent_id: number;
+	display_order: number;
+	date_published: number;
+	publish_from: number;
+	publish_to: number;
+	status: number;
+	is_delete: number;
+	date_created: number;
+	date_modified: number;
+	date_deleted: number;
+	itemtotal: number;
+	tags: any[];
+	banner_mobile_image: any;
+	banner_desktop_image: any;
+	images_file: any;
+	locale_title: DataLanguageCacheJson;
+	locale_description: DataLanguageCacheJson;
+	images: string[];
+	sort: Sort[];
+};
+type Sort = {
+	sort_by: string;
+	sort_type: string;
+};
