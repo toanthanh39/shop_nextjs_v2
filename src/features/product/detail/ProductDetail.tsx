@@ -16,10 +16,10 @@ export default function ProductDetail({ product }: Props) {
 	const sizes = ["Eau de Parfum 100ml", "Tester"];
 
 	return (
-		<div className="container mx-auto p-4 my-8 flex flex-col md:flex-row gap-8">
+		<div className="container mx-auto my-8 flex flex-col md:flex-row gap-8">
 			{/* Product Images Section */}
-			<div className="flex-1">
-				<div className="relative w-full h-96">
+			<div className="">
+				<div className="relative w-90 h-90">
 					<Image
 						src={product.images?.[0]?.url ?? ""}
 						alt="Salvatore Ferragamo Red Leather"
@@ -28,12 +28,12 @@ export default function ProductDetail({ product }: Props) {
 					/>
 				</div>
 				<div className="flex gap-2 mt-4 overflow-x-auto">
-					{[...Array(4)].map((_, index) => (
+					{product.images.map((_, index) => (
 						<div
 							key={index}
 							className="w-20 h-20 relative border border-gray-300">
 							<Image
-								src={product.images?.[0]?.url ?? ""}
+								src={_.url}
 								alt={`Thumbnail ${index + 1}`}
 								layout="fill"
 								objectFit="contain"
@@ -44,7 +44,7 @@ export default function ProductDetail({ product }: Props) {
 			</div>
 
 			{/* Product Details Section */}
-			<div className="flex-1">
+			<div className="flex-1 max-w-xl">
 				<h1 className="text-2xl font-bold text-gray-800">
 					Salvatore Ferragamo Red Leather For Men
 				</h1>

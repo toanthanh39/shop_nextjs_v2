@@ -6,6 +6,7 @@ import Text, { PProps } from "./Text";
 export type MoneyProps = PProps & {
 	value: number;
 	minus?: string;
+	isThrough?: boolean;
 };
 
 export default function Money({
@@ -20,7 +21,9 @@ export default function Money({
 			variant="default"
 			size="sm"
 			weight="bold"
-			className={cn(className)}
+			className={cn(className, {
+				"line-through": props.isThrough,
+			})}
 			{...props}>
 			{minus && minus}
 			{Helper.moneyFormat(value)}đ

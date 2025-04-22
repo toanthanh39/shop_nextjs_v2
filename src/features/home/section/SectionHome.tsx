@@ -53,6 +53,7 @@ const renderSection = (
 			return (
 				<Suspense fallback={<ProductListSkeleton />} key={commonProps.key}>
 					<ProductCollection
+						key={commonProps.key}
 						params={item.dataSource.params}
 						link={item.link}
 						title={item.title}

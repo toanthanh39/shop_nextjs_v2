@@ -22,7 +22,7 @@ type Props = ComProps & {
 async function getListProductServer(fillter: ProductFilter) {
 	try {
 		const products = await new ProductRepo({
-			accessMode: BaseAccessMode.PUBLIC_SERVER,
+			accessMode: "PUBLIC",
 		}).getAll(fillter);
 		return products.items;
 	} catch (error) {
@@ -41,6 +41,7 @@ export default async function ProductCollection({
 		...params,
 		show_promotion_price: IsShowPromotionPrice.show,
 	});
+
 	return (
 		<section className={cn("relative w-full mb-2 ", className)}>
 			{title && link && (
