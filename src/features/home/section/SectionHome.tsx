@@ -65,11 +65,9 @@ const renderSection = (
 		case "nmagazine":
 			return (
 				<React.Fragment key={commonProps.key}>
-					<React.Fragment key={commonProps.key}>
-						<Suspense fallback={<YoutubeListSkeleton />} key={commonProps.key}>
-							<NmagazineList link={item.link} title={item.title} />
-						</Suspense>
-					</React.Fragment>
+					<Suspense fallback={<YoutubeListSkeleton />} key={commonProps.key}>
+						<NmagazineList link={item.link} title={item.title} />
+					</Suspense>
 				</React.Fragment>
 			);
 

@@ -1,17 +1,8 @@
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
-import { cn } from "@/utils/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductPrice from "./ProductPrice";
-import {
-	Button,
-	CustomImage,
-	Flex,
-	Label,
-	LinkElement,
-	Tag,
-	Text,
-} from "@/components/ui";
+import { Button, CustomImage, Flex, LinkElement, Text } from "@/components/ui";
 import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
 import ProductListTagVariant from "../list/ProductListTagVariant";
 import { LoadingIcon } from "@/components/icons";
@@ -20,7 +11,6 @@ import AddToCart from "../action/AddToCart";
 import QuantityBtn from "../action/QuantityBtn";
 import ProductGender from "./ProductGender";
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
-import useCartStore from "@/lib/zustand/useCartStore";
 
 type Props = ComProps & {
 	product: ProductJson;
@@ -29,7 +19,7 @@ export default function ProductQuickView(props: Props) {
 	const { product } = props;
 
 	const { data: variantTags, isLoading } = useProductVariantTag({ product });
-	const isAdding = useCartStore((state) => state.isLoading);
+	const { isLoading: isLoadingCartGlobal } = useCartGlobal({});
 
 	////////////////////////////////////////
 	const [quantity, setQuantity] = useState(1);
@@ -39,6 +29,20 @@ export default function ProductQuickView(props: Props) {
 	const handleIncrease = () => setQuantity(quantity + 1);
 	const handleDecrease = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
 
+	////////////////////////////////////////
+	// lấy ra danh sách các biến thể của sản phẩm và active biến thể đầu tiên
+	useEffect(() => {
+		if (variantTags?.length) {
+			const variant = variantTags
+				.flatMap((i) => i.items)
+				.find((v) => v.id === product.id);
+			const firstVariant = variantTags?.[0]?.items?.[0];
+			if (!variant && firstVariant) {
+				setVariantActive(firstVariant);
+			}
+		}
+	}, [variantTags?.length]);
+	////////////////////////////////////////
 	if (isLoading)
 		return (
 			<>
@@ -109,7 +113,7 @@ export default function ProductQuickView(props: Props) {
 							className="justify-end"
 							product={variantActive}
 							quantity={quantity}
-							disabled={isAdding}
+							isLoading={isLoadingCartGlobal}
 							onDeCrease={handleDecrease}
 							onInCrease={handleIncrease}
 						/>

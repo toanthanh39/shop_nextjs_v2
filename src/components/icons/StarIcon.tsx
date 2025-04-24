@@ -2,7 +2,7 @@ import { sizes, variants } from "@/styles/svg-variant";
 import { cn } from "@/utils/utils";
 import { VariantProps } from "class-variance-authority";
 
-interface StarIconProps
+export interface StarIconProps
 	extends VariantProps<typeof variants>,
 		VariantProps<typeof sizes> {}
 

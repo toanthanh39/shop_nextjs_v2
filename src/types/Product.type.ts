@@ -114,6 +114,8 @@ export type ProductFilter = Filter & {
 	list_product_id?: string;
 	parent_id?: number;
 	show_promotion_price?: IsShowPromotionPrice;
+	collection_handle?: string;
+	collection_id?: number;
 };
 
 export type ProductListJson = BaseCollectionJson<ProductJson>;

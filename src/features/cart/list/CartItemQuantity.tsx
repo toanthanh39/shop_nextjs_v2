@@ -13,6 +13,7 @@ export default function CartItemQuantity({
 	onQuantityChange,
 	className,
 	disabled,
+	isLoading,
 }: Props) {
 	const [quantity, setQuantity] = useState<number>(item.item_quantity);
 
@@ -41,7 +42,7 @@ export default function CartItemQuantity({
 		<Flex align="center" gap={16} className={cn(className)}>
 			<Flex className="w-full basis-25 shrink-0">
 				<Button
-					disabled={disabled || quantity <= 1}
+					disabled={isLoading || disabled || quantity <= 1}
 					size="sm"
 					className="w-8"
 					onClick={handleDecrease}>
@@ -52,7 +53,9 @@ export default function CartItemQuantity({
 				</Text>
 
 				<Button
-					disabled={disabled || quantity >= item.product_json.limit_sale}
+					disabled={
+						isLoading || disabled || quantity >= item.product_json.limit_sale
+					}
 					size="sm"
 					className="w-8"
 					onClick={handleIncrease}>

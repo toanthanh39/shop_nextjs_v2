@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Flex, Money } from "@/components/ui";
+import { CustomImage, Flex, Money } from "@/components/ui";
 import { ProductJson } from "@/types/Product.type";
 
 type Props = {
@@ -20,7 +20,7 @@ export default function ProductDetail({ product }: Props) {
 			{/* Product Images Section */}
 			<div className="">
 				<div className="relative w-90 h-90">
-					<Image
+					<CustomImage
 						src={product.images?.[0]?.url ?? ""}
 						alt="Salvatore Ferragamo Red Leather"
 						layout="fill"

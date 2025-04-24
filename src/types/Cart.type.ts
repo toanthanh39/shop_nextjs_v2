@@ -5,7 +5,10 @@ export type CartProps = {
 	cart: OrderJson;
 };
 
-export type CartItemProps = Pick<ComProps, "className" | "disabled"> & {
+export type CartItemProps = Pick<
+	ComProps,
+	"className" | "disabled" | "isLoading"
+> & {
 	item: OrderItemJson;
 };
 

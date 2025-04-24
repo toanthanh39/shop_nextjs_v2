@@ -13,6 +13,7 @@ export default function CartItemAction({
 	item,
 	className,
 	disabled,
+	isLoading,
 	onDeleteItem,
 }: Props) {
 	const [idDelete, setIdDelete] = useState(0);
@@ -40,7 +41,7 @@ export default function CartItemAction({
 		<>
 			<Flex className={cn("w-fit", className)} justify="end">
 				<Button
-					disabled={disabled}
+					disabled={isLoading}
 					variant="text"
 					onClick={onDelete}
 					size="icon"

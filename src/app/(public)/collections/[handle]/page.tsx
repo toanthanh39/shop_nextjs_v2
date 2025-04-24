@@ -1,3 +1,41 @@
-export default async function Page() {
-	return <main></main>;
+import { ProductCard } from "@/features/product/list";
+import { getSiteSeting } from "@/services/api/handler/server";
+import ProductRepo from "@/services/api/repositories/ProductRepo";
+import { Params } from "@/types/Dynamic.type";
+import PageClient from "./page.client";
+import { Suspense } from "react";
+
+async function getDataServer(collection_handle: string) {
+	try {
+		const site = await getSiteSeting();
+		const resProducts = await new ProductRepo({ accessMode: "PUBLIC" }).getAll({
+			show: "web",
+			limit: site.pagination_limit,
+			collection_handle: collection_handle,
+			page: 1,
+			store_id: site.store_id,
+		});
+
+		return resProducts.items;
+	} catch (error) {
+		return [];
+	}
+}
+
+export default async function Page({
+	params,
+}: {
+	params: Params<{ handle: string }>;
+}) {
+	const handle = (await params).handle;
+
+	const products = await getDataServer(handle);
+
+	return (
+		<div>
+			<Suspense fallback={<div>Loading...</div>}>
+				<PageClient dataSource={products}></PageClient>
+			</Suspense>
+		</div>
+	);
 }

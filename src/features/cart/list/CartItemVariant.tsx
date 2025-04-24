@@ -13,11 +13,11 @@ export default function CartItemVariant({
 	item,
 	className,
 	disabled,
+	isLoading,
 	onChange,
 }: Props) {
 	const { data } = useProductVariantTag({ product: item.product_json });
 	const [active, setActive] = useState(item.product_id);
-	const [loading, setLoading] = useState(false);
 
 	const variantActive = useMemo(() => {
 		return data
@@ -27,14 +27,12 @@ export default function CartItemVariant({
 
 	///////////////////////////////////////////
 	const onChangeVariant = async (pId: number) => {
-		if (loading || disabled) return;
+		if (isLoading || disabled) return;
 		try {
-			setLoading(true);
 			await onChange(pId);
 			setActive(pId);
 		} catch (error) {
 		} finally {
-			setLoading(false);
 		}
 	};
 
@@ -81,7 +79,8 @@ export default function CartItemVariant({
 									className={cn("p-1 rounded border border-colors-gray-3", {
 										"border-colors-red-5": active === p.id,
 										"cursor-not-allowed line-through": p.quantity <= 0,
-										"opacity-55 ": loading || disabled,
+										"opacity-55 ": disabled,
+										"cursor-wait": isLoading,
 									})}>
 									<CustomImage
 										src={p.images?.[0]?.url ?? ""}

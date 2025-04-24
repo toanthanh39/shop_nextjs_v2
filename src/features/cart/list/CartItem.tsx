@@ -83,13 +83,10 @@ export default function CartItem({ item, className }: Props) {
 			gap={16}
 			className={cn(
 				"relative py-4 not-first:border-t border-colors-gray-3",
-				className,
-				{
-					"opacity-50": disabled,
-				}
+				className
 			)}>
 			{disabled && (
-				<Text variant="default" className="absolute top-0 left-0 z-2">
+				<Text variant="default" className="absolute -bottom-1 left-2 z-2">
 					Hết hàng
 				</Text>
 			)}
@@ -109,7 +106,8 @@ export default function CartItem({ item, className }: Props) {
 				</Flex>
 				<Flex gap={32} className="basis-1/2 max-md:flex-col max-md:gap-2">
 					<CartItemQuantity
-						disabled={isUpdating}
+						disabled={disabled}
+						isLoading={isUpdating}
 						item={item}
 						onQuantityChange={onUpdateQuantity}
 						className="flex-1 w-fit"
@@ -117,14 +115,15 @@ export default function CartItem({ item, className }: Props) {
 					<CartItemVariant
 						item={item}
 						onChange={updateVariant}
-						disabled={isUpdating}
+						disabled={disabled}
+						isLoading={isUpdating}
 						className=" w-fit"
 					/>
 				</Flex>
 				<CartItemAction
 					item={item}
 					onDeleteItem={onDeleteItem}
-					disabled={isUpdating}
+					isLoading={isUpdating}
 					className="w-fit "
 				/>
 			</Flex>

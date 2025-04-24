@@ -12,7 +12,7 @@ export const buttonVariants = cva(
 		variants: {
 			variant: {
 				default: "border border-input text-colors-gray-5",
-				primary: "bg-colors-red-5 text-white lg:hover:bg-colors-red-5/80",
+				primary: "bg-colors-red-5 text-white lg:hover:bg-red-700",
 				secondary: "bg-colors-gray-5 text-white",
 				text: "text-colors-gray-5 lg:hover:bg-colors-gray-2",
 				link: "text-colors-blue-5 lg:hover:bg-colors-blue-5/80 lg:hover:text-white",
@@ -53,7 +53,9 @@ export default function Button({
 	const Comp = "button";
 	return (
 		<Comp
-			className={cn(buttonVariants({ variant, size, className }))}
+			className={cn(buttonVariants({ variant, size, className }), {
+				"cursor-wait": loading,
+			})}
 			{...props}>
 			{loading ? <LoadingIcon className="mr-1" size="md" /> : icon && icon}
 			{children && children}

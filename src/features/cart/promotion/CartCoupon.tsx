@@ -211,7 +211,6 @@ export default function CartCoupon({ className, cart }: Props) {
 						<Empty dataSource={promoViewMore?.codes ?? []}>
 							<ul>
 								{promoViewMore?.codes?.map((code) => {
-									const isss = getActivePromo(promoViewMore, cart);
 									const isUsed =
 										getActivePromo(promoViewMore, cart)?.code === code.code;
 

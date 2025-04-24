@@ -15,6 +15,7 @@ type Props = ComProps &
 	};
 export default function ProductListTagVariant(props: Props) {
 	const { dataSource, variantActive, onSelect } = props;
+	const productInstance = new ProductModel(variantActive);
 
 	const onSelectVariant = (v: ProductJson) => {
 		if (variantActive.id === v.id) return;
@@ -32,8 +33,8 @@ export default function ProductListTagVariant(props: Props) {
 						<Grid gap={8} cols={2} lg={3} xl={3} className="w-full gap-y-1">
 							{item.items.map((option) => {
 								const isSelected = variantActive.id === option.id;
-								const productInstance = new ProductModel(option);
-								const tagPromotions = productInstance.getPromotionTagLabels();
+								const tagPromotions =
+									ProductModel.getPromotionTagLabels(option);
 
 								return (
 									<button

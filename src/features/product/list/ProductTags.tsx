@@ -1,5 +1,4 @@
 import ProductModel from "@/common/models/ProductModel";
-import { CardBagde } from "@/components/ui/Card";
 import Tag from "@/components/ui/Tag";
 import { ProductJson } from "@/types/Product.type";
 
@@ -8,10 +7,9 @@ type Props = {
 };
 export default function ProductTags({ product }: Props) {
 	const { tags } = product;
-	const productInstance = new ProductModel(product);
 
 	const tagValids = tags.filter((i) => i.type === "PRODUCT CARD") ?? [];
-	const tagPromotions = productInstance.getPromotionTagLabels();
+	const tagPromotions = ProductModel.getPromotionTagLabels(product);
 
 	return (
 		<>

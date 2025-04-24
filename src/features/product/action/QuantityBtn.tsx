@@ -19,6 +19,7 @@ export default function QuantityBtn(props: Props) {
 		quantity,
 		className,
 		disabled,
+		isLoading,
 		onDeCrease,
 		onInCrease,
 		onChangeQuantity,
@@ -42,13 +43,19 @@ export default function QuantityBtn(props: Props) {
 			</Label>
 			<Flex align="center" className="border rounded-md w-fit">
 				<button
-					disabled={disabled}
+					disabled={disabled || isLoading}
 					onClick={handleDecrease}
-					className="px-3 py-1 text-gray-600 hover:text-gray-800">
+					className={cn(
+						"px-3 py-1 text-gray-600 hover:text-gray-800 cursor-pointer",
+						{
+							"cursor-not-allowed": disabled,
+							"cursor-wait": isLoading,
+						}
+					)}>
 					-
 				</button>
 				<input
-					disabled={disabled}
+					disabled={disabled || isLoading}
 					type="number"
 					id="quantity"
 					value={quantity}
@@ -59,9 +66,15 @@ export default function QuantityBtn(props: Props) {
 					min="1"
 				/>
 				<button
-					disabled={disabled}
+					disabled={disabled || isLoading}
 					onClick={handleIncrease}
-					className="px-3 py-1 text-gray-600 hover:text-gray-800">
+					className={cn(
+						"px-3 py-1 text-gray-600 hover:text-gray-800 cursor-pointer",
+						{
+							"cursor-not-allowed": disabled,
+							"cursor-wait": isLoading,
+						}
+					)}>
 					+
 				</button>
 			</Flex>

@@ -2,7 +2,6 @@ import BaseApi from "@/lib/axios/BaseApi";
 import { HookCacheProps } from "@/types/Component";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useSiteSetting from "./useSiteSetting";
-import { MockOrderJson } from "@/lib/data/mocks";
 import {
 	ORDER_ACTION,
 	OrderAddCoupon,
@@ -16,11 +15,9 @@ import OrderConvert from "@/services/utils/OrderConvert";
 import { PaymentAccessMode, PaymentAddJson } from "@/types/Payment.type";
 import { PromotionJson } from "@/types/Promotion.type";
 import useCartStore from "@/lib/zustand/useCartStore";
-import { set } from "date-fns";
+import { useMemo } from "react";
 
 type Props = HookCacheProps & {};
-
-type ActionUpdateCart = "quantity" | "variant" | "use";
 
 type DefaultDataUpdateProps = Pick<OrderItemEdit, "id">;
 type ActionCartUpdate =
@@ -43,12 +40,19 @@ type ActionCartUpdate =
 const STALE_TIME = Infinity;
 export const CACHE_CART_GLOBAL_HOOK = "cart_global";
 export const CACHE_CREATE_CART_GLOBAL = "cart_global";
+export const CACHE_CART_GLOBAL_LOADING = "cart_global_loading";
+
+const cartError = {
+	error_cart_not_exited: "error_cart_not_exited",
+	error_action_invalid: "error_action_invalid",
+	error_site_global: "error_site_global",
+};
 
 /////////////////////////////////////
 
 function useCartGlobal({ enabled = true }: Props) {
 	const { data: site, isLoading: isLoadingSite } = useSiteSetting();
-	const setLoadingGlobal = useCartStore((state) => state.setLoading);
+	// const setLoadingGlobal = useCartStore((state) => state.setLoading);
 	const queryClient = useQueryClient();
 
 	const CartRepoInstance = new CartRepo({ accessMode: "PUBLIC" });
@@ -79,12 +83,24 @@ function useCartGlobal({ enabled = true }: Props) {
 		retry: 3,
 	});
 
+	const { data: isLoadingGlobal } = useQuery({
+		queryKey: [CACHE_CART_GLOBAL_LOADING],
+		// queryFn: async () => {
+		// 	return false;
+		// },
+		staleTime: 0,
+		enabled: enabled,
+		// refetchOnWindowFocus: "always",
+		retry: 0,
+		initialData: false,
+	});
+
 	/////////////////////////////////
 	const createMutation = useMutation({
 		mutationFn: async () => {
 			try {
 				if (!site) {
-					throw new Error("error_site_global");
+					throw new Error(cartError.error_site_global);
 				}
 				// return await createCart(site.customer_token, site.store_id);
 
@@ -113,23 +129,19 @@ function useCartGlobal({ enabled = true }: Props) {
 		}) => {
 			try {
 				if (!site) {
-					throw new Error("error_site_global");
+					throw new Error(cartError.error_site_global);
 				}
 
-				setLoadingGlobal(true);
+				queryClient.setQueryData([CACHE_CART_GLOBAL_LOADING], true, {
+					updatedAt: Date.now(),
+				});
+
 				const orderPromotions = OrderConvert.convertPromotionToOrderPromotion(
 					promotions,
 					item_quantity,
 					product_id
 				);
 				const cartGlobal = cart ?? (await createMutation.mutateAsync());
-
-				// return addToCart(
-				// 	product_id,
-				// 	item_quantity,
-				// 	cartGlobal.id,
-				// 	site.customer_token
-				// );
 
 				return CartRepoInstance.update({
 					action: ORDER_ACTION.ADD,
@@ -148,20 +160,29 @@ function useCartGlobal({ enabled = true }: Props) {
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			} finally {
-				setLoadingGlobal(false);
 			}
 		},
 		onSuccess: (updatedCart) => {
 			queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], updatedCart);
+			queryClient.setQueryData([CACHE_CART_GLOBAL_LOADING], false, {
+				updatedAt: Date.now(),
+			});
 		},
 	});
 
 	const updateMutation = useMutation({
 		mutationFn: async (ac: ActionCartUpdate) => {
 			try {
-				if (!cart || !site) {
-					throw new Error("error_cart_not_exited");
+				if (!site) {
+					throw new Error(cartError.error_site_global);
 				}
+
+				if (!cart) {
+					throw new Error(cartError.error_cart_not_exited);
+				}
+
+				const cartGlobal = cart;
+
 				let details: OrderItemEdit[] = [];
 
 				switch (ac.action) {
@@ -172,7 +193,8 @@ function useCartGlobal({ enabled = true }: Props) {
 							product_id,
 							item_quantity: quantity,
 							is_use:
-								cart.details.data.find((i) => i.id === id)?.is_use ?? IsUse.USE,
+								cartGlobal.details.data.find((i) => i.id === id)?.is_use ??
+								IsUse.USE,
 						});
 						break;
 					}
@@ -184,7 +206,8 @@ function useCartGlobal({ enabled = true }: Props) {
 							product_id: variant_id,
 							item_quantity: quantity,
 							is_use:
-								cart.details.data.find((i) => i.id === id)?.is_use ?? IsUse.USE,
+								cartGlobal.details.data.find((i) => i.id === id)?.is_use ??
+								IsUse.USE,
 						});
 						break;
 					}
@@ -195,8 +218,8 @@ function useCartGlobal({ enabled = true }: Props) {
 							product_id: d.product_id,
 							is_use: d.is_use,
 							item_quantity:
-								cart.details.data.find((i) => i.id === d.id)?.item_quantity ??
-								0,
+								cartGlobal.details.data.find((i) => i.id === d.id)
+									?.item_quantity ?? 0,
 						}));
 						break;
 					}
@@ -205,16 +228,9 @@ function useCartGlobal({ enabled = true }: Props) {
 						throw new Error("error_action_invalid");
 				}
 
-				// return await updateCartItem({
-				// 	action: ORDER_ACTION.UPDATE,
-				// 	cart_id: cart.id,
-				// 	customer_token: site.customer_token,
-				// 	details,
-				// });
-
 				return await CartRepoInstance.update({
 					action: ORDER_ACTION.UPDATE,
-					cart_id: cart.id,
+					cart_id: cartGlobal.id,
 					customer_token: site.customer_token,
 					details,
 				});
@@ -231,12 +247,12 @@ function useCartGlobal({ enabled = true }: Props) {
 	const removeMutation = useMutation({
 		mutationFn: async ({ ids }: { ids: number[] }) => {
 			try {
-				if (!site || !cart) {
-					throw new Error("error_site_not_exited");
+				if (!site) {
+					throw new Error(cartError.error_site_global);
 				}
 
 				if (!cart) {
-					throw new Error("error_cart_not_exited");
+					throw new Error(cartError.error_cart_not_exited);
 				}
 
 				const itemRemoves: OrderItemEdit[] = cart.details.data
@@ -252,7 +268,7 @@ function useCartGlobal({ enabled = true }: Props) {
 				return await CartRepoInstance.update({
 					action: ORDER_ACTION.DELETE,
 					cart_id: cart.id,
-					customer_token: site?.customer_token,
+					customer_token: site.customer_token,
 					details: itemRemoves,
 				});
 			} catch (error) {
@@ -303,9 +319,25 @@ function useCartGlobal({ enabled = true }: Props) {
 
 	/////////////////////////////////
 
+	const disabled = useMemo(() => {
+		return (
+			isLoading ||
+			isLoadingSite ||
+			addMutation.isPending ||
+			updateMutation.isPending
+		);
+	}, [
+		isLoading,
+		isLoadingSite,
+		addMutation.isPending,
+		updateMutation.isPending,
+	]);
+
+	/////////////////////////////////
+
 	return {
 		cart,
-		isLoading: isLoading || isLoadingSite,
+		isLoading: isLoading || isLoadingSite || isLoadingGlobal,
 		addToCart: addMutation.mutateAsync,
 		updateCart: updateMutation.mutateAsync,
 		createCart: createMutation.mutateAsync,
@@ -320,6 +352,7 @@ function useCartGlobal({ enabled = true }: Props) {
 		isUpdating: updateMutation.isPending || addCouponMutation.isPending,
 		isRemoving: removeMutation.isPending,
 		isCheckouting: checkoutMutation.isPending,
+		disabled,
 		//////////////////////////////
 	};
 }

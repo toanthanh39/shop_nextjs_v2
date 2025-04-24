@@ -5,14 +5,22 @@ import PromotionModel from "./PromotionModel";
 
 class ProductModel {
 	private product: ProductJson;
+	private static instance: ProductModel;
+
+	public getInstance(json: ProductJson): ProductModel {
+		if (!ProductModel.instance) {
+			ProductModel.instance = new ProductModel(json);
+		}
+		return ProductModel.instance;
+	}
 
 	constructor(json: ProductJson) {
 		this.product = json;
 	}
 
-	public getPromotionTagLabels() {
+	static getPromotionTagLabels(p: ProductJson) {
 		let result = [] as PromotionJson["label"][];
-		const { promotions, child_promotions } = this.product;
+		const { promotions, child_promotions } = p;
 		result = PromotionModel.getListPromotionValid(promotions).map(
 			(p) => p.label
 		);
