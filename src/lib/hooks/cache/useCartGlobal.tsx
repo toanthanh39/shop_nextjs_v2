@@ -85,9 +85,9 @@ function useCartGlobal({ enabled = true }: Props) {
 
 	const { data: isLoadingGlobal } = useQuery({
 		queryKey: [CACHE_CART_GLOBAL_LOADING],
-		// queryFn: async () => {
-		// 	return false;
-		// },
+		queryFn: async () => {
+			return false;
+		},
 		staleTime: 0,
 		enabled: enabled,
 		// refetchOnWindowFocus: "always",

@@ -7,6 +7,7 @@ import { generateMetadataSite } from "@/meta";
 import { detectHeaderServer, detectLangForServer } from "@/utils/detectServer";
 import BaseApi from "@/lib/axios/BaseApi";
 import { SystemConst } from "@/common/constants/system";
+import { NextIntlClientProvider } from "next-intl";
 export async function generateMetadata(): Promise<Metadata> {
 	const meta = await generateMetadataSite();
 	return meta;
@@ -59,10 +60,14 @@ export default async function RootLayout({
 			<meta charSet="utf-8"></meta>
 			<body
 				className={`${inter.variable} ${notoSans.variable} ${notoSerifDisplay.variable} antialiased  font-inter w-screen overflow-x-hidden dark:bg-black`}>
-				<RootProvider>
-					{children}
-					{modal}
-				</RootProvider>
+				<NextIntlClientProvider locale={lang}>
+					<RootProvider>
+						{children}
+						{modal}
+					</RootProvider>
+				</NextIntlClientProvider>
+				{/* <NextIntlClientProvider locale={lang}> */}
+
 				<DevComponents />
 			</body>
 		</html>

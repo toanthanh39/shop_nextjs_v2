@@ -5,8 +5,8 @@ import ShopProvider from "./ShopProvider";
 import { RootProviderProps } from "@/types/Shop.type";
 import OrderProvider from "./OrderProvider";
 import { SessionProvider } from "next-auth/react";
-
 export default function RootProvider({ children }: RootProviderProps) {
+	// const messages = useMessages();
 	const queryClient = new QueryClient({
 		defaultOptions: {
 			queries: {

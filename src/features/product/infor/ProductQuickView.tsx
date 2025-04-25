@@ -1,6 +1,7 @@
+"use client";
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import ProductPrice from "./ProductPrice";
 import { Button, CustomImage, Flex, LinkElement, Text } from "@/components/ui";
 import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
@@ -11,6 +12,7 @@ import AddToCart from "../action/AddToCart";
 import QuantityBtn from "../action/QuantityBtn";
 import ProductGender from "./ProductGender";
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
+import { useTranslations } from "next-intl";
 
 type Props = ComProps & {
 	product: ProductJson;
@@ -18,6 +20,7 @@ type Props = ComProps & {
 export default function ProductQuickView(props: Props) {
 	const { product } = props;
 
+	const t = useTranslations("Product");
 	const { data: variantTags, isLoading } = useProductVariantTag({ product });
 	const { isLoading: isLoadingCartGlobal } = useCartGlobal({});
 
@@ -52,6 +55,7 @@ export default function ProductQuickView(props: Props) {
 	return (
 		<Flex className=" bg-white overflow-hidden" gap={32}>
 			{/* Hình ảnh sản phẩm */}
+			{/* <Text>{t("test", { count: 7888 })}</Text> */}
 			<Flex direction="col" gap={4} className="w-fit">
 				<CustomImage
 					src={variantActive.images?.[0]?.url ?? ""}

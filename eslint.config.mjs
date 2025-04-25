@@ -31,6 +31,7 @@ const eslintConfig = [
 			"@typescript-eslint/no-empty-object-type": "off",
 			"@typescript-eslint/no-empty-interface": "off",
 			"@typescript-eslint/explicit-module-boundary-types": "off",
+			"react/jsx-no-literals": "error",
 		},
 	},
 ];

@@ -30,7 +30,7 @@ export default function ProductListTagVariant(props: Props) {
 					<Flex direction="col" gap={2} key={item.code}>
 						<Text.p className="capitalize">{item.name}</Text.p>
 
-						<Grid gap={8} cols={2} lg={3} xl={3} className="w-full gap-y-1">
+						<Grid gap={8} cols={2} lg={3} xl={3} className="w-full gap-y-2">
 							{item.items.map((option) => {
 								const isSelected = variantActive.id === option.id;
 								const tagPromotions =
