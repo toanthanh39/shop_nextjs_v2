@@ -58,12 +58,12 @@ export default async function Footer() {
 	// 	})
 	// }
 
-	const proces = (text: string) => {
+	const replaceTextGetYear = (text: string) => {
 		const year = new Date().getFullYear();
 		return replaceSingleKey(text, { current_year: year });
 	};
 	return (
-		<footer className="bg-colors-gray-5 h-full w-screen py-10 max-md:px-4 max-lg:mb-8">
+		<footer className="h-full w-screen py-10 max-md:container-padding max-lg:mb-8 bg-colors-gray-5">
 			{dataFooter && (
 				<section className="container text-whitesmoke ">
 					<Flex gap={32} className="max-sm:flex-wrap">
@@ -139,7 +139,7 @@ export default async function Footer() {
 							{dataFooterBottom?.value?.texts?.map((text, index) => {
 								return (
 									<Text.p variant="secondary" key={index}>
-										{proces(text)}
+										{replaceTextGetYear(text)}
 									</Text.p>
 								);
 							})}

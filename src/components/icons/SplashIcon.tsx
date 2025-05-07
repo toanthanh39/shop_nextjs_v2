@@ -1,7 +1,5 @@
 import React from "react";
-import LogoIcon from "./LogoIcon";
 import { sizes, variants } from "@/styles/svg-variant";
-import { cn, initArray } from "@/utils/utils";
 import { Flex } from "../ui";
 import { VariantProps } from "class-variance-authority";
 import { ComProps } from "@/types/Component";

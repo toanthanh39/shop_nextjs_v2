@@ -45,7 +45,7 @@ export default function AboutTabs({ dataSource, title }: Props) {
 				</div>
 			)}
 
-			<Tabs defaultValue={"0"}>
+			<Tabs defaultValue="0">
 				<TabsList className=" py-8 max-md:overflow-x-scroll flex-nowrap gap-8 max-md:justify-start bg-colors-gray-2 hide-scroll-bar">
 					{dataSource.map((item, index) => {
 						return (
@@ -83,7 +83,7 @@ export default function AboutTabs({ dataSource, title }: Props) {
 				{dataSource.map((item, index) => {
 					return (
 						<TabsContent
-							className="container flex tex-center py-8 lg:py-10 min-h-40"
+							className="container max-md:container-padding flex tex-center py-8 lg:py-10 min-h-40"
 							key={index}
 							value={index.toString()}>
 							<Flex

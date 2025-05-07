@@ -5,10 +5,31 @@ import { CartList } from "../list";
 import { CartProps } from "@/types/Cart.type";
 import CartLayoutSection from "./CartLayoutSection";
 import CartCoupon from "../promotion/CartCoupon";
-import { useEffect } from "react";
+import { CartPromoSeasonal } from "../promotion";
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
+import { PromotionJson, PromotionToggleProps } from "@/types/Promotion.type";
 
 type Props = CartProps & {};
 export default function CartLayout({ cart }: Props) {
+	const { addPromotionToCart } = useCartGlobal({});
+
+	//////////////////////////////////////////////////
+	const handleChangePromotionCart = async (
+		pro: PromotionJson,
+		type: PromotionToggleProps
+	) => {
+		try {
+			await addPromotionToCart({
+				action: type,
+				data: {
+					promotions: [pro],
+				},
+			});
+		} catch (error) {}
+	};
+
+	//////////////////////////////////////////////////
+
 	return (
 		<Flex direction="col" gap={16}>
 			<CartLayoutSection className=" shadow-none p-0">
@@ -34,6 +55,13 @@ export default function CartLayout({ cart }: Props) {
 					</CartLayoutSection>
 				</Flex>
 				<Flex direction="col" gap={16} className="basis-[400px]">
+					<CartLayoutSection>
+						<CartPromoSeasonal
+							cart={cart}
+							onChange={handleChangePromotionCart}
+						/>
+					</CartLayoutSection>
+
 					<CartLayoutSection>
 						<CartCoupon cart={cart} />
 					</CartLayoutSection>

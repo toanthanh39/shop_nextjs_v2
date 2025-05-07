@@ -1,11 +1,11 @@
 import { BaseCollectionJson } from "@/types/Base.type";
 import BaseRepository from "./BaseRepository";
 import Helper from "@/utils/helper";
-import { VideoFilter, VideoJson } from "@/types/Video.type";
 import { SettingFilter, SettingJson } from "@/types/Setting.type";
-import server, { Config } from "@/lib/core/server";
 import { AxiosConfig } from "@/lib/core/client";
-import { detectLangForServer } from "@/utils/detectServer";
+import { SettingConst } from "@/common/constants/setting";
+import { TimeServerJson } from "@/types/Shop.type";
+import SiteServerRepo from "./SiteRepo";
 
 const DOMAIN = process.env.NEXT_PUBLIC_API_BASE_DOMAIN;
 const CACHE_TIME = 60 * 60;
@@ -30,7 +30,13 @@ class SettingRepo extends BaseRepository<SettingJson<string>> {
 		config?: Partial<AxiosConfig & RequestInit>,
 		isRoot?: boolean
 	) {
-		const langServer = !isRoot ? await detectLangForServer() : undefined;
+		let langServer = undefined;
+
+		if (!isRoot) {
+			const { lang } = await new SiteServerRepo().getSiteSeting();
+			langServer = lang;
+		}
+
 		const params = {
 			domain: DOMAIN,
 			keys: keys,
@@ -63,6 +69,15 @@ class SettingRepo extends BaseRepository<SettingJson<string>> {
 		return this.getClientOrServer().get<SettingJson<D>>(
 			this.pathname + "/" + id,
 			{ ...baseConfig, ...config }
+		);
+	}
+
+	async getTimeServer() {
+		return this.getClientOrServer().get<TimeServerJson>(
+			this.pathname + "/" + SettingConst.time.timesever,
+			{
+				cache: "no-store" as const,
+			}
 		);
 	}
 }

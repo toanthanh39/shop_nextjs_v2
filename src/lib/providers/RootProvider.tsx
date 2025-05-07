@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import ShopProvider from "./ShopProvider";
 import { RootProviderProps } from "@/types/Shop.type";
-import OrderProvider from "./OrderProvider";
+import CartProvider from "./CartProvider";
 import { SessionProvider } from "next-auth/react";
 export default function RootProvider({ children }: RootProviderProps) {
 	// const messages = useMessages();
@@ -22,7 +22,7 @@ export default function RootProvider({ children }: RootProviderProps) {
 			<SessionProvider>
 				<QueryClientProvider client={queryClient}>
 					<ShopProvider>
-						<OrderProvider>{children}</OrderProvider>
+						<CartProvider>{children}</CartProvider>
 					</ShopProvider>
 				</QueryClientProvider>
 			</SessionProvider>

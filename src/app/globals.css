@@ -1,5 +1,4 @@
-@import 'tailwindcss';
-
+@import "tailwindcss";
 
 @config '../../tailwind.config.ts';
 
@@ -348,4 +347,26 @@ option:disabled[value=""] {
 	100% {
 		transform: translateY(0);
 	}
+}
+
+.fade-enter {
+	opacity: 0.01;
+	transform: translate(0-10px);
+}
+
+.fade-enter-active {
+	opacity: 1;
+	transform: translate(0, 0);
+	transition: opacity 300ms ease-in, transform 300ms ease-in;
+}
+
+.fade-exit {
+	opacity: 1;
+	transform: translate(0, 0);
+}
+
+.fade-exit-active {
+	opacity: 0.01;
+	transform: translate(0, -10px);
+	transition: opacity 300ms ease-in, transform 300ms ease-in;
 }

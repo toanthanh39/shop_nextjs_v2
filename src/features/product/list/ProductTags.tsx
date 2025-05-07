@@ -8,8 +8,11 @@ type Props = {
 export default function ProductTags({ product }: Props) {
 	const { tags } = product;
 
-	const tagValids = tags.filter((i) => i.type === "PRODUCT CARD") ?? [];
-	const tagPromotions = ProductModel.getPromotionTagLabels(product);
+	const tagValids =
+		tags.filter((i) => i.type === "PRODUCT CARD" && i.value?.length > 0) ?? [];
+	const tagPromotions = ProductModel.getPromotionTagLabels(product).filter(
+		(t) => t.name_card?.length > 0
+	);
 
 	return (
 		<>

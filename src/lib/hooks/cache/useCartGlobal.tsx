@@ -7,13 +7,18 @@ import {
 	OrderAddCoupon,
 	OrderItemEdit,
 	OrderJson,
+	OrderPromotion,
 } from "@/types/Order.type";
 import { IsUse } from "@/types/Global.type";
 import { OrderItemJson } from "@/types/Order.type";
 import CartRepo from "@/services/api/repositories/CartRepo";
 import OrderConvert from "@/services/utils/OrderConvert";
 import { PaymentAccessMode, PaymentAddJson } from "@/types/Payment.type";
-import { PromotionJson } from "@/types/Promotion.type";
+import {
+	PromotionDiscountType,
+	PromotionJson,
+	PromotionToggleProps,
+} from "@/types/Promotion.type";
 import useCartStore from "@/lib/zustand/useCartStore";
 import { useMemo } from "react";
 
@@ -36,6 +41,28 @@ type ActionCartUpdate =
 			>;
 	  };
 
+type ActionUpdateCouponProps =
+	| {
+			action: "add";
+			data: {
+				code: string;
+			};
+	  }
+	| {
+			action: "remove";
+			data: {
+				code: string;
+				promotion_detail: PromotionJson;
+			};
+	  };
+
+type ActionUpdatePromotionBodyProps = {
+	action: PromotionToggleProps;
+	data: {
+		promotions: PromotionJson[];
+	};
+};
+
 /////////////////////////////////////
 const STALE_TIME = Infinity;
 export const CACHE_CART_GLOBAL_HOOK = "cart_global";
@@ -46,12 +73,17 @@ const cartError = {
 	error_cart_not_exited: "error_cart_not_exited",
 	error_action_invalid: "error_action_invalid",
 	error_site_global: "error_site_global",
+	error_add_promotion_cart: "error_add_promotion_cart",
 };
 
 /////////////////////////////////////
 
 function useCartGlobal({ enabled = true }: Props) {
-	const { data: site, isLoading: isLoadingSite } = useSiteSetting();
+	const {
+		data: site,
+		isLoading: isLoadingSite,
+		error: siteError,
+	} = useSiteSetting();
 	// const setLoadingGlobal = useCartStore((state) => state.setLoading);
 	const queryClient = useQueryClient();
 
@@ -142,7 +174,7 @@ function useCartGlobal({ enabled = true }: Props) {
 					product_id
 				);
 				const cartGlobal = cart ?? (await createMutation.mutateAsync());
-
+				
 				return CartRepoInstance.update({
 					action: ORDER_ACTION.ADD,
 					cart_id: cartGlobal.id,
@@ -261,6 +293,7 @@ function useCartGlobal({ enabled = true }: Props) {
 						id: i.id,
 						product_id: i.product_id,
 						is_use: i.is_use,
+						item_quantity: i.item_quantity,
 					}));
 
 				// return await removeCartItem(cart.id, site.customer_token, itemRemoves);
@@ -281,18 +314,68 @@ function useCartGlobal({ enabled = true }: Props) {
 		},
 	});
 
-	const addCouponMutation = useMutation({
-		mutationFn: async ({ code }: Pick<OrderAddCoupon, "code">) => {
+	const updateCouponMutation = useMutation({
+		mutationFn: async ({ action, data }: ActionUpdateCouponProps) => {
 			try {
-				if (!site || !cart) {
-					throw new Error("error_site_global");
+				if (!site) {
+					throw new Error(cartError.error_site_global);
 				}
 
-				return await CartRepoInstance.addCoupon({
-					cart_id: cart.id,
-					code: code,
-					customer_token: site.customer_token,
-				});
+				if (!cart) {
+					throw new Error(cartError.error_cart_not_exited);
+				}
+
+				if (action === "add") {
+					return await CartRepoInstance.addCoupon({
+						cart_id: cart.id,
+						code: data.code,
+						customer_token: site.customer_token,
+					});
+				}
+
+				if (action === "remove") {
+					const itemsToRemoveCoupon: OrderItemEdit[] = cart.details.data
+						// .filter((item) =>
+						// 	item.promotions.some((promo) => promo.code === data.code)
+						// )
+						.map((item) => ({
+							order_id: cart.order_id,
+							id: item.id,
+							is_use: item.is_use,
+							item_quantity: item.item_quantity,
+							product_id: item.product_id,
+							promotions: item.promotions.filter(
+								(promo) => promo.code !== data.code
+							),
+						}));
+
+					const promoBodyToRemoveCoupon =
+						data.promotion_detail.discount_type === PromotionDiscountType.CART
+							? cart.promotions.filter((promo) => promo.code !== data.code)
+							: [];
+
+					let result = { ...cart };
+
+					if (promoBodyToRemoveCoupon.length > 0) {
+						result = await CartRepoInstance.update({
+							cart_id: cart.id,
+							customer_token: site.customer_token,
+							action: ORDER_ACTION.PROMOTION,
+							promotions: promoBodyToRemoveCoupon,
+						});
+					}
+
+					if (itemsToRemoveCoupon.length > 0) {
+						result = await CartRepoInstance.update({
+							cart_id: cart.id,
+							customer_token: site.customer_token,
+							action: ORDER_ACTION.UPDATE,
+							details: itemsToRemoveCoupon,
+						});
+					}
+
+					return result;
+				}
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			}
@@ -315,6 +398,58 @@ function useCartGlobal({ enabled = true }: Props) {
 		onSuccess: (updatedCart) => {
 			queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], null);
 		},
+	});
+
+	const updatePromotionBodyMutation = useMutation({
+		mutationFn: async ({ action, data }: ActionUpdatePromotionBodyProps) => {
+			try {
+				const { promotions } = data;
+				if (!site) {
+					throw new Error(cartError.error_site_global);
+				}
+
+				if (!cart) {
+					throw new Error(cartError.error_cart_not_exited);
+				}
+
+				let isUse = IsUse.USE;
+
+				switch (action) {
+					case "remove":
+						isUse = IsUse.NOT_USE;
+						break;
+
+					default:
+						break;
+				}
+
+				// merge old and new promotion cart
+				const cartPromotions = OrderConvert.mergeCartPromotions(
+					promotions,
+					cart.promotions,
+					isUse
+				);
+				if (cartPromotions.length <= 0) {
+					throw new Error(cartError.error_add_promotion_cart);
+				}
+
+				return await CartRepoInstance.update({
+					action: ORDER_ACTION.PROMOTION,
+					cart_id: cart.id,
+					customer_token: site.customer_token,
+					promotions: cartPromotions,
+				});
+			} catch (error) {
+				throw BaseApi.handleError(error);
+			}
+		},
+		onSuccess: (updatedCart) => {
+			console.log("🚀 ~ useCartGlobal ~ updatedCart:", updatedCart);
+
+			queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], updatedCart);
+		},
+		retry: 2,
+		// retryDelay: 2 * 1000,
 	});
 
 	/////////////////////////////////
@@ -342,14 +477,15 @@ function useCartGlobal({ enabled = true }: Props) {
 		updateCart: updateMutation.mutateAsync,
 		createCart: createMutation.mutateAsync,
 		removeCartItem: removeMutation.mutateAsync,
-		addCouponToCart: addCouponMutation.mutateAsync,
 		checkout: checkoutMutation.mutateAsync,
+		updateCartCoupon: updateCouponMutation.mutateAsync,
+		addPromotionToCart: updatePromotionBodyMutation.mutateAsync,
 
 		isAdding:
 			createMutation.isPending ||
 			addMutation.isPending ||
 			updateMutation.isPending,
-		isUpdating: updateMutation.isPending || addCouponMutation.isPending,
+		isUpdating: updateMutation.isPending || updateCouponMutation.isPending,
 		isRemoving: removeMutation.isPending,
 		isCheckouting: checkoutMutation.isPending,
 		disabled,

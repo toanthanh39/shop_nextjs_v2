@@ -1,13 +1,13 @@
 import { ProductCard } from "@/features/product/list";
-import { getSiteSeting } from "@/services/api/handler/server";
 import ProductRepo from "@/services/api/repositories/ProductRepo";
 import { Params } from "@/types/Dynamic.type";
 import PageClient from "./page.client";
 import { Suspense } from "react";
+import SiteServerRepo from "@/services/api/repositories/SiteRepo";
 
 async function getDataServer(collection_handle: string) {
 	try {
-		const site = await getSiteSeting();
+		const site = await new SiteServerRepo().getSiteSeting();
 		const resProducts = await new ProductRepo({ accessMode: "PUBLIC" }).getAll({
 			show: "web",
 			limit: site.pagination_limit,
@@ -22,11 +22,7 @@ async function getDataServer(collection_handle: string) {
 	}
 }
 
-export default async function Page({
-	params,
-}: {
-	params: Params<{ handle: string }>;
-}) {
+export default async function Page({ params }: Params<{ handle: string }>) {
 	const handle = (await params).handle;
 
 	const products = await getDataServer(handle);

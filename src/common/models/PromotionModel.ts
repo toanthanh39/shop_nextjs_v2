@@ -1,4 +1,6 @@
+import { DateStatusResultJson } from "@/types/Component";
 import {
+	PromotionDiscountType,
 	PromotionGroup,
 	PromotionJson,
 	PromotionStatus,
@@ -16,14 +18,16 @@ class PromotionModel {
 		);
 	}
 
+	// Get all promotions that are valid
 	static getPromotionStatusValid(item: PromotionJson, timeNow: number) {
 		try {
 			const { start_date, end_date } = item;
 			const startDate = Number(start_date);
 			const endDate = Number(end_date);
+			if (!item.status) return PromotionStatus.INVALID;
 
 			if (isNaN(startDate) || isNaN(endDate)) {
-				throw new Error("Invalid promotion date");
+				return PromotionStatus.INVALID;
 			}
 
 			if (startDate > timeNow) {
@@ -37,18 +41,60 @@ class PromotionModel {
 			if (endDate < timeNow) {
 				return PromotionStatus.DONE;
 			}
-
-			throw new Error("Unexpected promotion state");
 		} catch (error) {
 			return PromotionStatus.INVALID;
 		}
 	}
 
+	// Get all promotions that are coupon
 	static getPromotionCoupon(items: PromotionJson[]) {
 		return items.filter((i) => i.group === PromotionGroup.coupon);
 	}
+
+	// Get all promotions that are seasonal
 	static getPromotionSeasonal(items: PromotionJson[]) {
 		return items.filter((i) => i.group === PromotionGroup.seasonal);
 	}
+
+	// Get all promotions that are invoice
+	static getPromotionEffectOnCart(items: PromotionJson[]) {
+		return items.filter((i) => i.discount_type === PromotionDiscountType.CART);
+	}
+
+	// Get all promotions that are product
+	static getPromotionEffectOnProduct(items: PromotionJson[]) {
+		return items.filter(
+			(i) => i.discount_type === PromotionDiscountType.PRODUCT
+		);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Check if the current server time is within the active date range
+	static getPromotionDateStatus = (
+		startDate: number,
+		endDate: number,
+		currentTime: number
+	): DateStatusResultJson => {
+		const msPerDay = 24 * 60 * 60;
+		currentTime = currentTime ?? Date.now() / 1000;
+		if (currentTime < startDate) {
+			return {
+				status: "waiting",
+				remainingDays: Math.ceil((startDate - currentTime) / msPerDay),
+			};
+		}
+
+		if (currentTime > endDate) {
+			return {
+				status: "expired",
+				remainingDays: 0,
+			};
+		}
+
+		return {
+			status: "running",
+			remainingDays: Math.ceil((endDate - currentTime) / msPerDay),
+		};
+	};
 }
 export default PromotionModel;

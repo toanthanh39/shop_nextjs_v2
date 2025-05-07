@@ -33,6 +33,34 @@ class OrderConvert {
 				});
 			}) as OrderPromotion[];
 	}
+
+	static mergeCartPromotions = (
+		newPromotions: PromotionJson[],
+		existingPromotions: OrderPromotion[],
+		isUse?: IsUse
+	): OrderPromotion[] => {
+		const newPromotionOrder = this.convertPromotionToOrderPromotion(
+			newPromotions,
+			isUse ?? IsUse.USE
+		);
+
+		return Helper.removeDuplicatesArrObject(
+			[...newPromotionOrder, ...existingPromotions],
+			"promotion_id"
+		).map((newPromo) => {
+			const existingPromo = existingPromotions.find(
+				(existing) => existing.promotion_id === newPromo.promotion_id
+			);
+
+			if (existingPromo) {
+				return {
+					...existingPromo,
+					is_use: isUse ?? existingPromo.is_use ?? IsUse.USE,
+				};
+			}
+			return newPromo;
+		});
+	};
 }
 
 export default OrderConvert;

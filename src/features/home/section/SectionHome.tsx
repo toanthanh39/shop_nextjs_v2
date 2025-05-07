@@ -2,7 +2,6 @@ import { SettingConst } from "@/common/constants/setting";
 import { ProductCollection } from "@/features/product/list";
 import ProductListSkeleton from "@/features/product/list/ProductListSkeleton";
 import { SectionJson } from "@/types/Home.type";
-import { detectTimeServer } from "@/utils/detectServer";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 import { BrandHome } from "../brand";
@@ -19,7 +18,6 @@ const keySettings = SettingConst.home.settings_website_namperfume_net;
 async function getDataServer() {
 	try {
 		const data = await new SettingRepo().getOne<SectionJson[]>(keySettings);
-
 		return data;
 	} catch (error) {
 		notFound();
@@ -89,7 +87,8 @@ const renderSection = (
 
 export default async function HomeSections() {
 	const data = await getDataServer();
-	const timeServer = await detectTimeServer();
+	const { time_server } = await new SettingRepo().getTimeServer();
+	console.log("🚀 ~ HomeSections ~ time_server:", time_server);
 
 	const dataSections = data?.value;
 
@@ -100,7 +99,7 @@ export default async function HomeSections() {
 			</Suspense>
 			{dataSections &&
 				dataSections.map((item, index) =>
-					renderSection(item, index, timeServer)
+					renderSection(item, index, time_server)
 				)}
 		</Flex>
 	);

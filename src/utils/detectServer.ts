@@ -1,7 +1,7 @@
 import { Locale } from "@/types/Locale.type";
 import { headers } from "next/headers";
 
-export const i18n = {
+const i18n = {
 	defaultLocale: "vi",
 	locales: ["en", "vi"],
 } as const;
@@ -22,14 +22,5 @@ export async function detectHeaderServer(key: string, defaultValue?: string) {
 		return result ?? defaultValue;
 	} catch (error) {
 		return defaultValue;
-	}
-}
-
-export async function detectTimeServer() {
-	try {
-		// const _headers = await headers();
-		return 0;
-	} catch (error) {
-		return 0;
 	}
 }

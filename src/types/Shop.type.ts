@@ -13,6 +13,12 @@ type LanguageSettingJson = {
 	version?: string;
 };
 
+export type TimeServerJson = {
+	time_server: number;
+	date_time: string;
+	date_time_gmt_7: string;
+};
+
 export type RootProviderProps = {
 	children: Readonly<React.ReactNode>;
 };

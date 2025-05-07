@@ -13,6 +13,16 @@ export enum PromotionStatus {
 	INVALID = 4,
 }
 
+export enum PromotionDiscountType {
+	PRODUCT = "product",
+	CART = "order",
+}
+
+export enum CalculateOnSalePrice {
+	NO,
+	YES,
+}
+
 ///////////////////////////////////////////
 export type PromotionJson = {
 	id: number;
@@ -21,7 +31,7 @@ export type PromotionJson = {
 	req_subtotal: number;
 	req_quantity: number;
 	discount_value: number;
-	discount_type: "product" | "order";
+	discount_type: PromotionDiscountType;
 	req_productids: string;
 	campaign_info: {
 		id: number;
@@ -53,6 +63,7 @@ export type PromotionJson = {
 		text_color?: string;
 	};
 	codes?: CouponJson[];
+	calculate_on_sale_price: CalculateOnSalePrice;
 };
 
 export type PromotionFilter = {
@@ -62,5 +73,7 @@ export type PromotionFilter = {
 	collection_id?: number;
 	subtotal?: number;
 };
+
+export type PromotionToggleProps = "aplly " | "remove";
 
 ///////////////////////////////////////////

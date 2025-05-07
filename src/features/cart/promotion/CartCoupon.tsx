@@ -1,8 +1,11 @@
 "use client";
 import { imageConst } from "@/common/constants/image";
+import OrderModel from "@/common/models/OrderModel";
 import PromotionModel from "@/common/models/PromotionModel";
+
 import Popup from "@/components/composite/Popup";
 import GenericForm from "@/components/form/GenericForm";
+import { CloseIcon } from "@/components/icons";
 import {
 	Button,
 	CustomImage,
@@ -12,84 +15,63 @@ import {
 	Input,
 	Tag,
 	Text,
+	List,
 } from "@/components/ui";
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import usePromotion from "@/lib/hooks/cache/usePromotion";
+import useTimeServer from "@/lib/hooks/cache/useTimeServer";
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
 import { ComProps } from "@/types/Component";
 import { IsUse } from "@/types/Global.type";
 import { OrderJson } from "@/types/Order.type";
 import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
 import { cn, debounce } from "@/utils/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
-
-enum Status {
-	expired,
-	onhand,
-	comming,
-}
-const getEventStatus = (startTimestamp: number, endTimestamp: number) => {
-	const now = new Date().getTime() / 1000; // Thời gian hiện tại dưới dạng timestamp
-
-	// Kiểm tra nếu sự kiện chưa bắt đầu
-	if (now < startTimestamp) {
-		const diffTime = Math.abs(startTimestamp - now);
-		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-		return {
-			label: `Coming in ${diffDays} days`,
-			status: Status.comming,
-		};
-	}
-
-	// Kiểm tra nếu sự kiện đã kết thúc
-	if (now > endTimestamp) {
-		return {
-			label: "Hết hạn",
-			status: Status.expired,
-		};
-	}
-
-	// Nếu trong thời gian hiệu lực
-	const diffTime = Math.abs(endTimestamp - now);
-	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-	return {
-		label: `${diffDays} days`,
-		status: Status.onhand,
-	};
-};
+import Helper from "@/utils/helper";
+import { CartProps } from "@/types/Cart.type";
+import { DateStatusResult } from "@/components/composite";
 
 const getActivePromo = (promo: PromotionJson, cart: OrderJson) => {
 	const allPromoCouponInCart = [
 		...cart.promotions,
 		...cart.details.data.flatMap((i) => i.promotions),
-	].filter((pro) => pro.promotion_detail.group === PromotionGroup.coupon);
+	]
+		.filter(
+			(pro) =>
+				pro.promotion_detail.group === PromotionGroup.coupon &&
+				pro.is_use === IsUse.USE
+		)
+		.find((i) => {
+			return i.promotion_id === promo.id;
+		});
 
-	return allPromoCouponInCart.find(
-		(i) => i.promotion_id === promo.id && i.is_use === IsUse.USE
-	);
+	return allPromoCouponInCart;
 };
 
-type Props = ComProps & {
-	cart: OrderJson;
-};
+type Props = ComProps & CartProps & {};
 
 export default function CartCoupon({ className, cart }: Props) {
+	const OrderInstance = new OrderModel(cart);
+
 	const { data: promotions } = usePromotion({});
-	const { addCouponToCart, isUpdating } = useCartGlobal({});
+	const { data: timeserver } = useTimeServer({ enabled: !!promotions });
+	const { updateCartCoupon, isUpdating } = useCartGlobal({});
+
 	const promotionCoupons = PromotionModel.getPromotionCoupon(promotions ?? []);
 
 	//////////////////////////////////////////////
-
+	const [items, setItems] = useState<string[]>([]);
 	const [promoViewMore, setPromoViewMore] = useState<PromotionJson | undefined>(
 		undefined
 	);
 
+	//////////////////////////////////////////////
 	const toggleModal = debounce((pro?: PromotionJson) => {
 		setPromoViewMore(pro);
 	}, 200);
-	//////////////////////////////////////////////
 
+	//////////////////////////////////////////////
 	const validationSchema = z.object({
 		code: z.string().min(1, "Code is required"),
 	});
@@ -99,16 +81,17 @@ export default function CartCoupon({ className, cart }: Props) {
 		code: "",
 	};
 	const methods = useGenericFormMethods({
-		defaultValues: {
-			code: "",
-		},
+		defaultValues: defaultValues,
 		validationSchema,
 	});
-	//////////////////////////////////////////////
 
+	//////////////////////////////////////////////
 	const handleSubmit = debounce(async (data: FormData) => {
 		try {
-			const result = await addCouponToCart({ code: data.code });
+			const result = await updateCartCoupon({
+				action: "add",
+				data: { code: data.code },
+			});
 		} catch (error) {
 			console.log("🚀 ~ handleSubmit ~ error:", error);
 		}
@@ -119,6 +102,29 @@ export default function CartCoupon({ className, cart }: Props) {
 		toggleModal(undefined);
 	};
 
+	const onRemoveCode = debounce(async (code: string, detail: PromotionJson) => {
+		try {
+			await updateCartCoupon({
+				action: "remove",
+				data: {
+					code: code,
+					promotion_detail: detail,
+				},
+			});
+		} catch (error) {
+			console.log("🚀 ~ onRemoveCode ~ error:", error);
+		}
+	}, 200);
+
+	//////////////////////////////////////////////
+	const promoCouponUsed = useMemo(() => {
+		return Helper.removeDuplicatesArrObject(
+			OrderInstance.getPromotionCouponUsed(),
+			"code"
+		);
+	}, [JSON.stringify(cart)]);
+
+	//////////////////////////////////////////////
 	return (
 		<>
 			<GenericForm
@@ -143,12 +149,39 @@ export default function CartCoupon({ className, cart }: Props) {
 				</Flex>
 			</GenericForm>
 
-			<Flex gap={4} wrap="wrap" className="mt-1">
-				{promotionCoupons.map((promoCoupon) => {
-					const status = getEventStatus(
-						promoCoupon.start_date,
-						promoCoupon.end_date
+			{/* render list code coupon đã sử dụng  */}
+			<List
+				className={cn(" gap-1", {
+					"my-2": promoCouponUsed.length > 0,
+				})}
+				classNameItem="inline-block w-fit "
+				dataSource={promoCouponUsed}
+				render={(couponUsed, index) => {
+					return (
+						<Tag key={index} variant="primary" className="py-1">
+							{couponUsed.code}{" "}
+							<CloseIcon
+								size="sm"
+								onClick={() =>
+									onRemoveCode(couponUsed.code, couponUsed.promotion_detail)
+								}
+							/>
+						</Tag>
 					);
+				}}></List>
+
+			{/* render list chương trình (hợp lệ) */}
+			<Flex
+				gap={4}
+				wrap="wrap"
+				className="mt-1 max-h-30 overflow-y-auto hide-scroll-bar">
+				{promotionCoupons.map((promoCoupon) => {
+					const { status, remainingDays } =
+						PromotionModel.getPromotionDateStatus(
+							promoCoupon.start_date,
+							promoCoupon.end_date,
+							timeserver ?? 0
+						);
 
 					return (
 						<Flex
@@ -156,9 +189,9 @@ export default function CartCoupon({ className, cart }: Props) {
 							key={promoCoupon.id}
 							gap={4}
 							className={cn(
-								"relative w-full h-10 p-2  rounded-md overflow-hidden bg-gray-100 border border-gray-300 ",
+								"relative w-full h-auto px-1 py-1 rounded-md overflow-hidden bg-gray-100 border border-gray-300 ",
 								{
-									"opacity-50": status.status !== Status.onhand,
+									"opacity-50": status !== "running",
 								}
 							)}>
 							{/* QR Code Placeholder */}
@@ -174,25 +207,25 @@ export default function CartCoupon({ className, cart }: Props) {
 								<Text
 									as="span"
 									size="sm"
+									variant="secondary"
 									title={promoCoupon.campaign_info.name}
-									className="text-green-600 font-bold line-clamp-1">
+									className="font-bold line-clamp-1">
 									{promoCoupon.campaign_info.name}
 								</Text>
-								<Text
-									as="span"
-									size="xxs"
-									className="text-red-500 font-bold whitespace-nowrap">
-									{status.label}
-								</Text>
+								<DateStatusResult
+									remainingDays={remainingDays}
+									status={status}
+								/>
 							</Flex>
 							{/* Days and Show Button */}
+							
 							<Flex
 								direction="col"
 								align="end"
 								gap={2}
 								className="flex-1 shrink-0">
 								<Tag
-									className="whitespace-nowrap "
+									className="whitespace-nowrap cursor-pointer "
 									onClick={() => toggleModal(promoCoupon)}>
 									<Text.small variant="none">Chi tiết</Text.small>
 								</Tag>
@@ -201,11 +234,12 @@ export default function CartCoupon({ className, cart }: Props) {
 					);
 				})}
 			</Flex>
-			{promoViewMore && (
-				<Popup
-					title={`Mã giảm giá - ${promoViewMore?.campaign_info?.name}`}
-					open={!!promoViewMore}
-					onOpenChange={() => toggleModal()}>
+			<Popup
+				title={`Mã giảm giá - ${promoViewMore?.campaign_info?.name}`}
+				open={!!promoViewMore}
+				onOpenChange={() => toggleModal()}
+				className="min-h-50 ">
+				{promoViewMore && (
 					<div className="bg-white rounded-lg w-full max-w-md">
 						<Text.small>{promoViewMore.campaign_info.description}</Text.small>
 						<Empty dataSource={promoViewMore?.codes ?? []}>
@@ -231,8 +265,8 @@ export default function CartCoupon({ className, cart }: Props) {
 							</ul>
 						</Empty>
 					</div>
-				</Popup>
-			)}
+				)}
+			</Popup>
 		</>
 	);
 }

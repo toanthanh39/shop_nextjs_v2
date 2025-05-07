@@ -1,6 +1,5 @@
 import { SettingConst } from "@/common/constants/setting";
 import { BannerHomeData } from "@/types/Home.type";
-import { detectTimeServer } from "@/utils/detectServer";
 import { checkActiveDate } from "@/utils/utils";
 import BannerSlider from "./BannerSlider";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
@@ -11,9 +10,9 @@ async function customFunction() {
 			SettingConst.home.banner_home
 		);
 
-		const timeServer = await detectTimeServer();
+		const { time_server } = await new SettingRepo().getTimeServer();
 		return res.value.filter((i) =>
-			checkActiveDate(timeServer, i?.from_time ?? 0, i?.to_time ?? 0)
+			checkActiveDate(time_server, i?.from_time ?? 0, i?.to_time ?? 0)
 		);
 	} catch (error) {
 		return [];

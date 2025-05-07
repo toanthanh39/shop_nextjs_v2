@@ -1,15 +1,13 @@
-import { Flex } from "@/components/ui";
 import Heading from "@/components/ui/Heading";
 import CheckoutForm from "@/features/checkout/form/CheckoutForm";
 import { Params } from "@/types/Dynamic.type";
 import CartRepo from "@/services/api/repositories/CartRepo";
 import { notFound } from "next/navigation";
-import CustomerRepo from "@/services/api/repositories/CustomerRepo";
-import SiteServerRepo from "@/services/api/repositories/SiteServerRepo";
+import ServerRepo from "@/services/api/repositories/ServerRepo";
 
 const getDetailOrder = async (token: string) => {
 	try {
-		const customerToken = await new SiteServerRepo().getCustomerTokenServer();
+		const customerToken = await ServerRepo.getCustomerTokenServer();
 		const cart = await new CartRepo({
 			accessMode: "PUBLIC",
 		}).getOne(token, {

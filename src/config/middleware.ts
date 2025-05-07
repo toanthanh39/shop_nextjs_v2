@@ -1,6 +1,7 @@
 import { SystemConst } from "@/common/constants/system";
+import ServerRepo from "@/services/api/repositories/ServerRepo";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
-import SiteServerRepo from "@/services/api/repositories/SiteServerRepo";
+import SiteServerRepo from "@/services/api/repositories/SiteRepo";
 import { SystemSetting } from "@/types/Shop.type";
 import Helper from "@/utils/helper";
 import { cookies } from "next/headers";
@@ -21,7 +22,7 @@ export const initSiteSetting = async (
 		const dataSetting = await new SettingRepo().getOne<SystemSetting>(key);
 		const customer_token =
 			_header.get("customer_token") ??
-			(await new SiteServerRepo().getCustomerTokenServer());
+			(await ServerRepo.getCustomerTokenServer());
 
 		(await _cookies).set("customer_token", customer_token, {
 			httpOnly: true,

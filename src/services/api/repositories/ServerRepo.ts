@@ -1,16 +1,19 @@
-"use server";
 import server from "@/lib/core/server";
 import { cookies, headers } from "next/headers";
 
-class SiteServerRepo {
-	private readonly URLs = {
+class ServerRepo {
+	static readonly URLs = {
 		CUSTOMER: {
 			PRIVATE: "/customers",
 			PUBLIC: "/customers/public",
 		},
+
+		SITE: {
+			PRIVATE: process.env.NEXT_PUBLIC_BASE_URL + "/api/site",
+		},
 	};
 
-	async getCustomerTokenServer() {
+	static async getCustomerTokenServer() {
 		const _cookies = await cookies();
 		const _headers = await headers();
 
@@ -31,5 +34,4 @@ class SiteServerRepo {
 		return res;
 	}
 }
-
-export default SiteServerRepo;
+export default ServerRepo;

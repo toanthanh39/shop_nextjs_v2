@@ -33,4 +33,8 @@ export const SettingConst = {
 	product: {
 		setting_id_store_web_shop: "setting_id_store_web_shop",
 	},
+
+	time: {
+		timesever: "timesever",
+	},
 } as const;

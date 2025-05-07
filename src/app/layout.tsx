@@ -4,7 +4,7 @@ import "./globals.css";
 import RootProvider from "@/lib/providers/RootProvider";
 import DevComponents from "@/features/dev/fixed/DevComponents";
 import { generateMetadataSite } from "@/meta";
-import { detectHeaderServer, detectLangForServer } from "@/utils/detectServer";
+import { detectLangForServer } from "@/utils/detectServer";
 import BaseApi from "@/lib/axios/BaseApi";
 import { SystemConst } from "@/common/constants/system";
 import { NextIntlClientProvider } from "next-intl";
@@ -38,7 +38,6 @@ const getSetingSite = async () => {
 
 	try {
 		const lang = await detectLangForServer();
-
 		result.lang = lang;
 
 		return result;
@@ -66,7 +65,6 @@ export default async function RootLayout({
 						{modal}
 					</RootProvider>
 				</NextIntlClientProvider>
-				{/* <NextIntlClientProvider locale={lang}> */}
 
 				<DevComponents />
 			</body>

@@ -7,7 +7,6 @@ import Heading from "@/components/ui/Heading";
 import LinkElement from "@/components/ui/Link";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
 import { HomeMenu } from "@/types/Header.type";
-import { detectTimeServer } from "@/utils/detectServer";
 import { checkActiveDate, cn } from "@/utils/utils";
 
 async function getDataServer() {
@@ -19,15 +18,15 @@ async function getDataServer() {
 }
 export default async function Menu() {
 	const { value: menus } = await getDataServer();
-	const timeServer = await detectTimeServer();
+	const { time_server } = await new SettingRepo().getTimeServer();
 	return (
 		<nav
-			className="overflow-x-auto md:overflow-x-visible container hide-scroll-bar py-2 lg:py-4 relative"
+			className="container py-2 lg:py-4 relative max-md:container-padding overflow-x-auto md:overflow-x-visible hide-scroll-bar"
 			aria-label="Main Navigation">
 			<ul className="flex gap-4 md:gap-0 flex-nowrap whitespace-nowrap md:whitespace-normal relative">
 				{menus.map((item, index) => {
 					const show = checkActiveDate(
-						timeServer,
+						time_server,
 						item.from_time ?? 0,
 						item.to_time ?? 0
 					);

@@ -3,12 +3,10 @@ import Heading from "@/components/ui/Heading";
 import ProductSlider from "./ProductSlider";
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";
-import { Suspense } from "react";
-import Flex from "@/components/ui/Flex";
 import { IsShowPromotionPrice, ProductFilter } from "@/types/Product.type";
 import { Button } from "@/components/ui";
 import ProductRepo from "@/services/api/repositories/ProductRepo";
-import { BaseAccessMode } from "@/types/Base.type";
+import SiteServerRepo from "@/services/api/repositories/SiteRepo";
 type Props = ComProps & {
 	title?: string;
 	link?: string;
@@ -21,11 +19,14 @@ type Props = ComProps & {
 
 async function getListProductServer(fillter: ProductFilter) {
 	try {
+		const { store_id } = await new SiteServerRepo().getSiteSeting();
 		const products = await new ProductRepo({
 			accessMode: "PUBLIC",
-		}).getAll(fillter);
+		}).getAll({ ...fillter, store_id: store_id });
 		return products.items;
 	} catch (error) {
+		console.log("🚀 ~ getListProductServer ~ error:", error);
+
 		return [];
 	}
 }
@@ -41,12 +42,11 @@ export default async function ProductCollection({
 		...params,
 		show_promotion_price: IsShowPromotionPrice.show,
 	});
-
 	return (
 		<section className={cn("relative w-full mb-2 ", className)}>
 			{title && link && (
 				<LinkElement href={link} className="mb-4">
-					<Heading className=" " level={1} variant="productCollection">
+					<Heading level={1} variant="productCollection">
 						{title}
 					</Heading>
 				</LinkElement>

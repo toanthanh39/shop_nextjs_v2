@@ -29,7 +29,7 @@ export default function CartItem({ item, className }: Props) {
 				data: {
 					id: item.id,
 					quantity: quantity,
-					product_id: item.product_id + 123,
+					product_id: item.product_id,
 				},
 			});
 		} catch (error) {
@@ -81,10 +81,7 @@ export default function CartItem({ item, className }: Props) {
 			key={item.id}
 			direction="row"
 			gap={16}
-			className={cn(
-				"relative py-4 not-first:border-t border-colors-gray-3",
-				className
-			)}>
+			className={cn("relative py-4 ", className)}>
 			{disabled && (
 				<Text variant="default" className="absolute -bottom-1 left-2 z-2">
 					Hết hàng

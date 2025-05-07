@@ -16,7 +16,7 @@ export default function BrandGrid({ className, dataSource }: Props) {
 							"border-r border-b border-r-colors-gray-2 border-b-colors-gray-2",
 							{
 								"border-t border-t-colors-gray-2": index < 4,
-								"border-l-colors-gray-2": index % 4,
+								"border-l border-l-colors-gray-2": index % 4 === 0,
 							}
 						)}
 						key={item.id}

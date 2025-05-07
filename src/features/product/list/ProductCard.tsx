@@ -49,13 +49,13 @@ export default function ProductCard({ product, onQuickView }: Props) {
 					<Flex gap={4} align="center">
 						<Rating rate={product.rate.rate} />
 
-						<Tag size="xs">{product.rate.count_rate} reviews</Tag>
+						{/* <Tag size="xs">{product.rate.count_rate} reviews</Tag> */}
 					</Flex>
 					<Flex align="center" gap={4}>
 						<Money variant="primary" value={product.price}></Money>
 						{product.compare_at_price > product.price && (
 							<>
-								<Text as="span" className="mx-1" variant="primary">
+								<Text as="span" variant="primary">
 									-
 								</Text>
 								<Money

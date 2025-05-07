@@ -151,6 +151,11 @@ export default {
 					/* IE và Edge */
 					"-ms-overflow-style": "none",
 				},
+
+				".container-padding": {
+					"padding-left": "12px",
+					"padding-right": "12px",
+				},
 			});
 		},
 	],

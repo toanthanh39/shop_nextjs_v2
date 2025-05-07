@@ -234,8 +234,9 @@ export type DiscountType = "amount" | "percent";
 
 export type OrderItemEdit = Pick<OrderItemJson, "product_id" | "id"> & {
 	is_use: IsUse;
+	item_quantity: number;
 	promotions?: OrderPromotion[];
-	item_quantity?: number;
+	order_id?: OrderId;
 };
 
 export type OrderAddEdit = {

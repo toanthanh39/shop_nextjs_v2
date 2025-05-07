@@ -1,4 +1,3 @@
-"use server";
 import { BaseCollectionJson, BaseRepoParams } from "@/types/Base.type";
 import BaseRepository from "./BaseRepository";
 import Helper from "@/utils/helper";
@@ -12,8 +11,6 @@ import {
 	CustomerQuickEditJson,
 	CustomerUsernameEditJson,
 } from "@/types/Customer.type";
-import server from "@/lib/core/server";
-import { cookies, headers } from "next/headers";
 
 class CustomerRepo
 	extends BaseRepository<CustomerJson>

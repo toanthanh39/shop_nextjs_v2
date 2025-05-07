@@ -4,7 +4,6 @@ import CustomImage from "@/components/ui/CustomImage";
 import Flex from "@/components/ui/Flex";
 import Input from "@/components/ui/Input";
 import LinkElement from "@/components/ui/Link";
-import Text from "@/components/ui/Text";
 import { ProductPrice } from "@/features/product/infor";
 import useProductList from "@/lib/hooks/cache/useProductList";
 import useSiteSetting from "@/lib/hooks/cache/useSiteSetting";

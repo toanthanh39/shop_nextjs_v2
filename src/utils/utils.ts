@@ -1,20 +1,24 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+/// Merge class names and remove duplicates
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
+// Check if the current server time is within the active date range
 export const initArray = <T>(current: number, defaultData: T) => {
 	return Array.from(new Array(current)).map((i) => defaultData);
 };
 
+//////////////////////////////////////////////////////////////////////////////
+// Check if the current server time is within the active date range
 export const checkActiveDate = (
 	server: number,
 	from: number,
 	to: number
 ): boolean => {
-	const serverTime = server > 0 ? server / 1000 : 0;
+	const serverTime = server ?? 0;
 
 	if (serverTime <= 0 || (from <= 0 && to <= 0)) {
 		return true;
@@ -32,6 +36,8 @@ type DebounceFunction<T extends (...args: any[]) => any> = (
 	...args: Parameters<T>
 ) => void;
 
+//////////////////////////////////////////////////////////////////////////////
+// Debounce function to limit the rate at which a function can fire
 export function debounce<T extends (...args: any[]) => any>(
 	func: T,
 	wait: number,
@@ -74,6 +80,8 @@ type RedirectProps = {
 	prefix?: string;
 };
 
+//////////////////////////////////////////////////////////////////////////////
+// Redirects to a specified path with an encoded message as a query parameter.
 export function encodedQueryParams({
 	query,
 	path,

@@ -6,6 +6,7 @@ import { ProductVariantTag } from "@/lib/hooks/cache/useProductVariantTag";
 import { ComDataSource } from "@/types/Component";
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
+import { cn } from "@/utils/utils";
 import React from "react";
 
 type Props = ComProps &
@@ -33,17 +34,22 @@ export default function ProductListTagVariant(props: Props) {
 						<Grid gap={8} cols={2} lg={3} xl={3} className="w-full gap-y-2">
 							{item.items.map((option) => {
 								const isSelected = variantActive.id === option.id;
+								const outStock = option.quantity <= 0;
 								const tagPromotions =
 									ProductModel.getPromotionTagLabels(option);
 
 								return (
 									<button
-										disabled={isSelected}
+										disabled={isSelected || outStock}
 										key={option.id}
 										onClick={() => onSelectVariant(option)}
-										className={`relative flex items-center px-3 py-1 h-10 whitespace-nowrap rounded-md border transition-colors ${
-											isSelected ? "border-2 border-colors-red-5" : ""
-										}`}>
+										className={cn(
+											`relative flex items-center px-3 py-1 h-10 whitespace-nowrap rounded-md border transition-colors`,
+											{
+												"border-2 border-colors-red-5": isSelected,
+												"line-through opacity-80 cursor-not-allowed": outStock,
+											}
+										)}>
 										<Text
 											as="span"
 											size="sm"

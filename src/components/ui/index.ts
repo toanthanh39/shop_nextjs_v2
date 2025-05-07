@@ -15,4 +15,6 @@ export { default as Tag } from "./Tag";
 export { default as Text } from "./Text";
 
 export { default as Checkbox } from "./Checkbox";
+export { default as List } from "./List";
+
 // export {default as LinkElement} from "./Link"
