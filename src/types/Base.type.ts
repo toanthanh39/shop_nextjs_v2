@@ -8,6 +8,11 @@ export enum BaseAccessMode {
 	POS = 5,
 }
 
+export enum Alow {
+	NOTALOW,
+	ALOW,
+}
+
 /////////////////////////////////////////////////////////
 export type BaseCollectionJson<ModelJson> = {
 	items: ModelJson[];

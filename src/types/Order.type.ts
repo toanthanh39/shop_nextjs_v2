@@ -215,6 +215,8 @@ export type OrderItemJson = {
 	product_json: ProductJson;
 	discount_percent: number;
 	item_total: number;
+	item_vat: number;
+	price_vat: number;
 };
 
 export type OrderPromotion = {
@@ -294,6 +296,14 @@ export type ActionOrderUpdate =
 	| {
 			action: "use";
 			data: Array<{ id: number; is_use: IsUse }>;
+	  }
+	| {
+			action: "add";
+			data: { product_json: ProductJson; item_quantity: number };
+	  }
+	| {
+			action: "remove";
+			data: Array<{ id: number }>;
 	  };
 
 export type ValidatePromotionProps =

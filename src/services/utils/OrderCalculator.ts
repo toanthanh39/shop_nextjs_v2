@@ -1,4 +1,5 @@
 import PromotionModel from "@/common/models/PromotionModel";
+import BaseApi from "@/lib/axios/BaseApi";
 import { IsUse } from "@/types/Global.type";
 import {
 	ActionOrderUpdate,
@@ -10,33 +11,11 @@ import {
 	ValidatePromotionProps,
 } from "@/types/Order.type";
 import { ProductJson } from "@/types/Product.type";
-import { PromotionDiscountType } from "@/types/Promotion.type";
+import { PromotionDiscountType, PromotionJson } from "@/types/Promotion.type";
 
 class OrderCalculator {
 	/////////////////////////////////////////////////////////
 	// validate
-
-	private validateListPromotionValid(props: ValidatePromotionProps) {
-		try {
-			const {
-				data: { order, promotions },
-				on,
-			} = props;
-
-			const totalPriceSellOrder = this.calculatorPriceSellItems(order);
-
-			for (let index = 0; index < promotions.length; index++) {
-				const element = promotions[index];
-				if (promotions.length > 1 && element.apply_with_other === false) {
-					throw new Error("error_promotion_must_not_aplly_with_other");
-				}
-
-				if (totalPriceSellOrder < element.req_subtotal) {
-					throw new Error("error_promotion_must_not_aplly_with_other");
-				}
-			}
-		} catch (error) {}
-	}
 
 	/////////////////////////////////////////////////////////
 	// get Infor
@@ -50,21 +29,84 @@ class OrderCalculator {
 		}
 	}
 
-	private calculatorPriceFinalItems(o: OrderJson) {
-		const items = o.details.data;
+	private getDefaultDataItem(product: ProductJson) {
+		const result: OrderItemJson = {
+			order_id: 0,
+			product_id: 0,
+			id: 0,
+			is_use: 0,
+			item_title: "",
+			item_name: "",
+			item_quantity: 0,
+			item_unit_price_original: 0,
+			item_unit_price: 0,
+			item_total: 0,
+			price_discount: 0,
+			discount_percent: 0,
+			price_final: 0,
+			price_unit_final: 0,
+			item_vat: 0,
+			price_vat: 0,
+			promotions: [],
+			product_json: product,
+			item_date_deleted: 0,
+		};
+
+		return result;
+	}
+
+	private getListPromotionValid(props: ValidatePromotionProps) {
 		try {
-			return items.reduce((curr: number, prev) => {
-				if (prev.is_use === IsUse.USE) {
-					curr += this.getPriceProduct(prev.product_json);
+			const {
+				data: { order, promotions },
+				on,
+			} = props;
+			const totalPriceSellOrder = this.calculatorPriceSellItems(order);
+			const result: PromotionJson[] = [];
+			for (let index = 0; index < promotions.length; index++) {
+				const element = promotions[index];
+				if (promotions.length > 1 && element.apply_with_other === false) {
+					throw new Error("error_promotion_must_not_aplly_with_other");
 				}
-				return curr;
-			}, 0);
+
+				if (totalPriceSellOrder < element.req_subtotal) {
+					throw new Error("error_promotion_must_not_aplly_with_other");
+				}
+
+				if (on === "item") {
+					const { product_json } = props.data;
+					const { req_collectionids } = element;
+
+					const collectionIdsInProduct = product_json.collections.map(
+						(col) => col.id
+					);
+
+					const hasCommonValues = req_collectionids
+						.split(",")
+						.some((id) => collectionIdsInProduct.includes(Number(id)));
+
+					if (!hasCommonValues) {
+						throw new Error("error_promotion_collection_mismatch");
+					}
+				}
+
+				// validate on body
+
+				if (on === "body") {
+				}
+
+				result.push(element);
+			}
+
+			return result;
+
+			// validate on item
 		} catch (error) {
-			throw new Error("calculator_pricefinal_failed");
+			throw error;
 		}
 	}
 
-	/////////////////////////////////////////////////////////
+	///////////////////////////////////////
 	// mapping
 	private mappingDetailOrderFromInput(
 		order_old: OrderJson,
@@ -73,9 +115,7 @@ class OrderCalculator {
 		const orderUpdate: OrderJson = { ...order_old };
 
 		try {
-			const {
-				details: { data: items },
-			} = orderUpdate;
+			let items = orderUpdate.details.data;
 
 			const findItemIndexById = (id: number) =>
 				items.findIndex((item) => item.id === id);
@@ -140,10 +180,22 @@ class OrderCalculator {
 					});
 					break;
 				}
+				case "add": {
+					const {
+						data: { product_json, item_quantity },
+					} = input;
+					if (item_quantity <= 0 || !product_json) {
+						throw new Error("invalid_quantity_or_product_details");
+					}
+					items.push(this.getDefaultDataItem(product_json));
+				}
+				case "remove":
+
 				default:
 					throw new Error("invalid_action_action_type_not_recognized");
 			}
 
+			orderUpdate.details.data = items;
 			return orderUpdate;
 		} catch (error) {
 			throw error;
@@ -152,6 +204,20 @@ class OrderCalculator {
 
 	/////////////////////////////////////////////////////////
 	// calculator
+	private calculatorPriceFinalItems(o: OrderJson) {
+		const items = o.details.data;
+		try {
+			return items.reduce((curr: number, prev) => {
+				if (prev.is_use === IsUse.USE) {
+					curr += prev.price_final;
+				}
+				return curr;
+			}, 0);
+		} catch (error) {
+			throw new Error("calculator_pricefinal_failed");
+		}
+	}
+
 	private calculatorPriceSellItems(o: OrderJson) {
 		const items = o.details.data;
 		try {
@@ -171,22 +237,23 @@ class OrderCalculator {
 		try {
 			const totalpriceSell = this.calculatorPriceSellItems(order);
 
-			const promoValid = order.promotions.filter((pro) =>
-				PromotionModel.getPromotionStatusValid(
-					pro.promotion_detail,
-					Date.now() / 1000
-				)
-			);
+			const promoValid = this.getListPromotionValid({
+				on: "body",
+				data: {
+					order: order,
+					promotions: order.promotions.map(
+						(orderPromo) => orderPromo.promotion_detail
+					),
+				},
+			});
 			return promoValid.reduce((curr, prev) => {
-				const { req_subtotal, discount_value_type, discount_value } =
-					prev.promotion_detail;
-				if (req_subtotal > 0 && req_subtotal <= totalpriceSell) {
-					const valueToMinus =
-						discount_value_type === "amount"
-							? discount_value
-							: totalpriceSell * (discount_value / 100);
-					curr -= valueToMinus;
-				}
+				const { req_subtotal, discount_value_type, discount_value } = prev;
+
+				const valueToMinus =
+					discount_value_type === "amount"
+						? discount_value
+						: totalpriceSell * (discount_value / 100);
+				curr -= valueToMinus;
 
 				return curr;
 			}, 0);
@@ -195,19 +262,45 @@ class OrderCalculator {
 		}
 	}
 
-	private calulatorItemInfor(item: OrderItemJson) {
+	private calulatorItemInfor(item: OrderItemJson, order: OrderJson) {
 		try {
+			const { price } = item.product_json;
 			const result: OrderItemJson = { ...item };
 			result.item_name = item.product_json.full_name;
 			result.item_title = item.product_json.full_name;
 			result.product_id = item.product_json.id;
 			//
 
-			result.item_total = item.product_json.price * item.item_quantity;
+			result.item_total = price * item.item_quantity;
+
+			result.item_unit_price = price * item.item_quantity;
+
+			result.price_discount = this.getListPromotionValid({
+				on: "item",
+				data: {
+					order: order,
+					product_json: item.product_json,
+					promotions: item.promotions.map((i) => i.promotion_detail),
+				},
+			}).reduce((curr, prev) => {
+				if (prev.discount_value_type === "amount") {
+					curr -= prev.discount_value;
+				} else if (prev.discount_value_type === "percent") {
+					curr -= price * prev.discount_value;
+				}
+
+				return curr;
+			}, 0);
+
+			result.price_unit_final = result.item_unit_price - result.price_discount;
+			result.price_final = result.price_unit_final;
+			result.discount_percent = Math.round(
+				(result.price_discount / result.item_total) * 100
+			);
 
 			return result;
 		} catch (error) {
-			throw new Error("error_calulatorPriceItemInfor_failed");
+			throw error;
 		}
 	}
 
@@ -215,10 +308,14 @@ class OrderCalculator {
 	private recalculatorOrderFromJson(order: OrderJson) {
 		try {
 			const result: OrderJson = { ...order };
+			// update tiền từng item trong list
+			result.details.data = order.details.data.map((item) =>
+				this.calulatorItemInfor(item, order)
+			);
 
-			const totalPriceFinalItems = this.calculatorPriceFinalItems(order);
-			const totalPriceSellItems = this.calculatorPriceSellItems(order);
-			const totalPayment = this.calculatorPriceFinalOrder(order);
+			const totalPriceFinalItems = this.calculatorPriceFinalItems(result);
+			const totalPriceSellItems = this.calculatorPriceSellItems(result);
+			const totalPayment = this.calculatorPriceFinalOrder(result);
 
 			result.price_final = totalPayment;
 			result.total_payment = totalPayment;

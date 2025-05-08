@@ -1,4 +1,4 @@
-import { BaseCollectionJson } from "./Base.type";
+import { Alow, BaseCollectionJson } from "./Base.type";
 import { Filter } from "./Filter.type";
 import { DataLanguageCacheJson } from "./Language.type";
 import { PromotionJson } from "./Promotion.type";
@@ -99,13 +99,25 @@ export type ProductJson = {
 	limit_sale: number;
 	display_from: number;
 	display_to: number;
-	collections: any[];
+	collections: {
+		display_order: number;
+		handle: string;
+		id: number;
+		title: string;
+	}[];
 
 	actuals: ProductActualQuantity | null;
 
 	quantities: Quantitie[];
 
 	child_promotions: ProductChildPromotion[];
+
+	sale_channel: any[];
+	parent_handle: string;
+	max_quantity_show: number;
+	vat: number;
+	show_pos: ProductShowWeb;
+	allow_promotion: Alow;
 };
 
 export type ProductFilter = Filter & {

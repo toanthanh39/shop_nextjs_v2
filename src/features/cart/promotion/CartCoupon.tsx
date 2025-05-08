@@ -59,6 +59,7 @@ export default function CartCoupon({ className, cart }: Props) {
 	const { updateCartCoupon, isUpdating } = useCartGlobal({});
 
 	const promotionCoupons = PromotionModel.getPromotionCoupon(promotions ?? []);
+	console.log("🚀 ~ CartCoupon ~ promotions:", promotions);
 
 	//////////////////////////////////////////////
 	const [items, setItems] = useState<string[]>([]);
@@ -218,7 +219,7 @@ export default function CartCoupon({ className, cart }: Props) {
 								/>
 							</Flex>
 							{/* Days and Show Button */}
-							
+
 							<Flex
 								direction="col"
 								align="end"
