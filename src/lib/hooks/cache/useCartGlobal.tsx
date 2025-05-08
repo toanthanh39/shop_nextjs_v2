@@ -21,6 +21,7 @@ import {
 } from "@/types/Promotion.type";
 import useCartStore from "@/lib/zustand/useCartStore";
 import { useMemo } from "react";
+import OrderCalculator from "@/services/utils/OrderCalculator";
 
 type Props = HookCacheProps & {};
 
@@ -174,7 +175,7 @@ function useCartGlobal({ enabled = true }: Props) {
 					product_id
 				);
 				const cartGlobal = cart ?? (await createMutation.mutateAsync());
-				
+
 				return CartRepoInstance.update({
 					action: ORDER_ACTION.ADD,
 					cart_id: cartGlobal.id,
@@ -213,7 +214,7 @@ function useCartGlobal({ enabled = true }: Props) {
 					throw new Error(cartError.error_cart_not_exited);
 				}
 
-				const cartGlobal = cart;
+				let cartGlobal = { ...cart };
 
 				let details: OrderItemEdit[] = [];
 
@@ -228,6 +229,17 @@ function useCartGlobal({ enabled = true }: Props) {
 								cartGlobal.details.data.find((i) => i.id === id)?.is_use ??
 								IsUse.USE,
 						});
+
+						cartGlobal = new OrderCalculator().recalculateOrderOnUpdate(
+							cartGlobal,
+							{
+								action: "quantity",
+								data: {
+									id: id,
+									item_quantity: quantity,
+								},
+							}
+						);
 						break;
 					}
 
@@ -260,12 +272,14 @@ function useCartGlobal({ enabled = true }: Props) {
 						throw new Error("error_action_invalid");
 				}
 
-				return await CartRepoInstance.update({
-					action: ORDER_ACTION.UPDATE,
-					cart_id: cartGlobal.id,
-					customer_token: site.customer_token,
-					details,
-				});
+				// CartRepoInstance.update({
+				// 	action: ORDER_ACTION.UPDATE,
+				// 	cart_id: cartGlobal.id,
+				// 	customer_token: site.customer_token,
+				// 	details,
+				// });
+
+				return cartGlobal;
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			} finally {
