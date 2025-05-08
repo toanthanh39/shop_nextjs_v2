@@ -201,6 +201,7 @@ export type OrderItemJson = {
 	product_id: number;
 	id: number;
 	is_use: IsUse;
+	item_name: string;
 	item_title: string;
 	item_quantity: number;
 	item_unit_price_original: number;
@@ -274,3 +275,40 @@ export type OrderCreate = PaymentBillingJson &
 ////////////////////////////////////
 
 export type OrderListJson = BaseCollectionJson<OrderJson>;
+
+////////////////////////////////////
+
+type DefaultDataUpdateProps = Pick<OrderItemEdit, "id"> & {
+	product_json: ProductJson;
+};
+
+export type ActionOrderUpdate =
+	| {
+			action: "quantity";
+			data: DefaultDataUpdateProps & Pick<OrderItemJson, "item_quantity">;
+	  }
+	| {
+			action: "variant";
+			data: DefaultDataUpdateProps & { produt_variant_json: ProductJson };
+	  }
+	| {
+			action: "use";
+			data: Array<{ id: number; is_use: IsUse }>;
+	  };
+
+export type ValidatePromotionProps =
+	| {
+			on: "item";
+			data: {
+				promotions: PromotionJson[];
+				order: OrderJson;
+				product_json: ProductJson;
+			};
+	  }
+	| {
+			on: "body";
+			data: {
+				promotions: PromotionJson[];
+				order: OrderJson;
+			};
+	  };
