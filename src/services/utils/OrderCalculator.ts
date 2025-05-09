@@ -180,6 +180,7 @@ class OrderCalculator {
 			if (item.is_use !== IsUse.USE) {
 				return result;
 			}
+			item.id = item.id;
 			result.item_name = item.product_json.full_name;
 			result.item_title = item.product_json.full_name;
 			result.product_id = item.product_json.id;
@@ -328,7 +329,10 @@ class OrderCalculator {
 						if (item_quantity <= 0 || !product_json) {
 							throw new Error("invalid_quantity_or_product_details");
 						}
-						items.push(this.getDefaultDataItem(product_json));
+						items.push({
+							...this.getDefaultDataItem(product_json),
+							item_quantity: item_quantity,
+						});
 					}
 					break;
 				case "remove":

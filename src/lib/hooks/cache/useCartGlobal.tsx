@@ -193,13 +193,19 @@ function useCartGlobal({ enabled = true }: Props) {
 					],
 				});
 
-				return OrderCalculatorInstance.recalculateOrderOnUpdate(cartGlobal, {
-					action: "add",
-					data: {
-						item_quantity: item_quantity,
-						product_json: product_json,
-					},
-				});
+				const resultTest = OrderCalculatorInstance.recalculateOrderOnUpdate(
+					cartGlobal,
+					{
+						action: "add",
+						data: {
+							item_quantity: item_quantity,
+							product_json: product_json,
+						},
+					}
+				);
+				console.log("🚀 ~ useCartGlobal ~ resultTest:", resultTest);
+
+				return result;
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			} finally {
