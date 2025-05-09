@@ -88,7 +88,6 @@ const renderSection = (
 export default async function HomeSections() {
 	const data = await getDataServer();
 	const { time_server } = await new SettingRepo().getTimeServer();
-	console.log("🚀 ~ HomeSections ~ time_server:", time_server);
 
 	const dataSections = data?.value;
 

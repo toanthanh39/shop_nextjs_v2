@@ -43,10 +43,6 @@ function usePromotion({ staleTime, enabled = true }: Props) {
 					const results = await Promise.allSettled(getCouponPromises);
 					enhancedPromotions = promotionsValid.map((promotion, index) => {
 						const couponResult = results[index];
-						console.log(
-							"🚀 ~ enhancedPromotions=promotionsValid.map ~ couponResult:",
-							couponResult
-						);
 
 						return {
 							...promotion,

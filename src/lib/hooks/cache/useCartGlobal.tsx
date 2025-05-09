@@ -89,6 +89,7 @@ function useCartGlobal({ enabled = true }: Props) {
 	const queryClient = useQueryClient();
 
 	const CartRepoInstance = new CartRepo({ accessMode: "PUBLIC" });
+	const OrderCalculatorInstance = new OrderCalculator();
 
 	const {
 		data: cart,
@@ -157,7 +158,8 @@ function useCartGlobal({ enabled = true }: Props) {
 			product_id,
 			item_quantity,
 			promotions = [],
-		}: Pick<OrderItemJson, "product_id" | "item_quantity"> & {
+			product_json,
+		}: Pick<OrderItemJson, "product_id" | "item_quantity" | "product_json"> & {
 			promotions?: PromotionJson[];
 		}) => {
 			try {
@@ -176,7 +178,7 @@ function useCartGlobal({ enabled = true }: Props) {
 				);
 				const cartGlobal = cart ?? (await createMutation.mutateAsync());
 
-				return CartRepoInstance.update({
+				CartRepoInstance.update({
 					action: ORDER_ACTION.ADD,
 					cart_id: cartGlobal.id,
 					customer_token: site.customer_token,
@@ -189,6 +191,14 @@ function useCartGlobal({ enabled = true }: Props) {
 							id: 0,
 						},
 					],
+				});
+
+				return OrderCalculatorInstance.recalculateOrderOnUpdate(cartGlobal, {
+					action: "add",
+					data: {
+						item_quantity: item_quantity,
+						product_json: product_json,
+					},
 				});
 			} catch (error) {
 				throw BaseApi.handleError(error);
@@ -272,12 +282,12 @@ function useCartGlobal({ enabled = true }: Props) {
 						throw new Error("error_action_invalid");
 				}
 
-				// CartRepoInstance.update({
-				// 	action: ORDER_ACTION.UPDATE,
-				// 	cart_id: cartGlobal.id,
-				// 	customer_token: site.customer_token,
-				// 	details,
-				// });
+				const response = CartRepoInstance.update({
+					action: ORDER_ACTION.UPDATE,
+					cart_id: cartGlobal.id,
+					customer_token: site.customer_token,
+					details,
+				});
 
 				return cartGlobal;
 			} catch (error) {

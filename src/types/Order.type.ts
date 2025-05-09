@@ -287,7 +287,7 @@ type DefaultDataUpdateProps = Pick<OrderItemEdit, "id"> & {
 export type ActionOrderUpdate =
 	| {
 			action: "quantity";
-			data: DefaultDataUpdateProps & Pick<OrderItemJson, "item_quantity">;
+			data: Omit<DefaultDataUpdateProps,"product_json"> & Pick<OrderItemJson, "item_quantity">;
 	  }
 	| {
 			action: "variant";

@@ -30,7 +30,11 @@ export default function AddToCart({
 	const add = async () => {
 		try {
 			await addToCart(
-				{ product_id: product.id, item_quantity: quantity },
+				{
+					product_id: product.id,
+					item_quantity: quantity,
+					product_json: product,
+				},
 				{
 					onSuccess: () => {
 						setSuccess(true);

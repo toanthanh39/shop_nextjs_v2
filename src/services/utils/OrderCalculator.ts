@@ -34,7 +34,7 @@ class OrderCalculator {
 			order_id: 0,
 			product_id: 0,
 			id: 0,
-			is_use: 0,
+			is_use: IsUse.USE,
 			item_title: "",
 			item_name: "",
 			item_quantity: 0,
@@ -95,12 +95,153 @@ class OrderCalculator {
 				if (on === "body") {
 				}
 
-				result.push(element);
+				if (element.is_use === IsUse.USE) {
+					result.push(element);
+				}
 			}
 
 			return result;
 
 			// validate on item
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	/////////////////////////////////////////////////////////
+	// calculator
+	private calculatorPriceFinalItems(o: OrderJson) {
+		const order = { ...o };
+		const items = order.details.data;
+		try {
+			return items.reduce((curr: number, prev) => {
+				if (prev.is_use === IsUse.USE) {
+					curr += prev.price_final;
+				}
+				return curr;
+			}, 0);
+		} catch (error) {
+			throw new Error("calculator_pricefinal_failed");
+		}
+	}
+
+	private calculatorPriceSellItems(o: OrderJson) {
+		const order = { ...o };
+		const items = order.details.data;
+		try {
+			return items.reduce((curr: number, prev) => {
+				if (prev.is_use === IsUse.USE) {
+					curr += prev.product_json.price * prev.item_quantity;
+				}
+				return curr;
+			}, 0);
+		} catch (error) {
+			throw new Error("calculator_pricefinal_failed");
+		}
+	}
+
+	private calculatorPriceFinalOrder(o: OrderJson) {
+		const order = { ...o };
+		// const promotionBodys  = PromotionModel.get order.promotions
+
+		try {
+			const totalpriceSell = this.calculatorPriceSellItems(order);
+
+			const promoValid = this.getListPromotionValid({
+				on: "body",
+				data: {
+					order: order,
+					promotions: order.promotions.map(
+						(orderPromo) => orderPromo.promotion_detail
+					),
+				},
+			});
+			return promoValid.reduce((curr, prev) => {
+				const { req_subtotal, discount_value_type, discount_value } = prev;
+
+				const valueToMinus =
+					discount_value_type === "amount"
+						? discount_value
+						: totalpriceSell * (discount_value / 100);
+				curr -= valueToMinus;
+
+				return curr;
+			}, totalpriceSell);
+		} catch (error) {
+			throw new Error("calculatorPriceFinalOrder_failed");
+		}
+	}
+
+	private calulatorItemInfor(item: OrderItemJson, order: OrderJson) {
+		try {
+			const { price } = item.product_json;
+			const result: OrderItemJson = { ...item };
+
+			if (item.is_use !== IsUse.USE) {
+				return result;
+			}
+			result.item_name = item.product_json.full_name;
+			result.item_title = item.product_json.full_name;
+			result.product_id = item.product_json.id;
+			//
+
+			result.item_total = price * item.item_quantity;
+
+			result.item_unit_price = price * item.item_quantity;
+
+			result.price_discount = this.getListPromotionValid({
+				on: "item",
+				data: {
+					order: order,
+					product_json: item.product_json,
+					promotions: item.promotions.map((i) => i.promotion_detail),
+				},
+			}).reduce((curr, prev) => {
+				if (prev.discount_value_type === "amount") {
+					curr -= prev.discount_value;
+				} else if (prev.discount_value_type === "percent") {
+					curr -= price * prev.discount_value;
+				}
+
+				return curr;
+			}, 0);
+
+			result.price_unit_final = result.item_unit_price - result.price_discount;
+			result.price_final = result.price_unit_final;
+			result.discount_percent = Math.round(
+				(result.price_discount / result.item_total) * 100
+			);
+
+			return result;
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	private recalculatorOrderFromJson(order: OrderJson) {
+		try {
+			const result: OrderJson = { ...order };
+			// update tiền từng item trong list
+
+			result.details.data = order.details.data.map((item) =>
+				this.calulatorItemInfor(item, order)
+			);
+
+			const totalPriceFinalItems = this.calculatorPriceFinalItems(result);
+			const totalPriceSellItems = this.calculatorPriceSellItems(result);
+			const totalPayment = this.calculatorPriceFinalOrder(result);
+
+			result.price_final = totalPayment;
+			result.total_payment = totalPayment;
+			result.price_sell = totalPriceSellItems;
+			result.item_total = totalPriceSellItems;
+			result.item_discount = Math.max(
+				0,
+				totalPriceFinalItems - result.price_sell
+			);
+			result.debt = result.price_final;
+
+			return result;
 		} catch (error) {
 			throw error;
 		}
@@ -122,9 +263,9 @@ class OrderCalculator {
 
 			switch (input.action) {
 				case "quantity": {
-					const { id, item_quantity, product_json } = input.data;
+					const { id, item_quantity } = input.data;
 
-					if (item_quantity <= 0 || !product_json || !id) {
+					if (item_quantity <= 0 || !id) {
 						throw new Error("invalid_quantity_or_product_details");
 					}
 
@@ -135,7 +276,6 @@ class OrderCalculator {
 					}
 
 					items[itemIndex].item_quantity = item_quantity;
-					items[itemIndex].product_json = product_json;
 
 					break;
 				}
@@ -180,15 +320,17 @@ class OrderCalculator {
 					});
 					break;
 				}
-				case "add": {
-					const {
-						data: { product_json, item_quantity },
-					} = input;
-					if (item_quantity <= 0 || !product_json) {
-						throw new Error("invalid_quantity_or_product_details");
+				case "add":
+					{
+						const {
+							data: { product_json, item_quantity },
+						} = input;
+						if (item_quantity <= 0 || !product_json) {
+							throw new Error("invalid_quantity_or_product_details");
+						}
+						items.push(this.getDefaultDataItem(product_json));
 					}
-					items.push(this.getDefaultDataItem(product_json));
-				}
+					break;
 				case "remove":
 
 				default:
@@ -202,178 +344,29 @@ class OrderCalculator {
 		}
 	}
 
-	/////////////////////////////////////////////////////////
-	// calculator
-	private calculatorPriceFinalItems(o: OrderJson) {
-		const items = o.details.data;
-		try {
-			return items.reduce((curr: number, prev) => {
-				if (prev.is_use === IsUse.USE) {
-					curr += prev.price_final;
-				}
-				return curr;
-			}, 0);
-		} catch (error) {
-			throw new Error("calculator_pricefinal_failed");
-		}
-	}
-
-	private calculatorPriceSellItems(o: OrderJson) {
-		const items = o.details.data;
-		try {
-			return items.reduce((curr: number, prev) => {
-				if (prev.is_use === IsUse.USE) {
-					curr += prev.product_json.price;
-				}
-				return curr;
-			}, 0);
-		} catch (error) {
-			throw new Error("calculator_pricefinal_failed");
-		}
-	}
-
-	private calculatorPriceFinalOrder(order: OrderJson) {
-		// const promotionBodys  = PromotionModel.get order.promotions
-		try {
-			const totalpriceSell = this.calculatorPriceSellItems(order);
-
-			const promoValid = this.getListPromotionValid({
-				on: "body",
-				data: {
-					order: order,
-					promotions: order.promotions.map(
-						(orderPromo) => orderPromo.promotion_detail
-					),
-				},
-			});
-			return promoValid.reduce((curr, prev) => {
-				const { req_subtotal, discount_value_type, discount_value } = prev;
-
-				const valueToMinus =
-					discount_value_type === "amount"
-						? discount_value
-						: totalpriceSell * (discount_value / 100);
-				curr -= valueToMinus;
-
-				return curr;
-			}, 0);
-		} catch (error) {
-			throw new Error("calculatorPriceFinalOrder_failed");
-		}
-	}
-
-	private calulatorItemInfor(item: OrderItemJson, order: OrderJson) {
-		try {
-			const { price } = item.product_json;
-			const result: OrderItemJson = { ...item };
-			result.item_name = item.product_json.full_name;
-			result.item_title = item.product_json.full_name;
-			result.product_id = item.product_json.id;
-			//
-
-			result.item_total = price * item.item_quantity;
-
-			result.item_unit_price = price * item.item_quantity;
-
-			result.price_discount = this.getListPromotionValid({
-				on: "item",
-				data: {
-					order: order,
-					product_json: item.product_json,
-					promotions: item.promotions.map((i) => i.promotion_detail),
-				},
-			}).reduce((curr, prev) => {
-				if (prev.discount_value_type === "amount") {
-					curr -= prev.discount_value;
-				} else if (prev.discount_value_type === "percent") {
-					curr -= price * prev.discount_value;
-				}
-
-				return curr;
-			}, 0);
-
-			result.price_unit_final = result.item_unit_price - result.price_discount;
-			result.price_final = result.price_unit_final;
-			result.discount_percent = Math.round(
-				(result.price_discount / result.item_total) * 100
-			);
-
-			return result;
-		} catch (error) {
-			throw error;
-		}
-	}
-
-	/////////////////////////////////////////////////////////
-	private recalculatorOrderFromJson(order: OrderJson) {
-		try {
-			const result: OrderJson = { ...order };
-			// update tiền từng item trong list
-			result.details.data = order.details.data.map((item) =>
-				this.calulatorItemInfor(item, order)
-			);
-
-			const totalPriceFinalItems = this.calculatorPriceFinalItems(result);
-			const totalPriceSellItems = this.calculatorPriceSellItems(result);
-			const totalPayment = this.calculatorPriceFinalOrder(result);
-
-			result.price_final = totalPayment;
-			result.total_payment = totalPayment;
-			result.price_sell = totalPriceSellItems;
-			result.item_total = totalPriceSellItems;
-			result.item_discount = Math.max(
-				0,
-				totalPriceFinalItems - result.price_sell
-			);
-			result.debt = result.price_final;
-
-			return result;
-		} catch (error) {
-			throw error;
-		}
-	}
-
 	// Method to recalculate the cart JSON when an item is updated in the cart
 	recalculateOrderOnUpdate(order_old: OrderJson, data: ActionOrderUpdate) {
+		console.log(
+			"🚀 ~ OrderCalculator ~ recalculateOrderOnUpdate ~ data:",
+			data
+		);
 		try {
 			// Validate input data
 
 			// Create a deep copy of the order to avoid mutating the original object
 			const orderToUpdate = this.mappingDetailOrderFromInput(order_old, data);
-
-			return this.recalculatorOrderFromJson(orderToUpdate);
+			const result = this.recalculatorOrderFromJson(orderToUpdate);
+			console.log(
+				"🚀 ~ OrderCalculator ~ recalculateOrderOnUpdate ~ result:",
+				result
+			);
+			return result;
 		} catch (error) {
 			throw error;
 		}
 	}
 
 	// Method to calculate the cart JSON when a new product is added
-	calculateCartOnAdd(
-		cart: any[],
-		newItem: { id: string; name: string; price: number; quantity: number }
-	): any[] {
-		const existingItem = cart.find((item) => item.id === newItem.id);
-		if (existingItem) {
-			return cart.map((item) => {
-				if (item.id === newItem.id) {
-					return {
-						...item,
-						quantity: item.quantity + newItem.quantity,
-						totalPrice: item.price * (item.quantity + newItem.quantity),
-					};
-				}
-				return item;
-			});
-		} else {
-			return [
-				...cart,
-				{
-					...newItem,
-					totalPrice: newItem.price * newItem.quantity,
-				},
-			];
-		}
-	}
 }
 
 export default OrderCalculator;
