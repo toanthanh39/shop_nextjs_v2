@@ -8,12 +8,13 @@ import { useRouter } from "next/navigation";
 export default function Page() {
 	const router = useRouter();
 	const { cart, isLoading } = useCartGlobal({});
+	console.log("🚀 ~ Page ~ cart:", cart);
 
 	if (isLoading) {
 		return <LoadingIcon />;
 	}
 
-	if (!cart || cart.details.total <= 0) {
+	if (!cart || cart.details.data.length <= 0) {
 		return (
 			<Empty
 				className="text-center justify-center items-center"

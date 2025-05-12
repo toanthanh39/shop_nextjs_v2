@@ -204,8 +204,10 @@ function useCartGlobal({ enabled = true }: Props) {
 					}
 				);
 				console.log("🚀 ~ useCartGlobal ~ resultTest:", resultTest);
-
-				return result;
+				queryClient.setQueryData([CACHE_CART_GLOBAL_LOADING], false, {
+					updatedAt: Date.now(),
+				});
+				return resultTest;
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			} finally {
@@ -328,11 +330,15 @@ function useCartGlobal({ enabled = true }: Props) {
 
 				// return await removeCartItem(cart.id, site.customer_token, itemRemoves);
 
-				return await CartRepoInstance.update({
+				CartRepoInstance.update({
 					action: ORDER_ACTION.DELETE,
 					cart_id: cart.id,
 					customer_token: site.customer_token,
 					details: itemRemoves,
+				});
+				return OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
+					action: "remove",
+					data: { ids: ids },
 				});
 			} catch (error) {
 				console.error("Error in removeMutation:", error);
@@ -449,6 +455,9 @@ function useCartGlobal({ enabled = true }: Props) {
 						isUse = IsUse.NOT_USE;
 						break;
 
+					case "aplly ":
+						isUse = IsUse.USE;
+
 					default:
 						break;
 				}
@@ -463,19 +472,22 @@ function useCartGlobal({ enabled = true }: Props) {
 					throw new Error(cartError.error_add_promotion_cart);
 				}
 
-				return await CartRepoInstance.update({
+				CartRepoInstance.update({
 					action: ORDER_ACTION.PROMOTION,
 					cart_id: cart.id,
 					customer_token: site.customer_token,
 					promotions: cartPromotions,
 				});
+				const result = OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
+					action: "promotion",
+					data: { promotions: cartPromotions },
+				});
+				return result;
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			}
 		},
 		onSuccess: (updatedCart) => {
-			console.log("🚀 ~ useCartGlobal ~ updatedCart:", updatedCart);
-
 			queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], updatedCart);
 		},
 		retry: 2,

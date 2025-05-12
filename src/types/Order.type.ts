@@ -287,7 +287,8 @@ type DefaultDataUpdateProps = Pick<OrderItemEdit, "id"> & {
 export type ActionOrderUpdate =
 	| {
 			action: "quantity";
-			data: Omit<DefaultDataUpdateProps,"product_json"> & Pick<OrderItemJson, "item_quantity">;
+			data: Omit<DefaultDataUpdateProps, "product_json"> &
+				Pick<OrderItemJson, "item_quantity">;
 	  }
 	| {
 			action: "variant";
@@ -303,14 +304,20 @@ export type ActionOrderUpdate =
 	  }
 	| {
 			action: "remove";
-			data: Array<{ id: number }>;
+			data: { ids: number[] };
+	  }
+	| {
+			action: "promotion";
+			data: {
+				promotions: OrderPromotion[];
+			};
 	  };
 
 export type ValidatePromotionProps =
 	| {
 			on: "item";
 			data: {
-				promotions: PromotionJson[];
+				promotions: OrderPromotion[];
 				order: OrderJson;
 				product_json: ProductJson;
 			};
@@ -318,7 +325,7 @@ export type ValidatePromotionProps =
 	| {
 			on: "body";
 			data: {
-				promotions: PromotionJson[];
+				promotions: OrderPromotion[];
 				order: OrderJson;
 			};
 	  };

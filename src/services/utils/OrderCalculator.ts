@@ -12,6 +12,7 @@ import {
 } from "@/types/Order.type";
 import { ProductJson } from "@/types/Product.type";
 import { PromotionDiscountType, PromotionJson } from "@/types/Promotion.type";
+import Helper from "@/utils/helper";
 
 class OrderCalculator {
 	/////////////////////////////////////////////////////////
@@ -55,7 +56,7 @@ class OrderCalculator {
 		return result;
 	}
 
-	private getListPromotionValid(props: ValidatePromotionProps) {
+	private getListOrderPromotionValid(props: ValidatePromotionProps) {
 		try {
 			const {
 				data: { order, promotions },
@@ -64,7 +65,13 @@ class OrderCalculator {
 			const totalPriceSellOrder = this.calculatorPriceSellItems(order);
 			const result: PromotionJson[] = [];
 			for (let index = 0; index < promotions.length; index++) {
-				const element = promotions[index];
+				const element = promotions[index].promotion_detail;
+				const orderPromoItem = promotions[index];
+
+				if (orderPromoItem.is_use !== IsUse.USE) {
+					continue;
+				}
+
 				if (promotions.length > 1 && element.apply_with_other === false) {
 					throw new Error("error_promotion_must_not_aplly_with_other");
 				}
@@ -73,7 +80,10 @@ class OrderCalculator {
 					throw new Error("error_promotion_must_not_aplly_with_other");
 				}
 
-				if (on === "item") {
+				if (
+					on === "item" &&
+					element.discount_type === PromotionDiscountType.PRODUCT
+				) {
 					const { product_json } = props.data;
 					const { req_collectionids } = element;
 
@@ -88,16 +98,12 @@ class OrderCalculator {
 					if (!hasCommonValues) {
 						throw new Error("error_promotion_collection_mismatch");
 					}
+				} else {
 				}
 
 				// validate on body
 
-				if (on === "body") {
-				}
-
-				if (element.is_use === IsUse.USE) {
-					result.push(element);
-				}
+				result.push(element);
 			}
 
 			return result;
@@ -140,35 +146,36 @@ class OrderCalculator {
 		}
 	}
 
-	private calculatorPriceFinalOrder(o: OrderJson) {
+	private calculatorOrderDiscount(o: OrderJson) {
 		const order = { ...o };
 		// const promotionBodys  = PromotionModel.get order.promotions
 
-		try {
-			const totalpriceSell = this.calculatorPriceSellItems(order);
+		const totalPriceSell = this.calculatorPriceSellItems(order);
 
-			const promoValid = this.getListPromotionValid({
+		try {
+			const promoValid = this.getListOrderPromotionValid({
 				on: "body",
 				data: {
 					order: order,
-					promotions: order.promotions.map(
-						(orderPromo) => orderPromo.promotion_detail
-					),
+					promotions: order.promotions,
 				},
 			});
+
 			return promoValid.reduce((curr, prev) => {
 				const { req_subtotal, discount_value_type, discount_value } = prev;
-
-				const valueToMinus =
-					discount_value_type === "amount"
-						? discount_value
-						: totalpriceSell * (discount_value / 100);
-				curr -= valueToMinus;
-
-				return curr;
-			}, totalpriceSell);
+				if (discount_value_type === "amount") {
+					curr += discount_value;
+				} else if (discount_value_type === "percent") {
+					curr += totalPriceSell * Math.min(100, discount_value / 100);
+				}
+				if (prev.max_applied > 0) {
+					return Math.min(prev.max_applied, curr);
+				} else {
+					return curr;
+				}
+			}, 0);
 		} catch (error) {
-			throw new Error("calculatorPriceFinalOrder_failed");
+			throw error;
 		}
 	}
 
@@ -190,12 +197,12 @@ class OrderCalculator {
 
 			result.item_unit_price = price * item.item_quantity;
 
-			result.price_discount = this.getListPromotionValid({
+			result.price_discount = this.getListOrderPromotionValid({
 				on: "item",
 				data: {
 					order: order,
 					product_json: item.product_json,
-					promotions: item.promotions.map((i) => i.promotion_detail),
+					promotions: item.promotions,
 				},
 			}).reduce((curr, prev) => {
 				if (prev.discount_value_type === "amount") {
@@ -230,8 +237,11 @@ class OrderCalculator {
 
 			const totalPriceFinalItems = this.calculatorPriceFinalItems(result);
 			const totalPriceSellItems = this.calculatorPriceSellItems(result);
-			const totalPayment = this.calculatorPriceFinalOrder(result);
+			const orerDiscount = this.calculatorOrderDiscount(result);
 
+			const totalPayment = Math.max(0, totalPriceFinalItems - orerDiscount);
+
+			result.order_discount = orerDiscount;
 			result.price_final = totalPayment;
 			result.total_payment = totalPayment;
 			result.price_sell = totalPriceSellItems;
@@ -240,8 +250,9 @@ class OrderCalculator {
 				0,
 				totalPriceFinalItems - result.price_sell
 			);
-			result.debt = result.price_final;
 
+			result.debt = result.price_final;
+			result.details.total = Math.max(0, result.details.data.length);
 			return result;
 		} catch (error) {
 			throw error;
@@ -266,8 +277,11 @@ class OrderCalculator {
 				case "quantity": {
 					const { id, item_quantity } = input.data;
 
+					if (!id) {
+						throw new Error(`error_invalid_item_${id}`);
+					}
+
 					if (item_quantity <= 0 || !id) {
-						throw new Error("invalid_quantity_or_product_details");
 					}
 
 					const itemIndex = findItemIndexById(id);
@@ -329,13 +343,42 @@ class OrderCalculator {
 						if (item_quantity <= 0 || !product_json) {
 							throw new Error("invalid_quantity_or_product_details");
 						}
-						items.push({
+						items.unshift({
 							...this.getDefaultDataItem(product_json),
 							item_quantity: item_quantity,
 						});
 					}
 					break;
+
 				case "remove":
+					{
+						const {
+							data: { ids },
+						} = input;
+
+						ids.forEach((id) => {
+							const itemIndex = findItemIndexById(id);
+							if (itemIndex === -1) {
+								throw new Error("product_not_found_in_order_details");
+							}
+
+							items.splice(itemIndex, 1);
+						});
+					}
+
+					break;
+				case "promotion":
+					{
+						const {
+							data: { promotions },
+						} = input;
+
+						orderUpdate.promotions = Helper.removeDuplicatesArrObject(
+							promotions,
+							"promotion_id"
+						);
+					}
+					break;
 
 				default:
 					throw new Error("invalid_action_action_type_not_recognized");
@@ -350,13 +393,7 @@ class OrderCalculator {
 
 	// Method to recalculate the cart JSON when an item is updated in the cart
 	recalculateOrderOnUpdate(order_old: OrderJson, data: ActionOrderUpdate) {
-		console.log(
-			"🚀 ~ OrderCalculator ~ recalculateOrderOnUpdate ~ data:",
-			data
-		);
 		try {
-			// Validate input data
-
 			// Create a deep copy of the order to avoid mutating the original object
 			const orderToUpdate = this.mappingDetailOrderFromInput(order_old, data);
 			const result = this.recalculatorOrderFromJson(orderToUpdate);
@@ -369,8 +406,6 @@ class OrderCalculator {
 			throw error;
 		}
 	}
-
-	// Method to calculate the cart JSON when a new product is added
 }
 
 export default OrderCalculator;

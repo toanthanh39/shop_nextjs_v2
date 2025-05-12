@@ -18,6 +18,7 @@ export default function CartLayout({ cart }: Props) {
 		pro: PromotionJson,
 		type: PromotionToggleProps
 	) => {
+		console.log("🚀 ~ CartLayout ~ type:", type);
 		try {
 			await addPromotionToCart({
 				action: type,
@@ -25,7 +26,9 @@ export default function CartLayout({ cart }: Props) {
 					promotions: [pro],
 				},
 			});
-		} catch (error) {}
+		} catch (error) {
+			console.log("🚀 ~ CartLayout ~ error:", error);
+		}
 	};
 
 	//////////////////////////////////////////////////

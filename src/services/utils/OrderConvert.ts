@@ -55,7 +55,10 @@ class OrderConvert {
 			if (existingPromo) {
 				return {
 					...existingPromo,
-					is_use: isUse ?? existingPromo.is_use ?? IsUse.USE,
+					is_use:
+						typeof isUse !== "undefined"
+							? isUse
+							: existingPromo.is_use ?? IsUse.USE,
 				};
 			}
 			return newPromo;

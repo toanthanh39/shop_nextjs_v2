@@ -3,17 +3,33 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { CustomImage, Flex, Money } from "@/components/ui";
 import { ProductJson } from "@/types/Product.type";
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 
 type Props = {
 	product: ProductJson;
 };
 export default function ProductDetail({ product }: Props) {
+	const { addToCart } = useCartGlobal({});
+	/////////////////////////////////////////////////////
+
 	const [quantity, setQuantity] = useState(1);
 	const [selectedSize, setSelectedSize] = useState("Eau de Parfum 100ml");
 
 	const hasDiscount = true;
 	const discountPercentage = hasDiscount ? 10 : 0;
 	const sizes = ["Eau de Parfum 100ml", "Tester"];
+
+	/////////////////////////////////////////////////////
+
+	const add = async () => {
+		try {
+			await addToCart({
+				item_quantity: 1,
+				product_id: product.id,
+				product_json: product,
+			});
+		} catch (error) {}
+	};
 
 	return (
 		<div className="container mx-auto my-8 flex flex-col md:flex-row gap-8">
@@ -160,7 +176,9 @@ export default function ProductDetail({ product }: Props) {
 					<button className="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600">
 						MUA NGAY
 					</button>
-					<button className="border border-red-500 text-red-500 px-6 py-3 rounded hover:bg-red-50">
+					<button
+						onClick={add}
+						className="border border-red-500 text-red-500 px-6 py-3 rounded hover:bg-red-50">
 						THÊM VÀO GIỎ HÀNG
 					</button>
 					<button className="border border-gray-300 text-gray-600 px-4 py-3 rounded hover:bg-gray-100">
