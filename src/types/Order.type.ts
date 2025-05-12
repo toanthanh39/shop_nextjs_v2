@@ -244,6 +244,7 @@ export type OrderItemEdit = Pick<OrderItemJson, "product_id" | "id"> & {
 
 export type OrderAddEdit = {
 	cart_id: OrderId;
+	order_id?: OrderId;
 	action: ORDER_ACTION;
 	details?: OrderItemEdit[];
 	customer_token?: string;
@@ -264,7 +265,8 @@ export type OrderAddEdit = {
 };
 
 export type OrderAddCoupon = CouponAddJson & {
-	cart_id: OrderId;
+	order_id: OrderId;
+
 	customer_token?: string;
 };
 

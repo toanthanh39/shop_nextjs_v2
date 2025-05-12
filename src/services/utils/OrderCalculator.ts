@@ -1,10 +1,6 @@
-import PromotionModel from "@/common/models/PromotionModel";
-import BaseApi from "@/lib/axios/BaseApi";
 import { IsUse } from "@/types/Global.type";
 import {
 	ActionOrderUpdate,
-	OrderAddEdit,
-	OrderItemEdit,
 	OrderItemJson,
 	OrderJson,
 	OrderPromotion,
@@ -166,7 +162,8 @@ class OrderCalculator {
 				if (discount_value_type === "amount") {
 					curr += discount_value;
 				} else if (discount_value_type === "percent") {
-					curr += totalPriceSell * Math.min(100, discount_value / 100);
+					curr +=
+						totalPriceSell * Math.max(0, Math.min(100, discount_value / 100));
 				}
 				if (prev.max_applied > 0) {
 					return Math.min(prev.max_applied, curr);
@@ -196,19 +193,21 @@ class OrderCalculator {
 			result.item_total = price * item.item_quantity;
 
 			result.item_unit_price = price * item.item_quantity;
-
-			result.price_discount = this.getListOrderPromotionValid({
+			const promos = this.getListOrderPromotionValid({
 				on: "item",
 				data: {
 					order: order,
 					product_json: item.product_json,
 					promotions: item.promotions,
 				},
-			}).reduce((curr, prev) => {
+			});
+
+			console.log("🚀 ~ OrderCalculator ~ promos:", promos);
+			result.price_discount = promos.reduce((curr, prev) => {
 				if (prev.discount_value_type === "amount") {
-					curr -= prev.discount_value;
+					curr += prev.discount_value;
 				} else if (prev.discount_value_type === "percent") {
-					curr -= price * prev.discount_value;
+					curr += (prev.discount_value / 100) * result.item_unit_price;
 				}
 
 				return curr;
@@ -232,7 +231,7 @@ class OrderCalculator {
 			// update tiền từng item trong list
 
 			result.details.data = order.details.data.map((item) =>
-				this.calulatorItemInfor(item, order)
+				this.calulatorItemInfor(item, result)
 			);
 
 			const totalPriceFinalItems = this.calculatorPriceFinalItems(result);
@@ -393,6 +392,10 @@ class OrderCalculator {
 
 	// Method to recalculate the cart JSON when an item is updated in the cart
 	recalculateOrderOnUpdate(order_old: OrderJson, data: ActionOrderUpdate) {
+		console.log(
+			"🚀 ~ OrderCalculator ~ recalculateOrderOnUpdate ~ order_old:",
+			order_old
+		);
 		try {
 			// Create a deep copy of the order to avoid mutating the original object
 			const orderToUpdate = this.mappingDetailOrderFromInput(order_old, data);

@@ -28,22 +28,20 @@ class CartCalculator {
 		};
 		return details.data.reduce((total, product) => {
 			if (product.is_use === IsUse.NOT_USE) return total;
-			const discount = hasSeasonalPromotion(product.promotions)
-				? product.price_discount
-				: 0;
 
 			const itemTotal =
 				product.product_json.compare_discount * product.item_quantity;
-			return total + discount + itemTotal;
+			return total + itemTotal;
 		}, 0);
 	}
 	private static calculatePromotionDiscount(cart: OrderJson) {
 		const { details } = cart;
-
-		return details.data.reduce((curr: number, prev) => {
+		const discountPromoItem = details.data.reduce((curr: number, prev) => {
 			curr += prev.price_discount;
 			return curr;
 		}, 0);
+
+		return discountPromoItem + cart.order_discount;
 	}
 	private static calculateShippingFee(cart: OrderJson) {
 		return 0;

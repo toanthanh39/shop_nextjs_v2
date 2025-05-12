@@ -363,7 +363,7 @@ function useCartGlobal({ enabled = true }: Props) {
 
 				if (action === "add") {
 					return await CartRepoInstance.addCoupon({
-						cart_id: cart.id,
+						order_id: cart.id,
 						code: data.code,
 						customer_token: site.customer_token,
 					});
@@ -472,7 +472,7 @@ function useCartGlobal({ enabled = true }: Props) {
 					throw new Error(cartError.error_add_promotion_cart);
 				}
 
-				CartRepoInstance.update({
+				await CartRepoInstance.update({
 					action: ORDER_ACTION.PROMOTION,
 					cart_id: cart.id,
 					customer_token: site.customer_token,
