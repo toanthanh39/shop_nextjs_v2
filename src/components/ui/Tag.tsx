@@ -13,6 +13,7 @@ const tagVariants = cva("relative rounded-sm  w-fit px-1 py-1", {
 			genderMale: "bg-blue-400 text-white",
 			genderFemale: "bg-pink-400 text-white",
 			success: "bg-green-500 text-white",
+			secondary: "bg-colors-gray-4 text-white",
 		},
 		size: {
 			lg: "text-lg py-1",

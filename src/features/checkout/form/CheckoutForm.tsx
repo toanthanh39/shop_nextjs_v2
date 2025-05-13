@@ -2,7 +2,7 @@
 
 import GenericForm from "@/components/form/GenericForm";
 import Radio from "@/components/form/Radio";
-import { CustomImage, Heading, Money, Text } from "@/components/ui";
+import { CustomImage, Heading, List, Money, Tag, Text } from "@/components/ui";
 import Flex from "@/components/ui/Flex";
 import Input, { RadioBox, Select } from "@/components/ui/Input";
 import { DatePicker } from "@/components/ui/shacdn/DatePicker";
@@ -36,6 +36,7 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/shacdn/AlertDialog";
 import BaseApi from "@/lib/axios/BaseApi";
+import { CartPromoSeasonal } from "@/features/cart/promotion";
 
 type Props = ComProps & {
 	order: OrderJson;
@@ -349,21 +350,31 @@ export default function CheckoutForm({ className, order }: Props) {
 			<Flex direction="col" gap={16} className="basis-100">
 				<CheckoutLayoutSection>
 					<Heading level={3} size="h4">
-						Đơn hàng
+						Sản phẩm ({details.total})
 					</Heading>
-					<ul className="list-none w-full">
-						{details.data.map((item) => (
+					<List
+						dataSource={details.data}
+						render={(item) => (
 							<Flex
-								as="li"
 								key={item.id}
 								align="center"
-								gap={4}
-								className="py-2 border-b">
-								<CustomImage
-									src={item.product_json.images?.[0]?.url ?? ""}
-									alt={item.product_json.name}
-									width={60}
-									height={60}></CustomImage>
+								gap={16}
+								className="relative py-2 border-b">
+								<div className="relative">
+									<Tag
+										variant="secondary"
+										size="xs"
+										className="absolute right-0 top-0 z-2 w-5 h-5 rounded-full p-1 text-center -translate-y-1/2 translate-x-1/2">
+										{item.item_quantity}
+									</Tag>
+									<CustomImage
+										src={item.product_json.images?.[0]?.url ?? ""}
+										alt={item.product_json.name}
+										width={68}
+										height={68}
+										className="p-2 border border-colors-gray-3"></CustomImage>
+								</div>
+
 								<div className="w-full">
 									<Text.p weight="semibold">{item.product_json.name}</Text.p>
 									<Text.p size="sm" className=" text-gray-500">
@@ -375,12 +386,20 @@ export default function CheckoutForm({ className, order }: Props) {
 										className="flex-row justify-between w-full"></CartItemPrice>
 								</div>
 							</Flex>
-						))}
-					</ul>
+						)}
+						className="list-none w-full block"></List>
+				</CheckoutLayoutSection>
+				<CheckoutLayoutSection>
+					<CartPromoSeasonal
+						// onChange={onChangePromoBody}
+
+						className="w-full"
+						cart={order}></CartPromoSeasonal>
 				</CheckoutLayoutSection>
 				<CheckoutLayoutSection>
 					<CartCoupon className="w-full" cart={order}></CartCoupon>
 				</CheckoutLayoutSection>
+
 				<CheckoutLayoutSection>
 					<CartInfor
 						isLoading={isCheckouting || checkoutStatus.isLoading}

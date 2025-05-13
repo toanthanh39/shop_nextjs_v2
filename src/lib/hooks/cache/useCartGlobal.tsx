@@ -22,6 +22,7 @@ import {
 import useCartStore from "@/lib/zustand/useCartStore";
 import { useMemo } from "react";
 import OrderCalculator from "@/services/utils/OrderCalculator";
+import { ProductJson } from "@/types/Product.type";
 
 type Props = HookCacheProps & {};
 
@@ -62,6 +63,11 @@ type ActionUpdatePromotionBodyProps = {
 	data: {
 		promotions: PromotionJson[];
 	};
+};
+
+type BuyNowProps = {
+	product_json: ProductJson;
+	item_quantiy: number;
 };
 
 /////////////////////////////////////
@@ -203,14 +209,14 @@ function useCartGlobal({ enabled = true }: Props) {
 						},
 					}
 				);
-				console.log("🚀 ~ useCartGlobal ~ resultTest:", resultTest);
-				queryClient.setQueryData([CACHE_CART_GLOBAL_LOADING], false, {
-					updatedAt: Date.now(),
-				});
+
 				return resultTest;
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			} finally {
+				queryClient.setQueryData([CACHE_CART_GLOBAL_LOADING], false, {
+					updatedAt: Date.now(),
+				});
 			}
 		},
 		onSuccess: (updatedCart) => {
@@ -436,6 +442,61 @@ function useCartGlobal({ enabled = true }: Props) {
 		},
 	});
 
+	const buyNowMutaion = useMutation({
+		mutationFn: async (data: BuyNowProps) => {
+			if (!site) {
+				throw new Error(cartError.error_site_global);
+			}
+
+			const { item_quantiy, product_json } = data;
+			let cartGlobal = cart ?? (await createMutation.mutateAsync());
+			const {
+				details: { data: items },
+			} = cartGlobal;
+			let dataItemsUpdate = [...items];
+
+			const itemExited = dataItemsUpdate.find(
+				(i) => i.product_id === product_json.id
+			);
+
+			if (!itemExited) {
+				cartGlobal = OrderCalculatorInstance.recalculateOrderOnUpdate(
+					cartGlobal,
+					{
+						action: "add",
+						data: { item_quantity: item_quantiy, product_json: product_json },
+					}
+				);
+			} else {
+				cartGlobal = OrderCalculatorInstance.recalculateOrderOnUpdate(
+					cartGlobal,
+					{
+						action: "quantity",
+						data: { item_quantity: item_quantiy, id: itemExited.id },
+					}
+				);
+			}
+
+			if (items.length > 0) {
+				cartGlobal = OrderCalculatorInstance.recalculateOrderOnUpdate(
+					cartGlobal,
+					{
+						action: "use",
+						data: items.map((i) => ({
+							id: i.id,
+							is_use: IsUse.NOT_USE,
+						})),
+					}
+				);
+			}
+			return cartGlobal;
+		},
+
+		onSuccess: (updatedCart) => {
+			queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], updatedCart);
+		},
+	});
+
 	const updatePromotionBodyMutation = useMutation({
 		mutationFn: async ({ action, data }: ActionUpdatePromotionBodyProps) => {
 			try {
@@ -520,6 +581,7 @@ function useCartGlobal({ enabled = true }: Props) {
 		createCart: createMutation.mutateAsync,
 		removeCartItem: removeMutation.mutateAsync,
 		checkout: checkoutMutation.mutateAsync,
+		buyNow: buyNowMutaion.mutateAsync,
 		updateCartCoupon: updateCouponMutation.mutateAsync,
 		addPromotionToCart: updatePromotionBodyMutation.mutateAsync,
 
@@ -530,6 +592,7 @@ function useCartGlobal({ enabled = true }: Props) {
 		isUpdating: updateMutation.isPending || updateCouponMutation.isPending,
 		isRemoving: removeMutation.isPending,
 		isCheckouting: checkoutMutation.isPending,
+		isBuyNow: buyNowMutaion.isPending,
 		disabled,
 		//////////////////////////////
 	};

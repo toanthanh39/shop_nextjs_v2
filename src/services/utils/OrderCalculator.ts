@@ -73,7 +73,7 @@ class OrderCalculator {
 				}
 
 				if (totalPriceSellOrder < element.req_subtotal) {
-					throw new Error("error_promotion_must_not_aplly_with_other");
+					throw new Error("error_promotion_reqsubtotal_invalid");
 				}
 
 				if (
@@ -184,15 +184,15 @@ class OrderCalculator {
 			if (item.is_use !== IsUse.USE) {
 				return result;
 			}
-			item.id = item.id;
+
 			result.item_name = item.product_json.full_name;
 			result.item_title = item.product_json.full_name;
 			result.product_id = item.product_json.id;
 			//
 
 			result.item_total = price * item.item_quantity;
-
 			result.item_unit_price = price * item.item_quantity;
+
 			const promos = this.getListOrderPromotionValid({
 				on: "item",
 				data: {
@@ -202,7 +202,6 @@ class OrderCalculator {
 				},
 			});
 
-			console.log("🚀 ~ OrderCalculator ~ promos:", promos);
 			result.price_discount = promos.reduce((curr, prev) => {
 				if (prev.discount_value_type === "amount") {
 					curr += prev.discount_value;
@@ -228,11 +227,12 @@ class OrderCalculator {
 	private recalculatorOrderFromJson(order: OrderJson) {
 		try {
 			const result: OrderJson = { ...order };
-			// update tiền từng item trong list
 
+			// update tiền từng item trong list
 			result.details.data = order.details.data.map((item) =>
 				this.calulatorItemInfor(item, result)
 			);
+			result.details.total = Math.max(0, result.details.data.length);
 
 			const totalPriceFinalItems = this.calculatorPriceFinalItems(result);
 			const totalPriceSellItems = this.calculatorPriceSellItems(result);
@@ -249,9 +249,9 @@ class OrderCalculator {
 				0,
 				totalPriceFinalItems - result.price_sell
 			);
+			result.price_discount = result.item_discount + result.order_discount;
 
 			result.debt = result.price_final;
-			result.details.total = Math.max(0, result.details.data.length);
 			return result;
 		} catch (error) {
 			throw error;
@@ -320,6 +320,7 @@ class OrderCalculator {
 					}
 
 					data.forEach(({ id, is_use }) => {
+						console.log("🚀 ~ OrderCalculator ~ data.forEach ~ id:", id);
 						if (!id || (is_use !== IsUse.USE && is_use !== IsUse.NOT_USE)) {
 							throw new Error("invalid_use_action_invalid_id_or_is_use_value");
 						}
@@ -342,10 +343,18 @@ class OrderCalculator {
 						if (item_quantity <= 0 || !product_json) {
 							throw new Error("invalid_quantity_or_product_details");
 						}
-						items.unshift({
-							...this.getDefaultDataItem(product_json),
-							item_quantity: item_quantity,
-						});
+
+						const indexExited = items.findIndex(
+							(i) => i.product_id === product_json.id
+						);
+						if (indexExited > 0) {
+							items[indexExited].item_quantity += item_quantity;
+						} else {
+							items.unshift({
+								...this.getDefaultDataItem(product_json),
+								item_quantity: item_quantity,
+							});
+						}
 					}
 					break;
 
@@ -392,12 +401,7 @@ class OrderCalculator {
 
 	// Method to recalculate the cart JSON when an item is updated in the cart
 	recalculateOrderOnUpdate(order_old: OrderJson, data: ActionOrderUpdate) {
-		console.log(
-			"🚀 ~ OrderCalculator ~ recalculateOrderOnUpdate ~ order_old:",
-			order_old
-		);
 		try {
-			// Create a deep copy of the order to avoid mutating the original object
 			const orderToUpdate = this.mappingDetailOrderFromInput(order_old, data);
 			const result = this.recalculatorOrderFromJson(orderToUpdate);
 			console.log(
