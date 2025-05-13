@@ -78,6 +78,10 @@ export default function CartItem({ item, className }: Props) {
 	const disabled = useMemo(() => {
 		return item.product_json.quantity <= 0;
 	}, [item.product_json.quantity]);
+
+	const hasPromo = useMemo(() => {
+		return item.product_json.promotions.length > 0;
+	}, [item.product_json.promotions.length]);
 	return (
 		<Flex
 			key={item.id}
@@ -98,10 +102,12 @@ export default function CartItem({ item, className }: Props) {
 					justify="between"
 					className="basis-1/2 max-md:flex-col max-md:gap-2">
 					<CartItemName item={item} className="max-w-[190px]" />
-					<CartItemPrice
-						item={item}
-						className="flex-auto w-fit md:shrink-0 md:basis-20 "
-					/>
+					<Flex
+						direction="col"
+						className="flex-auto w-fit md:shrink-0 md:basis-20 ">
+						<CartItemPrice item={item} />
+						{hasPromo && <Text className="mt-2">🎁</Text>}
+					</Flex>
 				</Flex>
 				<Flex gap={32} className="basis-1/2 max-md:flex-col max-md:gap-2">
 					<CartItemQuantity

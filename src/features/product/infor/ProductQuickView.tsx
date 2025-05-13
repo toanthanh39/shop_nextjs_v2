@@ -6,14 +6,13 @@ import ProductPrice from "./ProductPrice";
 import { Button, CustomImage, Flex, LinkElement, Text } from "@/components/ui";
 import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
 import ProductListTagVariant from "../list/ProductListTagVariant";
-import { LoadingIcon } from "@/components/icons";
 import Rating from "@/components/composite/Rating";
-import AddToCart from "../action/AddToCart";
 import QuantityBtn from "../action/QuantityBtn";
 import ProductGender from "./ProductGender";
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import { useTranslations } from "next-intl";
 import Loading from "@/components/composite/Loading";
+import { AddToCart, BuynowCart } from "../action";
 
 type Props = ComProps & {
 	product: ProductJson;
@@ -117,9 +116,7 @@ export default function ProductQuickView(props: Props) {
 								onDeCrease={handleDecrease}
 								onInCrease={handleIncrease}
 							/>
-							<Button variant="primary" className="flex-1 w-full max-w-40">
-								Mua ngay
-							</Button>
+							<BuynowCart item_quantity={quantity} product={variantActive} />
 							<AddToCart
 								product={variantActive}
 								quantity={quantity}

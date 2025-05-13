@@ -15,6 +15,7 @@ export default function CartProvider({ children }: Props) {
 	const promoSeasonalCarts = PromotionModel.getPromotionEffectOnCart(
 		PromotionModel.getPromotionSeasonal(fullPromotion ?? [])
 	);
+	console.log("🚀 ~ CartProvider ~ promoSeasonalCarts:", promoSeasonalCarts);
 
 	// Phase 1 - Auto Add one of promotions (seasonal) to cart
 	React.useEffect(() => {
@@ -23,17 +24,17 @@ export default function CartProvider({ children }: Props) {
 			const hasPromotion = cart.promotions.some((promo) =>
 				promoSeasonalCarts.some(
 					(seasonal) =>
-						seasonal.id === promo.promotion_id && promo.is_use !== IsUse.USE
+						seasonal.id === promo.promotion_id && promo.is_use === IsUse.USE
 				)
 			);
 			// If not, add the promotion to the cart
-			!hasPromotion &&
-				addPromotionToCart({
-					action: "aplly ",
-					data: {
-						promotions: promoSeasonalCarts,
-					},
-				});
+			// !hasPromotion &&
+			// 	addPromotionToCart({
+			// 		action: "aplly ",
+			// 		data: {
+			// 			promotions: promoSeasonalCarts,
+			// 		},
+			// 	});
 		}
 	}, [promoSeasonalCarts.length, cart?.price_final]);
 

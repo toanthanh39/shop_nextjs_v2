@@ -3,29 +3,21 @@ import { OrderJson, OrderPromotion } from "@/types/Order.type";
 import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
 
 class CartCalculator {
-	private static calculateTotalProductPrice(cart: OrderJson) {
-		const {
-			details: { data },
-		} = { ...cart };
-		const result = data.reduce((totalPrice, item) => {
-			if (item.is_use === IsUse.USE) {
-				const price =
-					item.product_json.compare_at_price > 0
-						? item.product_json.compare_at_price
-						: item.product_json.price;
-				totalPrice += price * item.item_quantity;
+	static calculateTotalProductPrice(cart: OrderJson) {
+		const { details } = cart;
+		return details.data.reduce((curr: number, prev) => {
+			if (prev.is_use === IsUse.USE) {
+				if (prev.product_json.compare_at_price) {
+					curr += prev.product_json.compare_at_price * prev.item_quantity;
+				} else {
+					curr += prev.item_unit_price * prev.item_quantity;
+				}
 			}
 
-			return totalPrice;
+			return curr;
 		}, 0);
-		console.log(
-			"🚀 ~ CartCalculator ~ calculateTotalProductPrice ~ result:",
-			result
-		);
-
-		return result;
 	}
-	private static calculateProductDiscount(cart: OrderJson) {
+	static calculateProductDiscount(cart: OrderJson) {
 		const { details } = cart;
 
 		const hasSeasonalPromotion = (promotions: OrderPromotion[]) => {
@@ -35,28 +27,32 @@ class CartCalculator {
 					promo.promotion_detail.group === PromotionGroup.seasonal
 			);
 		};
-		return details.data.reduce((total, product) => {
-			if (product.is_use === IsUse.NOT_USE) return total;
-			const discount = hasSeasonalPromotion(product.promotions)
-				? product.price_discount
-				: 0;
+		return details.data.reduce((total, item) => {
+			if (item.is_use === IsUse.USE) {
+				total += item.product_json.compare_discount * item.item_quantity;
+			}
 
-			const itemTotal =
-				product.product_json.compare_discount * product.item_quantity;
-			return total + discount + itemTotal;
+			return total;
 		}, 0);
 	}
-	private static calculatePromotionDiscount(cart: OrderJson) {
+	static calculatePromotionDiscount(cart: OrderJson) {
 		const { details } = cart;
-
-		return details.data.reduce((curr: number, prev) => {
-			if (prev.is_use === IsUse.USE) {
-				curr += prev.price_discount;
-			}
+		const discountPromoItem = details.data.reduce((curr: number, prev) => {
+			curr += prev.price_discount;
 			return curr;
 		}, 0);
+
+		return discountPromoItem + cart.order_discount;
 	}
-	private static calculateShippingFee(cart: OrderJson) {
+
+	static caculatorPriceSave(cart: OrderJson) {
+		return (
+			this.calculateProductDiscount(cart) +
+			cart.item_discount +
+			cart.order_discount
+		);
+	}
+	static calculateShippingFee(cart: OrderJson) {
 		return 0;
 	}
 
@@ -65,6 +61,8 @@ class CartCalculator {
 			totalProductPrice: this.calculateTotalProductPrice(cart),
 			productDiscount: this.calculateProductDiscount(cart),
 			promotionDiscount: this.calculatePromotionDiscount(cart),
+			priceSave: this.caculatorPriceSave(cart),
+			// discountSave:this.
 			shippingFee: this.calculateShippingFee(cart),
 		};
 	}

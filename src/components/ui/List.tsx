@@ -21,14 +21,14 @@ export default function List<D>({
 	if (showEmpty) {
 		return (
 			<Empty dataSource={dataSource}>
-				<Flex wrap="wrap" gap={4} className={cn(className)}>
+				<Flex as="ul" wrap="wrap" gap={4} className={cn(className)}>
 					{dataSource.map((item, index) => (
-						<motion.div
+						<motion.li
 							className={cn(classNameItem)}
 							key={index}
 							{...motionConfig.fade}>
 							{render(item, index)}
-						</motion.div>
+						</motion.li>
 					))}
 				</Flex>
 			</Empty>
@@ -36,10 +36,10 @@ export default function List<D>({
 	}
 
 	return (
-		<Flex className={cn(className)}>
+		<Flex as="ul" className={cn(className)}>
 			<AnimatePresence>
 				{dataSource.map((item, index) => (
-					<motion.div
+					<motion.li
 						key={index}
 						className={cn(classNameItem)}
 						initial={motionConfig.fade.initial}
@@ -47,7 +47,7 @@ export default function List<D>({
 						exit={motionConfig.fade.exit}
 						transition={motionConfig.fade.transition}>
 						{render(item, index)}
-					</motion.div>
+					</motion.li>
 				))}
 			</AnimatePresence>
 		</Flex>

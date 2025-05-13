@@ -22,6 +22,7 @@ import {
 import useCartStore from "@/lib/zustand/useCartStore";
 import { useMemo } from "react";
 import OrderCalculator from "@/services/utils/OrderCalculator";
+import { ProductJson } from "@/types/Product.type";
 
 type Props = HookCacheProps & {};
 
@@ -62,6 +63,11 @@ type ActionUpdatePromotionBodyProps = {
 	data: {
 		promotions: PromotionJson[];
 	};
+};
+
+type BuyNowProps = {
+	product_json: ProductJson;
+	item_quantiy: number;
 };
 
 /////////////////////////////////////
@@ -208,6 +214,9 @@ function useCartGlobal({ enabled = true }: Props) {
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			} finally {
+				queryClient.setQueryData([CACHE_CART_GLOBAL_LOADING], false, {
+					updatedAt: Date.now(),
+				});
 			}
 		},
 		onSuccess: (updatedCart) => {
@@ -334,10 +343,9 @@ function useCartGlobal({ enabled = true }: Props) {
 					customer_token: site.customer_token,
 					details: itemRemoves,
 				});
-
 				return OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
 					action: "remove",
-					data: ids,
+					data: { ids: ids },
 				});
 			} catch (error) {
 				console.error("Error in removeMutation:", error);
@@ -362,7 +370,7 @@ function useCartGlobal({ enabled = true }: Props) {
 
 				if (action === "add") {
 					return await CartRepoInstance.addCoupon({
-						cart_id: cart.id,
+						order_id: cart.id,
 						code: data.code,
 						customer_token: site.customer_token,
 					});
@@ -435,6 +443,61 @@ function useCartGlobal({ enabled = true }: Props) {
 		},
 	});
 
+	const buyNowMutaion = useMutation({
+		mutationFn: async (data: BuyNowProps) => {
+			if (!site) {
+				throw new Error(cartError.error_site_global);
+			}
+
+			const { item_quantiy, product_json } = data;
+			let cartGlobal = cart ?? (await createMutation.mutateAsync());
+			const {
+				details: { data: items },
+			} = cartGlobal;
+			let dataItemsUpdate = [...items];
+
+			const itemExited = dataItemsUpdate.find(
+				(i) => i.product_id === product_json.id
+			);
+
+			if (!itemExited) {
+				cartGlobal = OrderCalculatorInstance.recalculateOrderOnUpdate(
+					cartGlobal,
+					{
+						action: "add",
+						data: { item_quantity: item_quantiy, product_json: product_json },
+					}
+				);
+			} else {
+				cartGlobal = OrderCalculatorInstance.recalculateOrderOnUpdate(
+					cartGlobal,
+					{
+						action: "quantity",
+						data: { item_quantity: item_quantiy, id: itemExited.id },
+					}
+				);
+			}
+
+			if (items.length > 0) {
+				cartGlobal = OrderCalculatorInstance.recalculateOrderOnUpdate(
+					cartGlobal,
+					{
+						action: "use",
+						data: items.map((i) => ({
+							id: i.id,
+							is_use: IsUse.NOT_USE,
+						})),
+					}
+				);
+			}
+			return cartGlobal;
+		},
+
+		onSuccess: (updatedCart) => {
+			queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], updatedCart);
+		},
+	});
+
 	const updatePromotionBodyMutation = useMutation({
 		mutationFn: async ({ action, data }: ActionUpdatePromotionBodyProps) => {
 			try {
@@ -454,6 +517,9 @@ function useCartGlobal({ enabled = true }: Props) {
 						isUse = IsUse.NOT_USE;
 						break;
 
+					case "aplly ":
+						isUse = IsUse.USE;
+
 					default:
 						break;
 				}
@@ -468,19 +534,22 @@ function useCartGlobal({ enabled = true }: Props) {
 					throw new Error(cartError.error_add_promotion_cart);
 				}
 
-				return await CartRepoInstance.update({
+				await CartRepoInstance.update({
 					action: ORDER_ACTION.PROMOTION,
 					cart_id: cart.id,
 					customer_token: site.customer_token,
 					promotions: cartPromotions,
 				});
+				const result = OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
+					action: "promotion",
+					data: { promotions: cartPromotions },
+				});
+				return result;
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			}
 		},
 		onSuccess: (updatedCart) => {
-			console.log("🚀 ~ useCartGlobal ~ updatedCart:", updatedCart);
-
 			queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], updatedCart);
 		},
 		retry: 2,
@@ -513,6 +582,7 @@ function useCartGlobal({ enabled = true }: Props) {
 		createCart: createMutation.mutateAsync,
 		removeCartItem: removeMutation.mutateAsync,
 		checkout: checkoutMutation.mutateAsync,
+		buyNow: buyNowMutaion.mutateAsync,
 		updateCartCoupon: updateCouponMutation.mutateAsync,
 		addPromotionToCart: updatePromotionBodyMutation.mutateAsync,
 
@@ -523,6 +593,7 @@ function useCartGlobal({ enabled = true }: Props) {
 		isUpdating: updateMutation.isPending || updateCouponMutation.isPending,
 		isRemoving: removeMutation.isPending,
 		isCheckouting: checkoutMutation.isPending,
+		isBuyNow: buyNowMutaion.isPending,
 		disabled,
 		//////////////////////////////
 	};

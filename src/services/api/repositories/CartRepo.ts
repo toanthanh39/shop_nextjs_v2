@@ -96,7 +96,7 @@ class CartRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
 	}
 
 	async addCoupon(data: OrderAddCoupon) {
-		const url = this.getCorrectURL(`/coupon/${data.cart_id}`);
+		const url = this.getCorrectURL(`/coupon/${data.order_id}`);
 		return client.put<OrderJson>(url, data);
 	}
 

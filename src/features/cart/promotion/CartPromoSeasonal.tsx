@@ -13,10 +13,13 @@ import { CheckIcon, ClockIcon } from "lucide-react";
 
 type Props = ComProps &
 	CartProps & {
-		onChange: (p: PromotionJson, type: PromotionToggleProps) => Promise<any>;
+		onChange?: (p: PromotionJson, type: PromotionToggleProps) => Promise<any>;
 	};
 
-export default function CartPromoSeasonal({ cart, onChange }: Props) {
+export default function CartPromoSeasonal({
+	cart,
+	onChange = async (p: PromotionJson, type: PromotionToggleProps) => null,
+}: Props) {
 	const { promotions, price_sell: subtotal } = cart;
 
 	const promotion = PromotionModel.getPromotionEffectOnCart(

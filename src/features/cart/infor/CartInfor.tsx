@@ -79,9 +79,7 @@ export default function CartInfor({
 			<Flex justify="between" gap={4}>
 				<Text.p variant="primary">Tiết kiệm</Text.p>
 				<Text.p>
-					<Money
-						variant="primary"
-						value={cart.price_discount + priceInfor.productDiscount}></Money>
+					<Money variant="primary" value={priceInfor.priceSave}></Money>
 				</Text.p>
 			</Flex>
 

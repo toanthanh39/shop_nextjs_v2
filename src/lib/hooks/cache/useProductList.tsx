@@ -18,7 +18,7 @@ function useProductList({ filters, staleTime, enabled }: Props) {
 		queryFn: async () => {
 			try {
 				return await new ProductRepo({
-					accessMode: "PRIVATE",
+					accessMode: "PUBLIC",
 				}).getAll(filters);
 			} catch (error) {
 				throw BaseApi.handleError(error);
