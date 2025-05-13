@@ -40,7 +40,9 @@ export default function CartItem({ item, className }: Props) {
 	const onDeleteItem = async (id: number) => {
 		try {
 			await removeCartItem({ ids: [id] });
-		} catch (error) {}
+		} catch (error) {
+			console.log("🚀 ~ onDeleteItem ~ error:", error);
+		}
 	};
 
 	const updateVariant = async (pId: number) => {

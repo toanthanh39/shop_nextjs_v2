@@ -178,7 +178,7 @@ function useCartGlobal({ enabled = true }: Props) {
 				);
 				const cartGlobal = cart ?? (await createMutation.mutateAsync());
 
-				CartRepoInstance.update({
+				await CartRepoInstance.update({
 					action: ORDER_ACTION.ADD,
 					cart_id: cartGlobal.id,
 					customer_token: site.customer_token,
@@ -203,9 +203,8 @@ function useCartGlobal({ enabled = true }: Props) {
 						},
 					}
 				);
-				console.log("🚀 ~ useCartGlobal ~ resultTest:", resultTest);
 
-				return result;
+				return resultTest;
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			} finally {
@@ -308,6 +307,7 @@ function useCartGlobal({ enabled = true }: Props) {
 
 	const removeMutation = useMutation({
 		mutationFn: async ({ ids }: { ids: number[] }) => {
+			console.log("🚀 ~ mutationFn: ~ ids:", ids);
 			try {
 				if (!site) {
 					throw new Error(cartError.error_site_global);
@@ -328,11 +328,16 @@ function useCartGlobal({ enabled = true }: Props) {
 
 				// return await removeCartItem(cart.id, site.customer_token, itemRemoves);
 
-				return await CartRepoInstance.update({
+				CartRepoInstance.update({
 					action: ORDER_ACTION.DELETE,
 					cart_id: cart.id,
 					customer_token: site.customer_token,
 					details: itemRemoves,
+				});
+
+				return OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
+					action: "remove",
+					data: ids,
 				});
 			} catch (error) {
 				console.error("Error in removeMutation:", error);
@@ -454,7 +459,7 @@ function useCartGlobal({ enabled = true }: Props) {
 				}
 
 				// merge old and new promotion cart
-				const cartPromotions = OrderConvert.mergeCartPromotions(
+				const cartPromotions = OrderConvert.mergeOrderPromotions(
 					promotions,
 					cart.promotions,
 					isUse

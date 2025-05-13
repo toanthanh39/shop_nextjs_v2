@@ -34,18 +34,18 @@ class OrderConvert {
 			}) as OrderPromotion[];
 	}
 
-	static mergeCartPromotions = (
+	static mergeOrderPromotions = (
 		newPromotions: PromotionJson[],
 		existingPromotions: OrderPromotion[],
 		isUse?: IsUse
 	): OrderPromotion[] => {
-		const newPromotionOrder = this.convertPromotionToOrderPromotion(
+		const newPromotionOrders = this.convertPromotionToOrderPromotion(
 			newPromotions,
 			isUse ?? IsUse.USE
 		);
 
 		return Helper.removeDuplicatesArrObject(
-			[...newPromotionOrder, ...existingPromotions],
+			[...newPromotionOrders, ...existingPromotions],
 			"promotion_id"
 		).map((newPromo) => {
 			const existingPromo = existingPromotions.find(

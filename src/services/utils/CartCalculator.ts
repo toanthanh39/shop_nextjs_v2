@@ -4,17 +4,26 @@ import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
 
 class CartCalculator {
 	private static calculateTotalProductPrice(cart: OrderJson) {
-		const { details } = cart;
-		return details.data.reduce((curr: number, prev) => {
-			if (prev.is_use === IsUse.USE) {
-				if (prev.product_json.compare_at_price) {
-					curr += prev.product_json.compare_at_price * prev.item_quantity;
-				} else {
-					curr += prev.item_unit_price * prev.item_quantity;
-				}
+		const {
+			details: { data },
+		} = { ...cart };
+		const result = data.reduce((totalPrice, item) => {
+			if (item.is_use === IsUse.USE) {
+				const price =
+					item.product_json.compare_at_price > 0
+						? item.product_json.compare_at_price
+						: item.product_json.price;
+				totalPrice += price * item.item_quantity;
 			}
-			return curr;
+
+			return totalPrice;
 		}, 0);
+		console.log(
+			"🚀 ~ CartCalculator ~ calculateTotalProductPrice ~ result:",
+			result
+		);
+
+		return result;
 	}
 	private static calculateProductDiscount(cart: OrderJson) {
 		const { details } = cart;
@@ -41,7 +50,9 @@ class CartCalculator {
 		const { details } = cart;
 
 		return details.data.reduce((curr: number, prev) => {
-			curr += prev.price_discount;
+			if (prev.is_use === IsUse.USE) {
+				curr += prev.price_discount;
+			}
 			return curr;
 		}, 0);
 	}
