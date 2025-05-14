@@ -101,7 +101,17 @@ export type PaymentCheckoutJson<T> = T & {
 };
 
 //////////////////////////////////////////
-export interface ResponCheckVnpay {
+
+export type CreateTransactionVNpayProps = {
+	order_id: OrderId;
+	cashflow_receipt_id: number | string;
+	return_url: string;
+};
+
+export type CreateTransactionVNpayJson = {
+	payment_url: string;
+};
+export interface CheckVnpayResponse {
 	status: boolean;
 	response_code: string;
 	transaction_status: string;

@@ -265,9 +265,8 @@ class OrderCalculator {
 				items.findIndex((item) => item.id === id);
 
 			switch (input.action) {
-				case "quantity":
-					{
-						const { id, item_quantity } = input.data;
+				case "quantity": {
+					const { id, item_quantity } = input.data;
 
 					if (!id) {
 						throw new Error(`error_invalid_item_${id}`);
@@ -305,47 +304,7 @@ class OrderCalculator {
 
 					break;
 				}
-				case "use": {
-					const { data } = input;
 
-					if (!Array.isArray(data) || data.length === 0) {
-						throw new Error("invalid_use_action_data_must_be_non_empty_array");
-					}
-
-					data.forEach(({ id, is_use }) => {
-						console.log("🚀 ~ OrderCalculator ~ data.forEach ~ id:", id);
-						if (!id || (is_use !== IsUse.USE && is_use !== IsUse.NOT_USE)) {
-							throw new Error("invalid_use_action_invalid_id_or_is_use_value");
-						}
-
-						const itemIndex = findItemIndexById(id);
-
-						if (itemIndex === -1) {
-							throw new Error("product_not_found_in_order_details");
-						}
-
-						items[itemIndex].item_quantity = item_quantity;
-					}
-					break;
-				case "variant":
-					{
-						const { id, produt_variant_json } = input.data;
-
-						if (!produt_variant_json || !id) {
-							throw new Error("invalid_variant_details");
-						}
-
-						const itemIndex = findItemIndexById(id);
-
-						if (itemIndex === -1) {
-							throw new Error("variant_not_found_in_order_details");
-						}
-						items[itemIndex].product_json = produt_variant_json;
-
-						// Update specific variant details as needed
-						// Example (assuming there is a variant field): items[itemIndex].variant = produt_variant_json;
-					}
-					break;
 				case "use":
 					{
 						const { data } = input;
@@ -445,10 +404,7 @@ class OrderCalculator {
 		try {
 			const orderToUpdate = this.mappingDetailOrderFromInput(order_old, data);
 			const result = this.recalculatorOrderFromJson(orderToUpdate);
-			console.log(
-				"🚀 ~ OrderCalculator ~ recalculateOrderOnUpdate ~ result:",
-				result
-			);
+
 			return result;
 		} catch (error) {
 			throw error;

@@ -15,7 +15,6 @@ export default function CartProvider({ children }: Props) {
 	const promoSeasonalCarts = PromotionModel.getPromotionEffectOnCart(
 		PromotionModel.getPromotionSeasonal(fullPromotion ?? [])
 	);
-	console.log("🚀 ~ CartProvider ~ promoSeasonalCarts:", promoSeasonalCarts);
 
 	// Phase 1 - Auto Add one of promotions (seasonal) to cart
 	React.useEffect(() => {
