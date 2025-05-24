@@ -14,6 +14,7 @@ import {
 	PaymentAddJsonPrivate,
 	PaymentAddJsonPublic,
 	PaymentCheckoutJson,
+	PaymentJson,
 } from "@/types/Payment.type";
 import CustomerRepo from "./CustomerRepo";
 import { CartCreate } from "@/types/Cart.type";
@@ -28,6 +29,7 @@ import {
 	CashflowreceiptTarget,
 } from "@/types/Cashflow.type";
 import CashflowConvert from "@/services/utils/CashflowConvert";
+import PaymentRepo from "./PaymentRepo";
 
 class CartRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
 	private static instance: CartRepo;
@@ -101,11 +103,13 @@ class CartRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
 	}
 
 	async checkout(data: PaymentAddJson) {
-		const isPrivate = data.access_mode === PaymentAccessMode.PRIVATE;
-		const checkoutMethod = isPrivate
-			? this.checkoutPrivateCart.bind(this)
-			: this.checkoutPublicCart.bind(this);
-		return checkoutMethod(data.data);
+		switch (data.access_mode) {
+			case PaymentAccessMode.PRIVATE:
+				return this.checkoutPrivateCart(data.data);
+
+			default:
+				return this.checkoutPublicCart(data.data);
+		}
 	}
 
 	// User public methods
@@ -126,7 +130,7 @@ class CartRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
 		};
 
 		const order = await new OrderRepo({
-			accessMode: "PUBLIC",
+			accessMode: this.accessMode,
 		}).create({
 			...dataPayment,
 			store_id: data.store_id,
@@ -134,7 +138,7 @@ class CartRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
 
 		dataPayment.order_id = order.order_id;
 
-		await new CashflowRepo().create({
+		const cashflowResponse = await new CashflowRepo().create({
 			cashflow_group: CashflowGroup.CASHFLOW_GROUP_SALE,
 			direction: CashflowreceiptsDirection.RECEIPT,
 			method: CashflowConvert.convertOrderMethodToCashflowMethod(
@@ -149,15 +153,27 @@ class CartRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
 			value: order.debt,
 		});
 
-		return client.put<OrderJson>(
+		const responsePayment = await client.put<PaymentJson>(
 			`${this.URLS.PUBLIC}/pay/${order.id}`,
 			dataPayment
 		);
+
+		if (dataPayment.payment_method === "vnpay") {
+			const reponseTransVnpay = await new PaymentRepo().createTransactionVNpay({
+				cashflow_receipt_id: cashflowResponse.id,
+				order_id: order.id,
+				return_url: location.origin + "/checkouts/vnpay",
+			});
+
+			responsePayment.url_payment = reponseTransVnpay.payment_url;
+		}
+
+		return responsePayment;
 	}
 
 	// User private methods
 	private async checkoutPrivateCart(data: PaymentAddJsonPrivate) {
-		return client.put<OrderJson>(`${this.URLS.PRIVATE}/checkout`, data);
+		return client.put<PaymentJson>(`${this.URLS.PRIVATE}/checkout`, data);
 	}
 }
 

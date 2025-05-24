@@ -414,10 +414,7 @@ class OrderCalculator {
 		try {
 			const orderToUpdate = this.mappingDetailOrderFromInput(order_old, data);
 			const result = this.recalculatorOrderFromJson(orderToUpdate);
-			console.log(
-				"🚀 ~ OrderCalculator ~ recalculateOrderOnUpdate ~ result:",
-				result
-			);
+
 			return result;
 		} catch (error) {
 			throw error;

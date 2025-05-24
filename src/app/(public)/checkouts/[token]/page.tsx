@@ -15,6 +15,7 @@ const getDetailOrder = async (token: string) => {
 		});
 		return cart;
 	} catch (error) {
+		console.log("🚀 ~ getDetailOrder ~ error:", error);
 		notFound();
 	}
 };

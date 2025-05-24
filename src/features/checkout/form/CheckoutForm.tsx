@@ -150,6 +150,13 @@ export default function CheckoutForm({ className, order }: Props) {
 				data: dataPayment,
 			});
 
+			if (res?.url_payment) {
+				await new Promise(() => {
+					router.push(res?.url_payment ?? "");
+				});
+				return;
+			}
+
 			// Bắt đầu prefetch trang thành công
 			setCheckoutStatus((prev) => ({ ...prev, isLoading: true }));
 			await router.prefetch(`/checkouts/success/${order.id}`);

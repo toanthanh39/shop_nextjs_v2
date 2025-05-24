@@ -17,38 +17,36 @@ export default function CartItemPrice({
 		const { price_discount, item_quantity, price_unit_final, product_json } =
 			item;
 		const { compare_at_price: compareAtPrice, price } = product_json;
-		const discount = price_discount / item_quantity;
 
-		const calculateFinalPrice = discount ? price_unit_final : price;
-		const dataFinal = calculateFinalPrice * quantity;
+		const discountPerItem = price_discount / item_quantity;
+		const finalPricePerItem = discountPerItem ? price_unit_final : price;
+		const totalFinalPrice = finalPricePerItem * quantity;
 
-		const calculateComparePrice = () => {
-			if (compareAtPrice <= 0 && discount > 0) return price;
+		const totalComparePrice = (() => {
+			if (compareAtPrice <= 0 && discountPerItem > 0) return price * quantity;
 			if (compareAtPrice <= price) return 0;
-			return compareAtPrice;
-		};
-		const dataCompare = calculateComparePrice() * quantity;
+			return compareAtPrice * quantity;
+		})();
 
-		const calculatePercent = () => {
-			const compareInit = dataCompare / quantity;
-			const finalPrice = dataFinal;
-
-			if (compareInit > 0) {
-				return compareInit <= finalPrice
+		const discountPercent = (() => {
+			const initialComparePrice = totalComparePrice / quantity;
+			if (initialComparePrice > 0) {
+				return initialComparePrice <= finalPricePerItem
 					? 0
-					: ((compareInit - finalPrice) / compareInit) * 100;
+					: ((initialComparePrice - finalPricePerItem) / initialComparePrice) *
+							100;
 			}
-
-			return price <= finalPrice ? 0 : ((price - finalPrice) / price) * 100;
-		};
-		const dataPercent = calculatePercent();
+			return price <= finalPricePerItem
+				? 0
+				: ((price - finalPricePerItem) / price) * 100;
+		})();
 
 		return {
-			priceFinal: dataFinal,
-			priceCompare: dataCompare,
-			percent: Math.round(dataPercent),
+			priceFinal: totalFinalPrice,
+			priceCompare: totalComparePrice,
+			percent: Math.round(discountPercent),
 		};
-	}, [item]);
+	}, [item, isNotWithQuantity]);
 
 	return (
 		<Flex direction="col" gap={4} className={cn(className)}>
