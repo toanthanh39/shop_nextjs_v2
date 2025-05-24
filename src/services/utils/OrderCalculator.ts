@@ -12,15 +12,6 @@ import Helper from "@/utils/helper";
 class OrderCalculator {
 	/////////////////////////////////////////////////////////
 	// get Infor
-	private getPriceProduct(product: ProductJson) {
-		// xử lý trả về giá sau giảm nếu đã áp dụng promotions , trả về giá bán nếu như ko có gì đặc biệt
-		// nếu có nhiều promotion trên 1 item và khác loại giảm thì phải tính dựa trên giá bán hay giá sau giảm của lần lượt từng promotion  ?
-		try {
-			return product.price;
-		} catch (error) {
-			throw new Error("get_price_product_failed");
-		}
-	}
 
 	private getDefaultDataItem(product: ProductJson) {
 		const result: OrderItemJson = {
@@ -265,9 +256,8 @@ class OrderCalculator {
 				items.findIndex((item) => item.id === id);
 
 			switch (input.action) {
-				case "quantity":
-					{
-						const { id, item_quantity } = input.data;
+				case "quantity": {
+					const { id, item_quantity } = input.data;
 
 					if (!id) {
 						throw new Error(`error_invalid_item_${id}`);
@@ -305,28 +295,35 @@ class OrderCalculator {
 
 					break;
 				}
-				case "use": {
-					const { data } = input;
+				case "use":
+					{
+						const { data } = input;
 
-					if (!Array.isArray(data) || data.length === 0) {
-						throw new Error("invalid_use_action_data_must_be_non_empty_array");
-					}
-
-					data.forEach(({ id, is_use }) => {
-						console.log("🚀 ~ OrderCalculator ~ data.forEach ~ id:", id);
-						if (!id || (is_use !== IsUse.USE && is_use !== IsUse.NOT_USE)) {
-							throw new Error("invalid_use_action_invalid_id_or_is_use_value");
+						if (!Array.isArray(data) || data.length === 0) {
+							throw new Error(
+								"invalid_use_action_data_must_be_non_empty_array"
+							);
 						}
 
-						const itemIndex = findItemIndexById(id);
+						for (const i of data) {
+							const { id, is_use } = i;
+							if (!id || (is_use !== IsUse.USE && is_use !== IsUse.NOT_USE)) {
+								throw new Error(
+									"invalid_use_action_invalid_id_or_is_use_value"
+								);
+							}
 
-						if (itemIndex === -1) {
-							throw new Error("product_not_found_in_order_details");
+							const itemIndex = findItemIndexById(id);
+
+							if (itemIndex === -1) {
+								throw new Error("product_not_found_in_order_details");
+							}
+
+							items[itemIndex].is_use = is_use;
 						}
-
-						items[itemIndex].item_quantity = item_quantity;
 					}
 					break;
+
 				case "variant":
 					{
 						const { id, produt_variant_json } = input.data;
@@ -346,35 +343,7 @@ class OrderCalculator {
 						// Example (assuming there is a variant field): items[itemIndex].variant = produt_variant_json;
 					}
 					break;
-				case "use":
-					{
-						const { data } = input;
 
-						if (!Array.isArray(data) || data.length === 0) {
-							throw new Error(
-								"invalid_use_action_data_must_be_non_empty_array"
-							);
-						}
-
-						data.forEach(({ id, is_use }) => {
-							if (!id || (is_use !== IsUse.USE && is_use !== IsUse.NOT_USE)) {
-								throw new Error(
-									"invalid_use_action_invalid_id_or_is_use_value"
-								);
-							}
-
-							const itemIndex = findItemIndexById(id);
-
-							if (itemIndex === -1) {
-								throw new Error(
-									`item_with_id_${id}_not_found_in_order_details`
-								);
-							}
-
-							items[itemIndex].is_use = is_use;
-						});
-					}
-					break;
 				case "add":
 					{
 						const {
