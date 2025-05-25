@@ -37,7 +37,7 @@ export default function List<D>({
 
 	return (
 		<Flex as="ul" className={cn(className)}>
-			<AnimatePresence>
+			<AnimatePresence mode="sync">
 				{dataSource.map((item, index) => (
 					<motion.li
 						key={index}
@@ -47,6 +47,7 @@ export default function List<D>({
 						exit={motionConfig.fade.exit}
 						transition={motionConfig.fade.transition}>
 						{render(item, index)}
+					
 					</motion.li>
 				))}
 			</AnimatePresence>

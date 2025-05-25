@@ -1,22 +1,24 @@
 import client from "@/lib/core/client";
 import server from "@/lib/core/server";
 import { BaseCollectionJson } from "@/types/Base.type";
-import Helper from "@/utils/helper";
 
 abstract class BaseRepository<T> {
-	protected readonly BASE_URL_V1: string;
-	protected readonly BASE_URL_V2: string;
+	protected readonly BASE_URL_V1: string =
+		process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+	protected readonly BASE_URL_V2: string =
+		process.env.NEXT_PUBLIC_API_BASE_URL_V2 ?? "";
 
 	constructor() {
-		this.BASE_URL_V1 = process.env.NEXT_PUBLIC_API_BASE_URL!;
-		this.BASE_URL_V2 = process.env.NEXT_PUBLIC_API_BASE_URL_V2!;
+		if (!this.BASE_URL_V1 || !this.BASE_URL_V2) {
+			throw new Error("Base URLs must be provided");
+		}
 	}
 
 	abstract getOne(id: number | string, f?: unknown): Promise<T | null>;
 	abstract getAll(f: unknown, config?: unknown): Promise<BaseCollectionJson<T>>;
 
-	public getClientOrServer() {
-		return Helper.isServer() ? server : client;
+	protected getClientOrServer() {
+		return typeof window === "undefined" ? server : client;
 	}
 }
 

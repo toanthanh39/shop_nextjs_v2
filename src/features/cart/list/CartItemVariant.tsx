@@ -3,11 +3,12 @@ import { CustomImage, Flex, Text } from "@/components/ui";
 import useProductList from "@/lib/hooks/cache/useProductList";
 import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
 import { CartItemProps } from "@/types/Cart.type";
+import { ProductJson } from "@/types/Product.type";
 import { cn } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 
 type Props = CartItemProps & {
-	onChange: (id: number) => Promise<void>;
+	onChange: (v: ProductJson) => Promise<void>;
 };
 export default function CartItemVariant({
 	item,
@@ -26,11 +27,11 @@ export default function CartItemVariant({
 	}, [data, item.product_id]);
 
 	///////////////////////////////////////////
-	const onChangeVariant = async (pId: number) => {
+	const onChangeVariant = async (v: ProductJson) => {
 		if (isLoading || disabled) return;
 		try {
-			await onChange(pId);
-			setActive(pId);
+			await onChange(v);
+			setActive(v.id);
 		} catch (error) {
 		} finally {
 		}
@@ -71,7 +72,7 @@ export default function CartItemVariant({
 							<Text.p className="mb-0.5">{vt.name}</Text.p>
 							{vt.items.map((p) => (
 								<Flex
-									onClick={() => p.quantity && onChangeVariant(p.id)}
+									onClick={() => p.quantity && onChangeVariant(p)}
 									key={p.id}
 									gap={4}
 									justify="start"

@@ -3,11 +3,12 @@ import Popup from "@/components/composite/Popup";
 import { CloseIcon } from "@/components/icons";
 import { Button, Flex, Text } from "@/components/ui";
 import { CartItemProps } from "@/types/Cart.type";
+import { OrderId } from "@/types/Order.type";
 import { cn } from "@/utils/utils";
 import { useState } from "react";
 
 type Props = CartItemProps & {
-	onDeleteItem: (id: number) => Promise<void>;
+	onDeleteItem: (id: number) => Promise<boolean>;
 };
 export default function CartItemAction({
 	item,
@@ -16,7 +17,7 @@ export default function CartItemAction({
 	isLoading,
 	onDeleteItem,
 }: Props) {
-	const [idDelete, setIdDelete] = useState(0);
+	const [idDelete, setIdDelete] = useState<OrderId>(0);
 	const [loading, setLoading] = useState(false);
 
 	const onDelete = () => {

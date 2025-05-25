@@ -21,7 +21,7 @@ export default function PageClient({ dataSource }: Props) {
 	};
 
 	const onCloseQuickView = () => {
-		setProductQuickView(undefined);
+		setProductQuickView(null);
 	};
 
 	return (

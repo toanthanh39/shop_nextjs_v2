@@ -1,0 +1,34 @@
+.skeleton-loading {
+	position: absolute;
+	top: 0;
+	z-index: 20;
+	left: -100%;
+	/* width: auto; */
+	height: 100%;
+	/* background: linear-gradient(
+		90deg,
+		transparent,
+		#f7c7c7,
+		rgba(228, 7, 7, 0.95),
+		red
+	); */
+
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.2),
+		rgba(215, 34, 41, 0.1),
+		#d72229,
+		transparent
+	);
+	animation: skeleton-shine 2.5s infinite;
+}
+
+@keyframes skeleton-shine {
+	0% {
+		left: -100%;
+	}
+	100% {
+		left: 100%;
+	}
+}

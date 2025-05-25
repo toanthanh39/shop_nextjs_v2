@@ -6,7 +6,7 @@ import { cn } from "@/utils/utils";
 import { LoadingIcon } from "../icons";
 
 export const buttonVariants = cva(
-	"inline-flex items-center justify-center w-fit whitespace-nowrap rounded font-medium  transition-colors disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
+	"inline-flex items-center justify-center w-fit whitespace-nowrap rounded font-medium cursor-pointer  transition-colors  disabled:opacity-50 disabled:cursor-not-allowed",
 	{
 		// ring-colors-red-5 ring-1
 		variants: {

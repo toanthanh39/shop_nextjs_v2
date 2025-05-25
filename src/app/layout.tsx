@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Noto_Sans, Noto_Serif_Display } from "next/font/google";
 import "./globals.css";
+import "@/styles/css/animation.css";
+
 import RootProvider from "@/lib/providers/RootProvider";
 import DevComponents from "@/features/dev/fixed/DevComponents";
 import { generateMetadataSite } from "@/meta";

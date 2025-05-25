@@ -15,44 +15,53 @@ import CartItemVariant from "./CartItemVariant";
 import CartItemIsUse from "./CartItemIsUse";
 import { IsUse } from "@/types/Global.type";
 import { useMemo } from "react";
+import { ProductJson } from "@/types/Product.type";
 
 type Props = ComProps & CartItemProps & {};
 export default function CartItem({ item, className }: Props) {
-	const { updateCart, removeCartItem, isUpdating } = useCartGlobal({
+	const { updateCart, isUpdating } = useCartGlobal({
 		enabled: false,
 	});
 
-	const onUpdateQuantity = debounce(async (quantity: number) => {
+	const onUpdateQuantity = async (quantity: number) => {
 		try {
 			await updateCart({
 				action: "quantity",
 				data: {
 					id: item.id,
-					quantity: quantity,
+					item_quantity: quantity,
 					product_id: item.product_id,
 				},
 			});
+			return true;
 		} catch (error) {
-			console.log("🚀 ~ onUpdateQuantity ~ error:", error);
-		}
-	}, 1000);
-
-	const onDeleteItem = async (id: number) => {
-		try {
-			await removeCartItem({ ids: [id] });
-		} catch (error) {
-			console.log("🚀 ~ onDeleteItem ~ error:", error);
+			console.log("🚀 ~ error:", error);
+			return false;
 		}
 	};
 
-	const updateVariant = async (pId: number) => {
+	const onDeleteItem = async (id: number) => {
+		try {
+			await updateCart({
+				action: "remove",
+				data: { ids: [id] },
+			});
+			return true;
+		} catch (error) {
+			console.log("🚀 ~ onDeleteItem ~ error:", error);
+			return true;
+		}
+	};
+
+	const updateVariant = async (variant: ProductJson) => {
 		try {
 			await updateCart({
 				action: "variant",
 				data: {
-					variant_id: pId,
+					product_json: variant,
 					id: item.id,
-					quantity: item.item_quantity,
+					produt_variant_json: variant,
+					product_id: variant.id,
 				},
 			});
 		} catch (error) {}

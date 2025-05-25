@@ -1,6 +1,7 @@
 import { IsUse } from "@/types/Global.type";
 import {
 	ActionOrderUpdate,
+	OrderId,
 	OrderItemJson,
 	OrderJson,
 	ValidatePromotionProps,
@@ -8,16 +9,28 @@ import {
 import { ProductJson } from "@/types/Product.type";
 import { PromotionDiscountType, PromotionJson } from "@/types/Promotion.type";
 import Helper from "@/utils/helper";
+import { v4 as uuidv4 } from "uuid";
 
 class OrderCalculator {
 	/////////////////////////////////////////////////////////
-	// get Infor
+	// validate
 
+	private checkAllPromotionOnOrderPassedToCalc(o: OrderJson) {
+		const promoBody = o.promotions.filter((p) => p.is_use === IsUse.USE);
+		const promoOnItems = o.details.data
+			.flatMap((i) => i.promotions)
+			.filter((i) => i.is_use === IsUse.USE);
+		return [...promoBody, ...promoOnItems].every(
+			(i) => i.promotion_detail.apply_with_other
+		);
+	}
+
+	// get Infor
 	private getDefaultDataItem(product: ProductJson) {
 		const result: OrderItemJson = {
 			order_id: 0,
 			product_id: 0,
-			id: 0,
+			id: uuidv4(),
 			is_use: IsUse.USE,
 			item_title: "",
 			item_name: "",
@@ -189,16 +202,23 @@ class OrderCalculator {
 				if (prev.discount_value_type === "amount") {
 					curr += prev.discount_value;
 				} else if (prev.discount_value_type === "percent") {
-					curr += (prev.discount_value / 100) * result.item_unit_price;
+					curr += Math.max(
+						0,
+						(prev.discount_value / 100) * result.item_unit_price
+					);
 				}
 
 				return curr;
 			}, 0);
 
-			result.price_unit_final = result.item_unit_price - result.price_discount;
+			result.price_unit_final = Math.max(
+				0,
+				result.item_unit_price - result.price_discount
+			);
 			result.price_final = result.price_unit_final;
-			result.discount_percent = Math.round(
-				(result.price_discount / result.item_total) * 100
+			result.discount_percent = Math.max(
+				0,
+				Math.round((result.price_discount / result.item_total) * 100)
 			);
 
 			return result;
@@ -252,7 +272,7 @@ class OrderCalculator {
 		try {
 			let items = orderUpdate.details.data;
 
-			const findItemIndexById = (id: number) =>
+			const findItemIndexById = (id: OrderId) =>
 				items.findIndex((item) => item.id === id);
 
 			switch (input.action) {
@@ -359,6 +379,7 @@ class OrderCalculator {
 						if (indexExited > 0) {
 							items[indexExited].item_quantity += item_quantity;
 						} else {
+							const itemIdRes = items;
 							items.unshift({
 								...this.getDefaultDataItem(product_json),
 								item_quantity: item_quantity,
@@ -394,6 +415,9 @@ class OrderCalculator {
 							promotions,
 							"promotion_id"
 						);
+						if (!this.checkAllPromotionOnOrderPassedToCalc(orderUpdate)) {
+							throw new Error("error_order_promotion_conflict");
+						}
 					}
 					break;
 

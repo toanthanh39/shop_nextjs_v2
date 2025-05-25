@@ -3,7 +3,7 @@ import StoryRepo from "@/services/api/repositories/StoryRepo";
 import { StoryJson } from "@/types/Story.type";
 import { useQueries } from "@tanstack/react-query";
 
-const STALE_TIME = 60 * 1000;
+const STALE_TIME = 5 * 60 * 1000;
 export const CACHE_NOTIFICATIONS_HOOK = "cache-notfications";
 
 function useNotfication() {

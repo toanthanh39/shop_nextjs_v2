@@ -5,3 +5,7 @@ export type Params<D> = {
 export type SearchParams = {
 	searchParams: { [key: string]: string };
 };
+
+export interface ChildrenProps {
+	children: React.ReactNode;
+}

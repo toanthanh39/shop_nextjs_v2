@@ -199,7 +199,7 @@ export type OrderJson = {
 export type OrderItemJson = {
 	order_id: OrderId;
 	product_id: number;
-	id: number;
+	id: OrderId;
 	is_use: IsUse;
 	item_name: string;
 	item_title: string;
@@ -235,11 +235,12 @@ export type DiscountType = "amount" | "percent";
 
 ////////////////////////////////////
 
-export type OrderItemEdit = Pick<OrderItemJson, "product_id" | "id"> & {
+export type OrderItemEdit = Pick<OrderItemJson, "id" | "product_id"> & {
 	is_use: IsUse;
-	item_quantity: number;
+	item_quantity?: number;
 	promotions?: OrderPromotion[];
 	order_id?: OrderId;
+	product_id?: number;
 };
 
 export type OrderAddEdit = {
@@ -282,7 +283,7 @@ export type OrderListJson = BaseCollectionJson<OrderJson>;
 
 ////////////////////////////////////
 
-type DefaultDataUpdateProps = Pick<OrderItemEdit, "id"> & {
+type DefaultDataUpdateProps = Pick<OrderItemEdit, "id" | "product_id"> & {
 	product_json: ProductJson;
 };
 
@@ -298,7 +299,7 @@ export type ActionOrderUpdate =
 	  }
 	| {
 			action: "use";
-			data: Array<{ id: number; is_use: IsUse }>;
+			data: Array<{ id: OrderId; is_use: IsUse; product_id: number }>;
 	  }
 	| {
 			action: "add";
@@ -306,7 +307,7 @@ export type ActionOrderUpdate =
 	  }
 	| {
 			action: "remove";
-			data: { ids: number[] };
+			data: { ids: OrderId[] };
 	  }
 	| {
 			action: "promotion";
