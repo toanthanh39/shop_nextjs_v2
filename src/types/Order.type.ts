@@ -3,7 +3,6 @@ import { PromotionJson } from "./Promotion.type";
 import { ProductJson } from "./Product.type";
 import { IsUse } from "./Global.type";
 import { CouponAddJson } from "./Coupon.type";
-import { Issue } from "next/dist/build/swc/types";
 import { PaymentBillingJson, PaymentShippingJson } from "./Payment.type";
 
 // enums
@@ -237,9 +236,10 @@ export type DiscountType = "amount" | "percent";
 
 export type OrderItemEdit = Pick<OrderItemJson, "product_id" | "id"> & {
 	is_use: IsUse;
-	item_quantity: number;
+	item_quantity?: number;
 	promotions?: OrderPromotion[];
 	order_id?: OrderId;
+	product_json?: ProductJson;
 };
 
 export type OrderAddEdit = {

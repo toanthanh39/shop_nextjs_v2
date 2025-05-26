@@ -2,24 +2,17 @@ import BaseApi from "@/lib/axios/BaseApi";
 import { HookCacheProps } from "@/types/Component";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useSiteSetting from "./useSiteSetting";
-import {
-	ORDER_ACTION,
-	OrderAddCoupon,
-	OrderItemEdit,
-	OrderJson,
-	OrderPromotion,
-} from "@/types/Order.type";
+import { ORDER_ACTION, OrderItemEdit } from "@/types/Order.type";
 import { IsUse } from "@/types/Global.type";
 import { OrderItemJson } from "@/types/Order.type";
 import CartRepo from "@/services/api/repositories/CartRepo";
 import OrderConvert from "@/services/utils/OrderConvert";
-import { PaymentAccessMode, PaymentAddJson } from "@/types/Payment.type";
+import { PaymentAddJson } from "@/types/Payment.type";
 import {
 	PromotionDiscountType,
 	PromotionJson,
 	PromotionToggleProps,
 } from "@/types/Promotion.type";
-import useCartStore from "@/lib/zustand/useCartStore";
 import { useMemo } from "react";
 import OrderCalculator from "@/services/utils/OrderCalculator";
 import { ProductJson } from "@/types/Product.type";
@@ -184,20 +177,20 @@ function useCartGlobal({ enabled = true }: Props) {
 				);
 				const cartGlobal = cart ?? (await createMutation.mutateAsync());
 
-				await CartRepoInstance.update({
-					action: ORDER_ACTION.ADD,
-					cart_id: cartGlobal.id,
-					customer_token: site.customer_token,
-					details: [
-						{
-							product_id: product_id,
-							promotions: orderPromotions,
-							item_quantity: item_quantity,
-							is_use: IsUse.USE,
-							id: 0,
-						},
-					],
-				});
+				// await CartRepoInstance.update({
+				// 	action: ORDER_ACTION.ADD,
+				// 	cart_id: cartGlobal.id,
+				// 	customer_token: site.customer_token,
+				// 	details: [
+				// 		{
+				// 			product_id: product_id,
+				// 			promotions: orderPromotions,
+				// 			item_quantity: item_quantity,
+				// 			is_use: IsUse.USE,
+				// 			id: 0,
+				// 		},
+				// 	],
+				// });
 
 				const resultTest = OrderCalculatorInstance.recalculateOrderOnUpdate(
 					cartGlobal,
@@ -316,7 +309,6 @@ function useCartGlobal({ enabled = true }: Props) {
 
 	const removeMutation = useMutation({
 		mutationFn: async ({ ids }: { ids: number[] }) => {
-			console.log("🚀 ~ mutationFn: ~ ids:", ids);
 			try {
 				if (!site) {
 					throw new Error(cartError.error_site_global);

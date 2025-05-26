@@ -12,10 +12,16 @@ abstract class BaseRepository<T> {
 		this.BASE_URL_V2 = process.env.NEXT_PUBLIC_API_BASE_URL_V2!;
 	}
 
-	abstract getOne(id: number | string, f?: unknown): Promise<T | null>;
-	abstract getAll(f: unknown, config?: unknown): Promise<BaseCollectionJson<T>>;
+	protected abstract getOne(
+		id: number | string,
+		f?: unknown
+	): Promise<T | null>;
+	protected abstract getAll(
+		f: unknown,
+		config?: unknown
+	): Promise<BaseCollectionJson<T>>;
 
-	public getClientOrServer() {
+	protected getClientOrServer() {
 		return Helper.isServer() ? server : client;
 	}
 }
