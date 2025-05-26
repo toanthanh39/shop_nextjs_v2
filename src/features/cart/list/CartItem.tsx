@@ -48,8 +48,7 @@ export default function CartItem({ item, className }: Props) {
 			});
 			return true;
 		} catch (error) {
-			console.log("🚀 ~ onDeleteItem ~ error:", error);
-			return true;
+			return false;
 		}
 	};
 
