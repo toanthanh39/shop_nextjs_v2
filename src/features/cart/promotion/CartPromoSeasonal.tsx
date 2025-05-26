@@ -69,7 +69,6 @@ const RenderItem = ({
 	onChange,
 }: RenderItemProps) => {
 	const OrderInstance = new OrderModel(cart);
-	console.log("🚀 ~ OrderInstance:", OrderInstance.order);
 
 	const isReqValid = OrderInstance.checkPromotionReqValid(promotion);
 	const subtotal = cart.price_sell;

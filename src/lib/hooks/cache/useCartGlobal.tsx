@@ -514,12 +514,12 @@ function useCartGlobal({ enabled = true }: Props) {
 					throw new Error(cartError.error_add_promotion_cart);
 				}
 
-				// await CartRepoInstance.update({
-				// 	action: ORDER_ACTION.PROMOTION,
-				// 	cart_id: cart.id,
-				// 	customer_token: site.customer_token,
-				// 	promotions: cartPromotions,
-				// });
+				await CartRepoInstance.update({
+					action: ORDER_ACTION.PROMOTION,
+					cart_id: cart.id,
+					customer_token: site.customer_token,
+					promotions: cartPromotions,
+				});
 
 				return OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
 					action: "promotion",

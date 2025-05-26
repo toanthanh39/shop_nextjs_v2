@@ -4,6 +4,7 @@ import {
 	OrderId,
 	OrderItemJson,
 	OrderJson,
+	OrderPromotion,
 	ValidatePromotionProps,
 } from "@/types/Order.type";
 import { ProductJson } from "@/types/Product.type";
@@ -20,9 +21,45 @@ class OrderCalculator {
 		const promoOnItems = o.details.data
 			.flatMap((i) => i.promotions)
 			.filter((i) => i.is_use === IsUse.USE);
-		return [...promoBody, ...promoOnItems].every(
-			(i) => i.promotion_detail.apply_with_other
+		const allPromotionOnOrder = [...promoBody, ...promoOnItems];
+		if (
+			allPromotionOnOrder.length > 1 &&
+			allPromotionOnOrder.some((i) => !i.promotion_detail.apply_with_other)
+		) {
+			return ["error_order_promotion_conflict_apply_with_other"];
+		}
+
+		return [];
+	}
+
+	private checkPromotionReqConditions(
+		promotions: OrderPromotion[],
+		order: OrderJson
+	): string[] {
+		// Return an empty array if there are no promotions
+		if (promotions.length === 0) {
+			return [];
+		}
+
+		// Extract all collection IDs present in the order
+		const allCollectionIdsInOrder = order.details.data.flatMap((item) =>
+			item.product_json.collections.map((col) => col.id)
 		);
+
+		// Extract all required collection IDs from promotions
+		const allCollectionIdsInPromotions = promotions.flatMap((promotion) =>
+			promotion.promotion_detail.req_collectionids
+				.split(",")
+				.map((id) => Number(id))
+		);
+
+		// Check if there is any common collection ID
+		const hasCommonCollectionId = allCollectionIdsInPromotions.some((id) =>
+			allCollectionIdsInOrder.includes(id)
+		);
+
+		// Return ["error"] if no common element is found, otherwise []
+		return hasCommonCollectionId ? [] : ["error_promotion_collection_mismatch"];
 	}
 
 	// get Infor
@@ -69,11 +106,11 @@ class OrderCalculator {
 				}
 
 				if (promotions.length > 1 && element.apply_with_other === false) {
-					throw new Error("error_promotion_must_not_aplly_with_other");
+					continue;
 				}
 
 				if (totalPriceSellOrder < element.req_subtotal) {
-					throw new Error("error_promotion_reqsubtotal_invalid");
+					continue;
 				}
 
 				if (
@@ -90,7 +127,7 @@ class OrderCalculator {
 						.some((id) => collectionIdsInProduct.includes(Number(id)));
 
 					if (!hasCommonValues) {
-						throw new Error("error_promotion_collection_mismatch");
+						continue;
 					}
 				} else {
 				}
@@ -415,8 +452,13 @@ class OrderCalculator {
 							promotions,
 							"promotion_id"
 						);
-						if (!this.checkAllPromotionOnOrderPassedToCalc(orderUpdate)) {
-							throw new Error("error_order_promotion_conflict");
+						let errors: string[] = [];
+
+						errors = this.CheckPromotionReqConditions(promotions, orderUpdate);
+						errors = this.checkAllPromotionOnOrderPassedToCalc(orderUpdate);
+
+						if (errors.length > 0) {
+							throw new Error(errors[0]);
 						}
 					}
 					break;
