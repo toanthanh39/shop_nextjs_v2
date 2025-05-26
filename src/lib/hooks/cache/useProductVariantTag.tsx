@@ -30,7 +30,7 @@ function useProductVariantTag({ product, enabled }: Props) {
 		queryFn: async () => {
 			try {
 				const res = await new ProductRepo({
-					accessMode: BaseAccessMode.PUBLIC_CLIENT,
+					accessMode: "PUBLIC",
 				}).getAll({
 					store_id: site?.store_id,
 					show: "pos",

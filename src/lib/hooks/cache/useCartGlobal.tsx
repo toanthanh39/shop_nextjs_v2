@@ -2,7 +2,14 @@ import BaseApi from "@/lib/axios/BaseApi";
 import { HookCacheProps } from "@/types/Component";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useSiteSetting from "./useSiteSetting";
-import { ORDER_ACTION, OrderItemEdit } from "@/types/Order.type";
+import {
+	ActionOrderUpdate,
+	ORDER_ACTION,
+	OrderAddCoupon,
+	OrderItemEdit,
+	OrderJson,
+	OrderPromotion,
+} from "@/types/Order.type";
 import { IsUse } from "@/types/Global.type";
 import { OrderItemJson } from "@/types/Order.type";
 import CartRepo from "@/services/api/repositories/CartRepo";
@@ -18,23 +25,6 @@ import OrderCalculator from "@/services/utils/OrderCalculator";
 import { ProductJson } from "@/types/Product.type";
 
 type Props = HookCacheProps & {};
-
-type DefaultDataUpdateProps = Pick<OrderItemEdit, "id">;
-type ActionCartUpdate =
-	| {
-			action: "quantity";
-			data: DefaultDataUpdateProps & { product_id: number; quantity: number };
-	  }
-	| {
-			action: "variant";
-			data: DefaultDataUpdateProps & { variant_id: number; quantity: number };
-	  }
-	| {
-			action: "use";
-			data: Array<
-				DefaultDataUpdateProps & { product_id: number; is_use: IsUse }
-			>;
-	  };
 
 type ActionUpdateCouponProps =
 	| {
@@ -177,33 +167,42 @@ function useCartGlobal({ enabled = true }: Props) {
 				);
 				const cartGlobal = cart ?? (await createMutation.mutateAsync());
 
-				// await CartRepoInstance.update({
-				// 	action: ORDER_ACTION.ADD,
-				// 	cart_id: cartGlobal.id,
-				// 	customer_token: site.customer_token,
-				// 	details: [
-				// 		{
-				// 			product_id: product_id,
-				// 			promotions: orderPromotions,
-				// 			item_quantity: item_quantity,
-				// 			is_use: IsUse.USE,
-				// 			id: 0,
-				// 		},
-				// 	],
-				// });
+				const orderServerJson = await CartRepoInstance.update({
+					action: ORDER_ACTION.ADD,
+					cart_id: cartGlobal.id,
+					customer_token: site.customer_token,
+					details: [
+						{
+							product_id: product_id,
+							promotions: orderPromotions,
+							item_quantity: item_quantity,
+							is_use: IsUse.USE,
+							id: 0,
+						},
+					],
+				});
 
-				const resultTest = OrderCalculatorInstance.recalculateOrderOnUpdate(
-					cartGlobal,
-					{
+				const orderClientJson =
+					OrderCalculatorInstance.recalculateOrderOnUpdate(cartGlobal, {
 						action: "add",
 						data: {
 							item_quantity: item_quantity,
 							product_json: product_json,
 						},
-					}
+					});
+
+				const serverItemMap = new Map(
+					orderServerJson.details.data.map((item) => [item.product_id, item.id])
 				);
 
-				return resultTest;
+				orderClientJson.details.data = orderClientJson.details.data.map(
+					(clientItem) => ({
+						...clientItem,
+						id: serverItemMap.get(clientItem.product_id) ?? clientItem.id,
+					})
+				);
+
+				return orderClientJson;
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			} finally {
@@ -221,7 +220,7 @@ function useCartGlobal({ enabled = true }: Props) {
 	});
 
 	const updateMutation = useMutation({
-		mutationFn: async (ac: ActionCartUpdate) => {
+		mutationFn: async (ac: ActionOrderUpdate) => {
 			try {
 				if (!site) {
 					throw new Error(cartError.error_site_global);
@@ -230,18 +229,17 @@ function useCartGlobal({ enabled = true }: Props) {
 				if (!cart) {
 					throw new Error(cartError.error_cart_not_exited);
 				}
-
 				let cartGlobal = { ...cart };
 
 				let details: OrderItemEdit[] = [];
 
 				switch (ac.action) {
 					case "quantity": {
-						const { id, product_id, quantity } = ac.data;
+						const { id, item_quantity, product_id } = ac.data;
 						details.push({
 							id,
-							product_id,
-							item_quantity: quantity,
+							item_quantity,
+							product_id: product_id,
 							is_use:
 								cartGlobal.details.data.find((i) => i.id === id)?.is_use ??
 								IsUse.USE,
@@ -253,7 +251,8 @@ function useCartGlobal({ enabled = true }: Props) {
 								action: "quantity",
 								data: {
 									id: id,
-									item_quantity: quantity,
+									item_quantity,
+									product_id,
 								},
 							}
 						);
@@ -261,11 +260,11 @@ function useCartGlobal({ enabled = true }: Props) {
 					}
 
 					case "variant": {
-						const { id, variant_id, quantity } = ac.data;
+						const { id, produt_variant_json } = ac.data;
 						details.push({
 							id,
-							product_id: variant_id,
-							item_quantity: quantity,
+							product_id: produt_variant_json.id,
+
 							is_use:
 								cartGlobal.details.data.find((i) => i.id === id)?.is_use ??
 								IsUse.USE,
@@ -275,9 +274,7 @@ function useCartGlobal({ enabled = true }: Props) {
 
 					case "use": {
 						details = ac.data.map((d) => ({
-							id: d.id,
-							product_id: d.product_id,
-							is_use: d.is_use,
+							...d,
 							item_quantity:
 								cartGlobal.details.data.find((i) => i.id === d.id)
 									?.item_quantity ?? 0,
@@ -285,11 +282,40 @@ function useCartGlobal({ enabled = true }: Props) {
 						break;
 					}
 
+					case "remove": {
+						const { ids } = ac.data;
+
+						const itemRemoves: OrderItemEdit[] = cart.details.data
+							.filter((recordItem) => ids.includes(recordItem.id))
+							.map((i) => ({
+								id: i.id,
+								product_id: i.product_id,
+								is_use: i.is_use,
+								item_quantity: i.item_quantity,
+							}));
+
+						// return await removeCartItem(cart.id, site.customer_token, itemRemoves);
+
+						await CartRepoInstance.update({
+							action: ORDER_ACTION.DELETE,
+							cart_id: cart.id,
+							customer_token: site.customer_token,
+							details: itemRemoves,
+						});
+
+						return OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
+							action: "remove",
+							data: { ids: ids },
+						});
+
+						break;
+					}
+
 					default:
 						throw new Error("error_action_invalid");
 				}
 
-				const response = CartRepoInstance.update({
+				const response = await CartRepoInstance.update({
 					action: ORDER_ACTION.UPDATE,
 					cart_id: cartGlobal.id,
 					customer_token: site.customer_token,
@@ -300,48 +326,6 @@ function useCartGlobal({ enabled = true }: Props) {
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			} finally {
-			}
-		},
-		onSuccess: (updatedCart) => {
-			queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], updatedCart);
-		},
-	});
-
-	const removeMutation = useMutation({
-		mutationFn: async ({ ids }: { ids: number[] }) => {
-			try {
-				if (!site) {
-					throw new Error(cartError.error_site_global);
-				}
-
-				if (!cart) {
-					throw new Error(cartError.error_cart_not_exited);
-				}
-
-				const itemRemoves: OrderItemEdit[] = cart.details.data
-					.filter((recordItem) => ids.includes(recordItem.id))
-					.map((i) => ({
-						id: i.id,
-						product_id: i.product_id,
-						is_use: i.is_use,
-						item_quantity: i.item_quantity,
-					}));
-
-				// return await removeCartItem(cart.id, site.customer_token, itemRemoves);
-
-				CartRepoInstance.update({
-					action: ORDER_ACTION.DELETE,
-					cart_id: cart.id,
-					customer_token: site.customer_token,
-					details: itemRemoves,
-				});
-				return OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
-					action: "remove",
-					data: { ids: ids },
-				});
-			} catch (error) {
-				console.error("Error in removeMutation:", error);
-				throw BaseApi.handleError(error);
 			}
 		},
 		onSuccess: (updatedCart) => {
@@ -465,7 +449,11 @@ function useCartGlobal({ enabled = true }: Props) {
 					cartGlobal,
 					{
 						action: "quantity",
-						data: { item_quantity: item_quantiy, id: itemExited.id },
+						data: {
+							item_quantity: item_quantiy,
+							id: itemExited.id,
+							product_id: itemExited.product_id,
+						},
 					}
 				);
 			}
@@ -476,7 +464,7 @@ function useCartGlobal({ enabled = true }: Props) {
 					{
 						action: "use",
 						data: items.map((i) => ({
-							id: i.id,
+							...i,
 							is_use: IsUse.NOT_USE,
 						})),
 					}
@@ -526,17 +514,20 @@ function useCartGlobal({ enabled = true }: Props) {
 					throw new Error(cartError.error_add_promotion_cart);
 				}
 
-				await CartRepoInstance.update({
-					action: ORDER_ACTION.PROMOTION,
-					cart_id: cart.id,
-					customer_token: site.customer_token,
-					promotions: cartPromotions,
-				});
-				const result = OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
+				// await CartRepoInstance.update({
+				// 	action: ORDER_ACTION.PROMOTION,
+				// 	cart_id: cart.id,
+				// 	customer_token: site.customer_token,
+				// 	promotions: cartPromotions,
+				// });
+
+				return OrderCalculatorInstance.recalculateOrderOnUpdate(cart, {
 					action: "promotion",
-					data: { promotions: cartPromotions },
+					data: {
+						promotions: cartPromotions,
+					},
 				});
-				return result;
+				// return result;
 			} catch (error) {
 				throw BaseApi.handleError(error);
 			}
@@ -572,7 +563,6 @@ function useCartGlobal({ enabled = true }: Props) {
 		addToCart: addMutation.mutateAsync,
 		updateCart: updateMutation.mutateAsync,
 		createCart: createMutation.mutateAsync,
-		removeCartItem: removeMutation.mutateAsync,
 		checkout: checkoutMutation.mutateAsync,
 		buyNow: buyNowMutaion.mutateAsync,
 		updateCartCoupon: updateCouponMutation.mutateAsync,
@@ -583,7 +573,6 @@ function useCartGlobal({ enabled = true }: Props) {
 			addMutation.isPending ||
 			updateMutation.isPending,
 		isUpdating: updateMutation.isPending || updateCouponMutation.isPending,
-		isRemoving: removeMutation.isPending,
 		isCheckouting: checkoutMutation.isPending,
 		isBuyNow: buyNowMutaion.isPending,
 		disabled,

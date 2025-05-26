@@ -20,7 +20,6 @@ export default function CartInfor({
 	isLoading,
 	onSubmit,
 }: Props) {
-	console.log("🚀 ~ cart:", cart);
 	const priceInfor = CartCalculator.getPriceInfor(cart);
 
 	const { newCancelToken, setCancel } = useCancelToken();

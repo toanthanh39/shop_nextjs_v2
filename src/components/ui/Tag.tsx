@@ -5,14 +5,14 @@ import { VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/utils";
 import Text from "./Text";
 
-const tagVariants = cva("relative rounded-sm w-fit px-1 py-1", {
+const tagVariants = cva("relative rounded-sm w-fit px-1", {
 	variants: {
 		variant: {
 			default: "bg-colors-gray-5 text-whitesmoke",
 			primary: "bg-colors-red-5 text-whitesmoke",
 			genderMale: "bg-blue-400 text-white py-0",
 			genderFemale: "bg-pink-400 text-white py-0",
-			success: "bg-green-500 text-white",
+			success: "bg-green-500 text-white py-1",
 			secondary: "bg-colors-gray-4 text-white",
 		},
 		size: {

@@ -2,11 +2,11 @@
 import { Button, Flex, Text } from "@/components/ui";
 import { CartItemProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
-import { cn } from "@/utils/utils";
-import { useEffect, useState } from "react";
+import { cn, debounce } from "@/utils/utils";
+import { useCallback, useEffect, useState } from "react";
 
 type Props = CartItemProps & {
-	onQuantityChange: (quantity: number) => void;
+	onQuantityChange: (quantity: number) => Promise<boolean>;
 };
 export default function CartItemQuantity({
 	item,
@@ -17,10 +17,20 @@ export default function CartItemQuantity({
 }: Props) {
 	const [quantity, setQuantity] = useState<number>(item.item_quantity);
 
+	const handleQuantityChange = useCallback(
+		debounce(async (newQuantity: number) => {
+			const success = await onQuantityChange(newQuantity);
+			if (!success) {
+				// Revert to previous quantity if API call fails
+				setQuantity(item.item_quantity);
+			}
+		}, 800),
+		[item.item_quantity, onQuantityChange]
+	);
 	const handleIncrease = () => {
 		setQuantity((prevQuantity) => {
 			const newQuantity = prevQuantity + 1;
-			onQuantityChange(newQuantity); // Gọi hàm debounce trong CartItem
+			handleQuantityChange(newQuantity); // Gọi hàm debounce trong CartItem
 			return newQuantity;
 		});
 	};
@@ -28,7 +38,7 @@ export default function CartItemQuantity({
 	const handleDecrease = () => {
 		setQuantity((prevQuantity) => {
 			const newQuantity = Math.max(prevQuantity - 1, 1); // Đảm bảo không giảm dưới 0
-			onQuantityChange(newQuantity); // Gọi hàm debounce trong CartItem
+			handleQuantityChange(newQuantity); // Gọi hàm debounce trong CartItem
 			return newQuantity;
 		});
 	};

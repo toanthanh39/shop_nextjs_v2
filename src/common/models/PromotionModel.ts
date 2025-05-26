@@ -70,11 +70,11 @@ class PromotionModel {
 
 	//////////////////////////////////////////////////////////////////////////
 	// Check if the current server time is within the active date range
-	static getPromotionDateStatus = (
+	static getPromotionDateStatus(
 		startDate: number,
 		endDate: number,
 		currentTime: number
-	): DateStatusResultJson => {
+	): DateStatusResultJson {
 		const msPerDay = 24 * 60 * 60;
 		currentTime = currentTime ?? Date.now() / 1000;
 		if (currentTime < startDate) {
@@ -95,6 +95,6 @@ class PromotionModel {
 			status: "running",
 			remainingDays: Math.ceil((endDate - currentTime) / msPerDay),
 		};
-	};
+	}
 }
 export default PromotionModel;
