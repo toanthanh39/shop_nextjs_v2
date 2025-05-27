@@ -24,7 +24,7 @@ const mergeConfig = (config?: RequestInit): RequestInit => {
 
 const processUrl = (url: string, config?: Config): string => {
 	let result =
-		url.includes("https") || url.includes("http")
+		url.includes("https") || url.includes("http") || url.includes("/api")
 			? url
 			: process.env.NEXT_PUBLIC_API_BASE_URL + url;
 	if (config?.params) {

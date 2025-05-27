@@ -12,7 +12,7 @@ export default function HeaderCart() {
 	return (
 		<div className="relative">
 			<Badge count={cart?.details?.total}>
-				<LinkElement href="/cart" prefetch>
+				<LinkElement href="/cart">
 					<CartIcon />
 				</LinkElement>
 			</Badge>

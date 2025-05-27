@@ -51,8 +51,8 @@ export const initSiteSetting = async (
 	} catch (error) {
 		console.log("🚀 ~ error:", error);
 		// redirect về page lỗi
-		return NextResponse.redirect(
-			new URL(SystemConst.ROUTE_ERROR_REDIRECT, request.url)
-		);
+		// return NextResponse.redirect(
+		// 	new URL(SystemConst.ROUTE_ERROR_REDIRECT, request.url)
+		// );
 	}
 };

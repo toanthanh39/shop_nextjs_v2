@@ -8,7 +8,7 @@ import { cn } from "@/utils/utils";
 import { useState } from "react";
 
 type Props = CartItemProps & {
-	onDeleteItem: (id: number) => Promise<boolean>;
+	onDeleteItem: (id: OrderId) => Promise<boolean>;
 };
 export default function CartItemAction({
 	item,
@@ -51,7 +51,7 @@ export default function CartItemAction({
 			<Popup
 				title="Bạn chắc chắn muốn xóa!"
 				hideCloseButton={true}
-				open={idDelete > 0}
+				open={!!idDelete}
 				onOpenChange={onCancel}>
 				<div className="mt-4">
 					<Text.p className="text-center">Xóa sản phẩm khỏi giỏ hàng</Text.p>

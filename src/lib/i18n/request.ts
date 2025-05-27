@@ -7,6 +7,6 @@ export default getRequestConfig(async () => {
 
 	return {
 		locale,
-		messages: (await import(`./messages/vi.json`)).default,
+		messages: (await import(`./messages/${locale}.json`)).default,
 	};
 });

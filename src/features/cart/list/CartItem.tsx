@@ -16,6 +16,7 @@ import CartItemIsUse from "./CartItemIsUse";
 import { IsUse } from "@/types/Global.type";
 import { useMemo } from "react";
 import { ProductJson } from "@/types/Product.type";
+import { OrderId } from "@/types/Order.type";
 
 type Props = ComProps & CartItemProps & {};
 export default function CartItem({ item, className }: Props) {
@@ -40,7 +41,7 @@ export default function CartItem({ item, className }: Props) {
 		}
 	};
 
-	const onDeleteItem = async (id: number) => {
+	const onDeleteItem = async (id: OrderId) => {
 		try {
 			await updateCart({
 				action: "remove",

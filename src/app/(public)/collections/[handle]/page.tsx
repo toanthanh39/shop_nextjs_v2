@@ -18,6 +18,7 @@ async function getDataServer(collection_handle: string) {
 
 		return resProducts.items;
 	} catch (error) {
+		console.log("🚀 ~ getDataServer ~ error:", error);
 		return [];
 	}
 }

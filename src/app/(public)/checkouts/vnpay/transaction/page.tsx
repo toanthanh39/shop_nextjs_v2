@@ -4,8 +4,10 @@ import PaymentRepo from "@/services/api/repositories/PaymentRepo";
 import { SearchParams } from "@/types/Dynamic.type";
 
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
-export default async function Page({ searchParams }: SearchParams) {
+export default async function Page(props: { searchParams: SearchParams }) {
+	const searchParams = await props.searchParams;
 	const { status, id } = await new PaymentRepo().checkTransactionVNpay(
 		searchParams
 	);
