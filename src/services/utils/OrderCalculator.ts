@@ -454,7 +454,7 @@ class OrderCalculator {
 						);
 						let errors: string[] = [];
 
-						errors = this.CheckPromotionReqConditions(promotions, orderUpdate);
+						errors = this.checkPromotionReqConditions(promotions, orderUpdate);
 						errors = this.checkAllPromotionOnOrderPassedToCalc(orderUpdate);
 
 						if (errors.length > 0) {
