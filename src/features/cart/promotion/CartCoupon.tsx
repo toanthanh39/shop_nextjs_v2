@@ -61,7 +61,6 @@ export default function CartCoupon({ className, cart }: Props) {
 	const promotionCoupons = PromotionModel.getPromotionCoupon(promotions ?? []);
 
 	//////////////////////////////////////////////
-	const [items, setItems] = useState<string[]>([]);
 	const [promoViewMore, setPromoViewMore] = useState<PromotionJson | undefined>(
 		undefined
 	);
