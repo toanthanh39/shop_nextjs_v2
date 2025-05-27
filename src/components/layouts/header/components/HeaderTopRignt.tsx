@@ -3,7 +3,7 @@
 import Popup from "@/components/composite/Popup";
 import Flex from "@/components/ui/Flex";
 import Text from "@/components/ui/Text";
-import useToggle from "@/lib/hooks/useToggle";
+import useToggle from "@/lib/hooks/utilities/useToggle";
 import Notification from "./Notification";
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";

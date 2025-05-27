@@ -3,8 +3,8 @@ import { SystemSetting } from "@/types/Shop.type";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 export async function GET() {
+	const result = SystemConst.DEFAULT_SYSTEM_SETTING;
 	try {
-		const result = SystemConst.DEFAULT_SYSTEM_SETTING;
 		return NextResponse.json(result, { status: 200 });
 
 		// Lấy headers
@@ -45,6 +45,8 @@ export async function GET() {
 
 		// return NextResponse.json(result, { status: 200 });
 	} catch (error) {
-		return NextResponse.json({ message: "Error", error }, { status: 500 });
+		return NextResponse.json(result, { status: 200 });
+
+		// return NextResponse.json({ message: "Error", error }, { status: 500 });
 	}
 }

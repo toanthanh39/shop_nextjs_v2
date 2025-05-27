@@ -20,7 +20,9 @@ type Props = ComProps & {
 export default function ProductQuickView(props: Props) {
 	const { product } = props;
 
-	const t = useTranslations("product");
+	const t = useTranslations("cart");
+	const tP = useTranslations("product");
+
 	const { data: variantTags, isLoading } = useProductVariantTag({ product });
 	const { isLoading: isLoadingCartGlobal } = useCartGlobal({});
 
@@ -48,6 +50,9 @@ export default function ProductQuickView(props: Props) {
 
 	return (
 		<Loading className="absolute inset-0" isLoading={isLoading}>
+			<p>{t("test11")}</p>
+			<p>{tP("text")}</p>
+
 			<Flex className=" bg-white overflow-hidden" gap={32}>
 				{/* Hình ảnh sản phẩm */}
 				{/* <Text>{t("test", { count: 7888 })}</Text> */}
