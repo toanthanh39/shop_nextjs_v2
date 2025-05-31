@@ -1,6 +1,6 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import React from "react";
 import ShopProvider from "./ShopProvider";
 import { RootProviderProps } from "@/types/Shop.type";
 import CartProvider from "./CartProvider";

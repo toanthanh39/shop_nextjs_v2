@@ -1,10 +1,7 @@
 "use client";
 import { CartIcon } from "@/components/icons";
 import { Badge, Button, LinkElement } from "@/components/ui";
-import useCartGlobal, {
-	CACHE_CART_GLOBAL_HOOK,
-} from "@/lib/hooks/cache/useCartGlobal";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 
 export default function HeaderCart() {
 	const { cart } = useCartGlobal({});

@@ -6,7 +6,7 @@ import { Button, Flex, Heading, List, Tag, Text } from "@/components/ui";
 import { MotionItem } from "@/components/ui/motion";
 import usePromotion from "@/lib/hooks/cache/usePromotion";
 import useTimeServer from "@/lib/hooks/cache/useTimeServer";
-import useLoading from "@/lib/hooks/useLoading";
+import useLoading from "@/lib/hooks/utilities/useLoading";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { IsUse } from "@/types/Global.type";
