@@ -15,6 +15,7 @@ import { OrderItemJson } from "@/types/Order.type";
 import CartRepo from "@/services/api/repositories/CartRepo";
 import OrderConvert from "@/services/utils/OrderConvert";
 import { PaymentAddJson } from "@/types/Payment.type";
+
 import {
 	PromotionDiscountType,
 	PromotionJson,
@@ -500,7 +501,7 @@ function useCartGlobal({ enabled = true }: Props) {
 			const {
 				details: { data: items },
 			} = cartGlobal;
-			let dataItemsUpdate = [...items];
+			const dataItemsUpdate = [...items];
 
 			const itemExited = dataItemsUpdate.find(
 				(i) => i.product_id === product_json.id

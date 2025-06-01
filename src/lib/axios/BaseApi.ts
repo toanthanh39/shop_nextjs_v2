@@ -62,7 +62,7 @@ class BaseApi {
 		axiosError: AxiosError
 	): ErrorResponse {
 		const url = axiosError.response?.config?.url || "";
-		let statusCode = axiosError.response?.status || 500;
+		const statusCode = axiosError.response?.status || 500;
 		let errors: string[] = [];
 		let error_detail: ErrorDetail[] = [];
 		let active_phone = "";

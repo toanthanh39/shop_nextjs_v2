@@ -1,5 +1,4 @@
 "use client";
-import { Button, CustomImage, Flex, Grid, Text } from "@/components/ui";
 import CartItemPrice from "./CartItemPrice";
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 
@@ -8,10 +7,12 @@ import { ComProps } from "@/types/Component";
 import { cn, debounce } from "@/utils/utils";
 import CartItemQuantity from "./CartItemQuantity";
 import CartItemImage from "./CartItemImage";
+import { Button, CustomImage, Flex, Grid, Text } from "@/components/ui";
+
 import CartItemName from "./CartItemName";
 import CartItemAction from "./CartItemAction";
-import ProgressBar from "@/components/ui/ProgressBar";
 import CartItemVariant from "./CartItemVariant";
+import ProgressBar from "@/components/ui/ProgressBar";
 import CartItemIsUse from "./CartItemIsUse";
 import { IsUse } from "@/types/Global.type";
 import { useMemo } from "react";

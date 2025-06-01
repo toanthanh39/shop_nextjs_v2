@@ -508,7 +508,7 @@ class OrderCalculator {
 							},
 						} = input;
 
-						let promotionOrderToUpdate =
+						const promotionOrderToUpdate =
 							OrderConvert.convertPromotionToOrderPromotion(
 								[promotion],
 								promotion.is_use
