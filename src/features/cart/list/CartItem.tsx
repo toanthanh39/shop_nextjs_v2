@@ -110,7 +110,7 @@ export default function CartItem({ item, className }: Props) {
 					gap={32}
 					justify="between"
 					className="basis-1/2 max-md:flex-col max-md:gap-2">
-					<CartItemName item={item} className="max-w-[190px]" />
+					<CartItemName item={item} className="basis-32 max-w-[190px]" />
 					<Flex
 						direction="col"
 						className="flex-auto w-fit md:shrink-0 md:basis-20 ">

@@ -12,8 +12,6 @@ class SiteServerRepo {
 	};
 
 	async getSiteSeting() {
-		const result = SystemConst.DEFAULT_SYSTEM_SETTING;
-		return result;
 		return server.get<SystemSetting>(this.URLs.SITE.PRIVATE, {
 			cache: "force-cache",
 			next: {
@@ -21,18 +19,6 @@ class SiteServerRepo {
 				tags: [SITE_HANDLER_TAG],
 			},
 		});
-
-		// const result = await fetch(this.URLs.SITE.PRIVATE, {
-		// 	cache: "force-cache",
-		// 	next: {
-		// 		revalidate: TIME_CACHE,
-		// 		tags: [SITE_HANDLER_TAG],
-		// 	},
-		// });
-
-		// const i = await result.json();
-
-		// return i as SystemSetting;
 	}
 }
 

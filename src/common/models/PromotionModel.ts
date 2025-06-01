@@ -96,5 +96,23 @@ class PromotionModel {
 			remainingDays: Math.ceil((endDate - currentTime) / msPerDay),
 		};
 	}
+
+	// Utilize
+
+	static groupPromotionCouponByCode(
+		promotions: PromotionJson[]
+	): Record<string, PromotionJson[]> {
+		return promotions.reduce((acc, promo) => {
+			if (promo.codes && promo.codes.length > 0) {
+				promo.codes.forEach((code) => {
+					if (!acc[code.code]) {
+						acc[code.code] = [];
+					}
+					acc[code.code].push(promo);
+				});
+			}
+			return acc;
+		}, {} as Record<string, PromotionJson[]>);
+	}
 }
 export default PromotionModel;

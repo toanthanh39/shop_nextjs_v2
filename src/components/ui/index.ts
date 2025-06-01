@@ -17,4 +17,6 @@ export { default as Text } from "./Text";
 export { default as Checkbox } from "./Checkbox";
 export { default as List } from "./List";
 
+export { default as Space } from "./Space";
+
 // export {default as LinkElement} from "./Link"

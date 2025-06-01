@@ -6,7 +6,7 @@ import { PromotionFilter } from "@/types/Promotion.type";
 import PromotionModel from "@/common/models/PromotionModel";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
 
-const STALE_TIME = 10 * 1000;
+const STALE_TIME = 0;
 export const CACHE_PROMOTIONS_HOOK = "cache-promotions";
 type Props = HookCacheProps & {
 	filters?: PromotionFilter;

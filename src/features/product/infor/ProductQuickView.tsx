@@ -50,9 +50,6 @@ export default function ProductQuickView(props: Props) {
 
 	return (
 		<Loading className="absolute inset-0" isLoading={isLoading}>
-			<p>{t("test11")}</p>
-			<p>{tP("text")}</p>
-
 			<Flex className=" bg-white overflow-hidden" gap={32}>
 				{/* Hình ảnh sản phẩm */}
 				{/* <Text>{t("test", { count: 7888 })}</Text> */}

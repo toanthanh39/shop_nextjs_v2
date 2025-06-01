@@ -2,7 +2,7 @@ import { BaseCollectionJson } from "./Base.type";
 import { PromotionJson } from "./Promotion.type";
 import { ProductJson } from "./Product.type";
 import { IsUse } from "./Global.type";
-import { CouponAddJson } from "./Coupon.type";
+import { CouponAddJson, CouponJson } from "./Coupon.type";
 import { PaymentBillingJson, PaymentShippingJson } from "./Payment.type";
 
 // enums
@@ -312,6 +312,13 @@ export type ActionOrderUpdate =
 			action: "promotion";
 			data: {
 				promotions: OrderPromotion[];
+			};
+	  }
+	| {
+			action: "coupon";
+			data: {
+				coupon: CouponJson;
+				promotion: PromotionJson;
 			};
 	  };
 

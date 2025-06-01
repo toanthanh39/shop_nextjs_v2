@@ -9,31 +9,31 @@ interface CloseIconProps
 		VariantProps<typeof sizes> {}
 
 export default function CloseIcon(props: CloseIconProps) {
-	const { size, variant, onClick } = props;
+	const { size, variant, onClick, disabled } = props;
 	return (
-		<>
-			<svg
-				onClick={onClick}
-				className={cn("cursor-pointer", variants({ variant }))}
-				xmlns="http://www.w3.org/2000/svg"
-				width={cn(sizes({ size }))}
-				height={cn(sizes({ size }))}
-				viewBox="0 0 16 16"
-				fill="none">
-				<path
-					d="M12 4L4 12"
-					stroke="currentColor"
-					strokeLinecap="square"
-					strokeLinejoin="round"
-				/>
-				<path
-					d="M4 4L12 12"
-					stroke="currentColor"
-					strokeLinecap="square"
-					strokeLinejoin="round"
-				/>
-			</svg>
-		</>
+		<svg
+			onClick={!disabled ? onClick : undefined}
+			className={cn("cursor-pointer", variants({ variant }), {
+				"pointer-events-none cursor-not-allowed": disabled,
+			})}
+			xmlns="http://www.w3.org/2000/svg"
+			width={cn(sizes({ size }))}
+			height={cn(sizes({ size }))}
+			viewBox="0 0 16 16"
+			fill="none">
+			<path
+				d="M12 4L4 12"
+				stroke="currentColor"
+				strokeLinecap="square"
+				strokeLinejoin="round"
+			/>
+			<path
+				d="M4 4L12 12"
+				stroke="currentColor"
+				strokeLinecap="square"
+				strokeLinejoin="round"
+			/>
+		</svg>
 	);
 }
 

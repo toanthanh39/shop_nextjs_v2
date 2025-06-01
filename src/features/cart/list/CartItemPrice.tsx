@@ -19,7 +19,9 @@ export default function CartItemPrice({
 		const { compare_at_price: compareAtPrice, price } = product_json;
 
 		const discountPerItem = price_discount / item_quantity;
-		const finalPricePerItem = discountPerItem ? price_unit_final : price;
+		const priceUnitFinalPerItem = price_unit_final / item_quantity;
+
+		const finalPricePerItem = discountPerItem ? priceUnitFinalPerItem : price;
 		const totalFinalPrice = finalPricePerItem * quantity;
 
 		const totalComparePrice = (() => {
