@@ -1,10 +1,16 @@
 "use client";
-import { Button, Flex, Money, Text } from "@/components/ui";
+import OrderModel from "@/common/models/OrderModel";
+import { Button, Flex, List, Money, Text } from "@/components/ui";
 import { useCancelToken } from "@/lib/hooks/optimization/useCancelToken";
 import CartCalculator from "@/services/utils/CartCalculator";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
+import { IsUse } from "@/types/Global.type";
+import { OrderPromotion } from "@/types/Order.type";
+import { PromotionGroup } from "@/types/Promotion.type";
 import { cn } from "@/utils/utils";
+import { Car } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -55,14 +61,17 @@ export default function CartInfor({
 				</Text.p>
 			</Flex>
 
-			<Flex justify="between" gap={4}>
-				<Text.p variant="default">Giảm giá Khuyến mãi</Text.p>
-				<Text.p>
-					<Money
-						variant="default"
-						minus="-"
-						value={priceInfor.promotionDiscount}></Money>
-				</Text.p>
+			<Flex vertical>
+				<Flex justify="between" gap={4}>
+					<Text.p variant="default">Giảm giá Khuyến mãi</Text.p>
+					<Text.p>
+						<Money
+							variant="default"
+							minus="-"
+							value={priceInfor.promotionDiscount}></Money>
+					</Text.p>
+				</Flex>
+				<CartInfor.CouponList cart={cart}></CartInfor.CouponList>
 			</Flex>
 
 			<Flex justify="between" gap={4}>
@@ -98,3 +107,41 @@ export default function CartInfor({
 		</Flex>
 	);
 }
+
+CartInfor.CouponList = ({ cart }: Props) => {
+	const t = useTranslations("cart.cart_infor");
+	const OrderModelInstance = new OrderModel(cart);
+	const allOrderPromotionCoupon = OrderModelInstance.getPromotionCouponUsed();
+	const aggregateDiscountCodes = OrderModel.aggregateDiscountsWithSameCode(
+		allOrderPromotionCoupon
+	);
+
+	if (aggregateDiscountCodes.length === 0) return null;
+	return (
+		<List
+			className="flex flex-col pl-4 mt-2"
+			dataSource={aggregateDiscountCodes}
+			render={(orderPromo) => {
+				return (
+					<Flex justify="between" align="center" gap={4}>
+						<Flex gap={4}>
+							<Text size="sm" variant="secondary" as="span">
+								{t("coupon_label")}
+							</Text>
+							<Text weight="bold" as="span" size="sm">
+								{orderPromo.code}
+							</Text>
+						</Flex>
+
+						<Money
+							minus="-"
+							size="sm"
+							variant="secondary"
+							weight="default"
+							value={orderPromo.discount}></Money>
+					</Flex>
+				);
+			}}
+		/>
+	);
+};

@@ -1,5 +1,5 @@
 import { IsUse } from "@/types/Global.type";
-import { OrderJson } from "@/types/Order.type";
+import { OrderJson, OrderPromotion } from "@/types/Order.type";
 import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
 
 class OrderModel {
@@ -34,6 +34,21 @@ class OrderModel {
 
 	////////////////////////////////////////
 	// static method
+
+	static aggregateDiscountsWithSameCode(promotions: OrderPromotion[]) {
+		const discountMap = promotions.reduce((acc, promo) => {
+			if (!acc[promo.code]) {
+				acc[promo.code] = 0;
+			}
+			acc[promo.code] += promo.discount;
+			return acc;
+		}, {} as Record<string, number>);
+
+		return Object.entries(discountMap).map(([code, totalDiscount]) => ({
+			code,
+			discount: totalDiscount,
+		}));
+	}
 }
 
 export default OrderModel;

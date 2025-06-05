@@ -8,9 +8,14 @@ import {
 	ValidatePromotionProps,
 } from "@/types/Order.type";
 import { ProductJson } from "@/types/Product.type";
-import { PromotionDiscountType, PromotionJson } from "@/types/Promotion.type";
+import {
+	PromotionDiscountType,
+	PromotionGroup,
+	PromotionJson,
+} from "@/types/Promotion.type";
 import Helper from "@/utils/helper";
 import { v4 as uuidv4 } from "uuid";
+import OrderConvert from "./OrderConvert";
 
 class OrderCalculator {
 	/////////////////////////////////////////////////////////
@@ -42,16 +47,20 @@ class OrderCalculator {
 		}
 
 		// Extract all collection IDs present in the order
-		const allCollectionIdsInOrder = order.details.data.flatMap((item) =>
-			item.product_json.collections.map((col) => col.id)
-		);
+		const allCollectionIdsInOrder = order.details.data
+			.filter((item) => item.is_use === IsUse.USE)
+			.flatMap((item) => item.product_json.collections.map((col) => col.id));
 
 		// Extract all required collection IDs from promotions
-		const allCollectionIdsInPromotions = promotions.flatMap((promotion) =>
-			promotion.promotion_detail.req_collectionids
-				.split(",")
-				.map((id) => Number(id))
-		);
+		const allCollectionIdsInPromotions = promotions
+			.filter((op) => op.is_use === IsUse.USE)
+			.flatMap((promotion) =>
+				promotion.promotion_detail.req_collectionids
+					.split(",")
+					.map((id) => Number(id))
+			);
+
+		if (allCollectionIdsInPromotions.length <= 0) return [];
 
 		// Check if there is any common collection ID
 		const hasCommonCollectionId = allCollectionIdsInPromotions.some((id) =>
@@ -96,45 +105,62 @@ class OrderCalculator {
 				on,
 			} = props;
 			const totalPriceSellOrder = this.calculatorPriceSellItems(order);
-			const result: PromotionJson[] = [];
+			const result: {
+				promotionOrders: OrderPromotion[];
+				promotions: PromotionJson[];
+			} = {
+				promotionOrders: [],
+				promotions: [],
+			};
 			for (let index = 0; index < promotions.length; index++) {
-				const element = promotions[index].promotion_detail;
+				const promotionJson = promotions[index].promotion_detail;
 				const orderPromoItem = promotions[index];
 
 				if (orderPromoItem.is_use !== IsUse.USE) {
 					continue;
 				}
 
-				if (promotions.length > 1 && element.apply_with_other === false) {
+				if (promotions.length > 1 && promotionJson.apply_with_other === false) {
+					// throw new Error("error_promotion_must_not_aplly_with_other");
 					continue;
 				}
 
-				if (totalPriceSellOrder < element.req_subtotal) {
+				if (totalPriceSellOrder < promotionJson.req_subtotal) {
+					// throw new Error("error_promotion_reqsubtotal_invalid");
 					continue;
 				}
 
 				if (
 					on === "item" &&
-					element.discount_type === PromotionDiscountType.PRODUCT
+					promotionJson.discount_type === PromotionDiscountType.PRODUCT
 				) {
 					const { product_json } = props.data;
 					const collectionIdsInProduct = product_json.collections.map(
 						(col) => col.id
 					);
 
-					const hasCommonValues = element.req_collectionids
+					if (
+						promotionJson.group === PromotionGroup.coupon &&
+						orderPromoItem.code.length <= 0
+					) {
+						continue;
+					}
+
+					const hasCommonValues = promotionJson.req_collectionids
 						.split(",")
 						.some((id) => collectionIdsInProduct.includes(Number(id)));
 
 					if (!hasCommonValues) {
 						continue;
+						// throw new Error("error_promotion_collection_mismatch");
 					}
 				} else {
 				}
 
 				// validate on body
 
-				result.push(element);
+				result.promotions.push(promotionJson);
+				result.promotionOrders.push(orderPromoItem);
 			}
 
 			return result;
@@ -182,7 +208,7 @@ class OrderCalculator {
 		const totalPriceSell = this.calculatorPriceSellItems(order);
 
 		try {
-			const promoValid = this.getListOrderPromotionValid({
+			const { promotions: promoValid } = this.getListOrderPromotionValid({
 				on: "body",
 				data: {
 					order: order,
@@ -224,9 +250,10 @@ class OrderCalculator {
 			//
 
 			result.item_total = price * item.item_quantity;
-			result.item_unit_price = price * item.item_quantity;
+			result.item_unit_price = result.item_total;
+			result.item_unit_price_original = price;
 
-			const promos = this.getListOrderPromotionValid({
+			const { promotionOrders } = this.getListOrderPromotionValid({
 				on: "item",
 				data: {
 					order: order,
@@ -235,15 +262,20 @@ class OrderCalculator {
 				},
 			});
 
-			result.price_discount = promos.reduce((curr, prev) => {
-				if (prev.discount_value_type === "amount") {
-					curr += prev.discount_value;
-				} else if (prev.discount_value_type === "percent") {
-					curr += Math.max(
-						0,
-						(prev.discount_value / 100) * result.item_unit_price
-					);
-				}
+			result.promotions = result.promotions.map((promotionItem) => {
+				const isValid = promotionOrders.some(
+					(i) => i.promotion_id === promotionItem.promotion_id
+				);
+				return {
+					...promotionItem,
+					discount: !isValid
+						? 0
+						: this.calculatorPromotionDiscountOnItem(result, promotionItem),
+				};
+			});
+
+			result.price_discount = result.promotions.reduce((curr, prev) => {
+				curr += prev.discount;
 
 				return curr;
 			}, 0);
@@ -262,6 +294,30 @@ class OrderCalculator {
 		} catch (error) {
 			throw error;
 		}
+	}
+
+	private calculatorPromotionDiscountOnItem(
+		item: OrderItemJson,
+		orderPromo: OrderPromotion
+	) {
+		if (item.is_use !== IsUse.USE || orderPromo.is_use !== IsUse.USE) {
+			return 0;
+		}
+
+		const {
+			promotion_detail: { discount_value_type, discount_value, max_applied },
+		} = orderPromo;
+
+		const result =
+			discount_value_type === "amount"
+				? discount_value
+				: discount_value_type === "percent"
+					? (discount_value / 100) * item.item_unit_price
+					: 0;
+		if (max_applied > 0) {
+			return Math.min(max_applied, result);
+		}
+		return result;
 	}
 
 	private recalculatorOrderFromJson(order: OrderJson) {
@@ -287,7 +343,7 @@ class OrderCalculator {
 			result.item_total = totalPriceSellItems;
 			result.item_discount = Math.max(
 				0,
-				totalPriceFinalItems - result.price_sell
+				result.price_sell - totalPriceFinalItems
 			);
 			result.price_discount = result.item_discount + result.order_discount;
 
@@ -307,7 +363,7 @@ class OrderCalculator {
 		const orderUpdate: OrderJson = { ...order_old };
 
 		try {
-			const items = orderUpdate.details.data;
+			let items = orderUpdate.details.data;
 
 			const findItemIndexById = (id: OrderId) =>
 				items.findIndex((item) => item.id === id);
@@ -381,26 +437,6 @@ class OrderCalculator {
 					}
 					break;
 
-				case "variant":
-					{
-						const { id, produt_variant_json } = input.data;
-
-						if (!produt_variant_json || !id) {
-							throw new Error("invalid_variant_details");
-						}
-
-						const itemIndex = findItemIndexById(id);
-
-						if (itemIndex === -1) {
-							throw new Error("variant_not_found_in_order_details");
-						}
-						items[itemIndex].product_json = produt_variant_json;
-
-						// Update specific variant details as needed
-						// Example (assuming there is a variant field): items[itemIndex].variant = produt_variant_json;
-					}
-					break;
-
 				case "add":
 					{
 						const {
@@ -459,6 +495,63 @@ class OrderCalculator {
 
 						if (errors.length > 0) {
 							throw new Error(errors[0]);
+						}
+					}
+					break;
+
+				case "coupon": // update promotion nhập mã coupon cho toàn bộ order
+					{
+						const {
+							data: {
+								coupon: { code },
+								promotion,
+							},
+						} = input;
+
+						const promotionOrderToUpdate =
+							OrderConvert.convertPromotionToOrderPromotion(
+								[promotion],
+								promotion.is_use
+							)[0];
+
+						promotionOrderToUpdate.code = code;
+
+						if (promotion.discount_type === PromotionDiscountType.CART) {
+							// xử lý nếu cho promotion trên body
+							const indexPromotionExistedOnOrder =
+								orderUpdate.promotions.findIndex(
+									(p) => p.promotion_id === promotion.id
+								);
+							if (indexPromotionExistedOnOrder >= 0) {
+								orderUpdate.promotions[indexPromotionExistedOnOrder] =
+									promotionOrderToUpdate;
+							} else {
+								orderUpdate.promotions.push(promotionOrderToUpdate);
+							}
+						} else if (
+							promotion.discount_type === PromotionDiscountType.PRODUCT
+						) {
+							// xử lý nếu cho promotion trên tất cả item sản phẩm
+							items = orderUpdate.details.data.map((item) => {
+								const indexPromotionExistedOnItem = item.promotions.findIndex(
+									(p) => p.promotion_id === promotion.id
+								);
+
+								const updatedPromotions = item.promotions.map((promo) =>
+									promo.promotion_id === promotion.id
+										? { ...promo, code, is_use: promotionOrderToUpdate.is_use }
+										: promo
+								);
+
+								if (indexPromotionExistedOnItem < 0) {
+									updatedPromotions.push(promotionOrderToUpdate);
+								}
+
+								return {
+									...item,
+									promotions: updatedPromotions,
+								};
+							});
 						}
 					}
 					break;

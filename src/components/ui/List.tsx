@@ -24,7 +24,7 @@ export default function List<D>({
 				<Flex as="ul" wrap="wrap" gap={4} className={cn(className)}>
 					{dataSource.map((item, index) => (
 						<motion.li
-							className={cn(classNameItem)}
+							className={cn("w-full", classNameItem)}
 							key={index}
 							{...motionConfig.fade}>
 							{render(item, index)}
@@ -41,13 +41,12 @@ export default function List<D>({
 				{dataSource.map((item, index) => (
 					<motion.li
 						key={index}
-						className={cn(classNameItem)}
+						className={cn("w-full", classNameItem)}
 						initial={motionConfig.fade.initial}
 						animate={motionConfig.fade.animate}
 						exit={motionConfig.fade.exit}
 						transition={motionConfig.fade.transition}>
 						{render(item, index)}
-					
 					</motion.li>
 				))}
 			</AnimatePresence>

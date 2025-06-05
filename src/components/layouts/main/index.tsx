@@ -13,7 +13,7 @@ export default function Main({
 }: MainProps) {
 	return (
 		<main
-			className={cn(className, "min-h-[50dvh]", {
+			className={cn("min-h-[50dvh]", className, {
 				container: !!useContainer,
 				"px-3": !!usePadding,
 			})}>

@@ -24,6 +24,7 @@ import useTimeServer from "@/lib/hooks/cache/useTimeServer";
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
+import { CouponJson } from "@/types/Coupon.type";
 import { IsUse } from "@/types/Global.type";
 import { OrderJson } from "@/types/Order.type";
 import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
@@ -56,7 +57,7 @@ export default function CartCoupon({ className, cart }: Props) {
 
 	const { data: promotions } = usePromotion({});
 	const { data: timeserver } = useTimeServer({ enabled: !!promotions });
-	const { updateCartCoupon, isUpdating } = useCartGlobal({});
+	const { updateCart, isUpdating } = useCartGlobal({});
 
 	const promotionCoupons = PromotionModel.getPromotionCoupon(promotions ?? []);
 
@@ -87,33 +88,70 @@ export default function CartCoupon({ className, cart }: Props) {
 	//////////////////////////////////////////////
 	const handleSubmit = debounce(async (data: FormData) => {
 		try {
-			const result = await updateCartCoupon({
-				action: "add",
-				data: { code: data.code },
-			});
+			const promotionCouponToApplies = promotionCoupons.filter((i) =>
+				i.codes?.flatMap((c) => c.code).includes(data.code)
+			);
+			if (promotionCouponToApplies.length <= 0) {
+				methods.setError("code", {
+					type: "manual",
+					message: "Mã khuyến mãi không hợp lệ hoặc đã hết hạn.",
+				});
+				return;
+			}
+			await Promise.allSettled(
+				promotionCouponToApplies.map(async (promo) => {
+					const isApplied = getActivePromo(promo, cart);
+					if (isApplied) {
+						methods.setError("code", {
+							type: "manual",
+							message: "Mã khuyến mãi đã được áp dụng.",
+						});
+						return;
+					}
+					const couponCode = promo.codes?.find((c) => c.code === data.code);
+					if (!couponCode) return;
+
+					return await updateCart({
+						action: "coupon",
+						data: {
+							coupon: couponCode,
+							promotion: { ...promo, is_use: IsUse.USE },
+						},
+					});
+				})
+			);
+			// const result = await updateCart({
+			// 	action: "coupon",
+			// 	data: { code: data.code },
+			// });
 		} catch (error) {
 			console.log("🚀 ~ handleSubmit ~ error:", error);
 		}
 	}, 200);
 
-	const onPickCode = (code: string) => {
-		methods.setValue("code", code);
+	const onPickCode = (coupon: CouponJson) => {
+		methods.setValue("code", coupon.code);
 		toggleModal(undefined);
 	};
 
-	const onRemoveCode = debounce(async (code: string, detail: PromotionJson) => {
-		try {
-			await updateCartCoupon({
-				action: "remove",
-				data: {
-					code: code,
-					promotion_detail: detail,
-				},
-			});
-		} catch (error) {
-			console.log("🚀 ~ onRemoveCode ~ error:", error);
-		}
-	}, 200);
+	const onRemoveCode = debounce(
+		async (code: string, promotion: PromotionJson) => {
+			try {
+				const couponCode = promotion.codes?.find((c) => c.code === code);
+				if (!couponCode) return;
+				await updateCart({
+					action: "coupon",
+					data: {
+						coupon: couponCode,
+						promotion: { ...promotion, is_use: IsUse.NOT_USE },
+					},
+				});
+			} catch (error) {
+				console.log("🚀 ~ onRemoveCode ~ error:", error);
+			}
+		},
+		200
+	);
 
 	//////////////////////////////////////////////
 	const promoCouponUsed = useMemo(() => {
@@ -133,6 +171,7 @@ export default function CartCoupon({ className, cart }: Props) {
 				<Heading level={2} size="h4">
 					Mã khuyến mãi
 				</Heading>
+
 				<Flex align="start" gap={8}>
 					<GenericForm.Item name="code">
 						<Input variant="border"></Input>
@@ -255,7 +294,7 @@ export default function CartCoupon({ className, cart }: Props) {
 											<Button
 												disabled={isUsed}
 												variant="primary"
-												onClick={() => !isUsed && onPickCode(code.code)}>
+												onClick={() => !isUsed && onPickCode(code)}>
 												{isUsed ? "Đã dùng" : "Lấy mã"}
 											</Button>
 										</li>

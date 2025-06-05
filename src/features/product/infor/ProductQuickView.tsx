@@ -20,7 +20,9 @@ type Props = ComProps & {
 export default function ProductQuickView(props: Props) {
 	const { product } = props;
 
-	const t = useTranslations("product");
+	const t = useTranslations("cart");
+	const tP = useTranslations("product");
+
 	const { data: variantTags, isLoading } = useProductVariantTag({ product });
 	const { isLoading: isLoadingCartGlobal } = useCartGlobal({});
 

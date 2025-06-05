@@ -8,10 +8,12 @@ import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";
 import CartItemQuantity from "./CartItemQuantity";
 import CartItemImage from "./CartItemImage";
+import { Button, CustomImage, Flex, Grid, Text } from "@/components/ui";
+
 import CartItemName from "./CartItemName";
 import CartItemAction from "./CartItemAction";
-import ProgressBar from "@/components/ui/ProgressBar";
 import CartItemVariant from "./CartItemVariant";
+import ProgressBar from "@/components/ui/ProgressBar";
 import CartItemIsUse from "./CartItemIsUse";
 import { IsUse } from "@/types/Global.type";
 import { useMemo } from "react";
@@ -110,7 +112,7 @@ export default function CartItem({ item, className }: Props) {
 					gap={32}
 					justify="between"
 					className="basis-1/2 max-md:flex-col max-md:gap-2">
-					<CartItemName item={item} className="max-w-[190px]" />
+					<CartItemName item={item} className="basis-32 max-w-[190px]" />
 					<Flex
 						direction="col"
 						className="flex-auto w-fit md:shrink-0 md:basis-20 ">

@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<>
 			<Header />
-			<Main usePadding className="min-h-[40vh] my-4 lg:my-10">
+			<Main usePadding className="min-h-[80vh] my-4 lg:my-10">
 				{children}
 			</Main>
 			<Footer />

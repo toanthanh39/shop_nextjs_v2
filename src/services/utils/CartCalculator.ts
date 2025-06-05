@@ -10,7 +10,7 @@ class CartCalculator {
 				if (prev.product_json.compare_at_price) {
 					curr += prev.product_json.compare_at_price * prev.item_quantity;
 				} else {
-					curr += prev.item_unit_price * prev.item_quantity;
+					curr += prev.item_total;
 				}
 			}
 

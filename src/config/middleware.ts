@@ -18,6 +18,7 @@ export const initSiteSetting = async (
 		const key = `${replaceDomainSetting}_config`;
 
 		const dataSetting = await new SettingRepo().getOne<SystemSetting>(key);
+		console.log("🚀 ~ dataSetting:", dataSetting);
 		const customer_token =
 			_header.get("customer_token") ??
 			(await ServerRepo.getCustomerTokenServer());
@@ -48,6 +49,7 @@ export const initSiteSetting = async (
 		return response;
 	} catch (error) {
 		console.log("🚀 ~ error:", error);
+		throw error;
 		// redirect về page lỗi
 		// return NextResponse.redirect(
 		// 	new URL(SystemConst.ROUTE_ERROR_REDIRECT, request.url)
