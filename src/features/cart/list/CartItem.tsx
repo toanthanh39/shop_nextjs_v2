@@ -1,11 +1,11 @@
 "use client";
-import { Button, CustomImage, Flex, Grid, Text } from "@/components/ui";
+import { Flex, Text } from "@/components/ui";
 import CartItemPrice from "./CartItemPrice";
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 
 import { CartItemProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
-import { cn, debounce } from "@/utils/utils";
+import { cn } from "@/utils/utils";
 import CartItemQuantity from "./CartItemQuantity";
 import CartItemImage from "./CartItemImage";
 import CartItemName from "./CartItemName";

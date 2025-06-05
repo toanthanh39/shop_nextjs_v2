@@ -1,8 +1,6 @@
 "use client";
 import { RootProviderProps } from "@/types/Shop.type";
 import { ShopProviderProps } from "@/types/Shop.type";
-import { debounce } from "@/utils/utils";
-import { useLayoutEffect } from "react";
 
 type Props = ShopProviderProps & RootProviderProps & {};
 

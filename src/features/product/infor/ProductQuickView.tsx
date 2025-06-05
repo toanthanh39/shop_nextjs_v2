@@ -1,9 +1,9 @@
 "use client";
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProductPrice from "./ProductPrice";
-import { Button, CustomImage, Flex, LinkElement, Text } from "@/components/ui";
+import { CustomImage, Flex, LinkElement, Text } from "@/components/ui";
 import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
 import ProductListTagVariant from "../list/ProductListTagVariant";
 import Rating from "@/components/composite/Rating";

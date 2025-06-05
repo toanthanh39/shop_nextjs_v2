@@ -1,5 +1,5 @@
 import AxiosInstance from "@/lib/axios/axiosClient";
-import { AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import { AxiosRequestConfig, Method } from "axios";
 
 interface Options {
 	url: string;

@@ -1,6 +1,6 @@
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";
-import React, { ReactNode } from "react";
+import React from "react";
 import {
 	FormProvider,
 	UseFormReturn,

@@ -2,9 +2,9 @@
 
 import GenericForm from "@/components/form/GenericForm";
 import Radio from "@/components/form/Radio";
-import { CustomImage, Heading, List, Money, Tag, Text } from "@/components/ui";
+import { CustomImage, Heading, List, Tag, Text } from "@/components/ui";
 import Flex from "@/components/ui/Flex";
-import Input, { RadioBox, Select } from "@/components/ui/Input";
+import Input, { Select } from "@/components/ui/Input";
 import { DatePicker } from "@/components/ui/shacdn/DatePicker";
 import { CartItemPrice } from "@/features/cart/list";
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
@@ -17,10 +17,8 @@ import CheckoutLayoutSection from "./CheckoutLayoutSection";
 import { CartInfor } from "@/features/cart/infor";
 import CartCoupon from "@/features/cart/promotion/CartCoupon";
 import { useFormStatus } from "react-dom";
-import { submitFormData } from "@/actions/cart-action";
 import { useRouter } from "next/navigation";
 import { AddressType } from "@/types/Customer.type";
-import CartRepo from "@/services/api/repositories/CartRepo";
 import { PaymentAccessMode, PaymentAddJsonPublic } from "@/types/Payment.type";
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import useSiteSetting from "@/lib/hooks/cache/useSiteSetting";
@@ -33,7 +31,6 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger,
 } from "@/components/ui/shacdn/AlertDialog";
 import BaseApi from "@/lib/axios/BaseApi";
 import { CartPromoSeasonal } from "@/features/cart/promotion";

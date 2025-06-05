@@ -4,7 +4,6 @@ import { Button, Text } from "@/components/ui";
 import CustomImage from "@/components/ui/CustomImage";
 import Flex from "@/components/ui/Flex";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 export default function HeaderAuthen() {
 	const router = useRouter();
 	// const { data: session } = useSession();

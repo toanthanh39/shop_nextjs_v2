@@ -1,5 +1,4 @@
 import { SystemConst } from "@/common/constants/system";
-import { SystemSetting } from "@/types/Shop.type";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 export async function GET() {

@@ -5,10 +5,7 @@ import useSiteSetting from "./useSiteSetting";
 import {
 	ActionOrderUpdate,
 	ORDER_ACTION,
-	OrderAddCoupon,
 	OrderItemEdit,
-	OrderJson,
-	OrderPromotion,
 } from "@/types/Order.type";
 import { IsUse } from "@/types/Global.type";
 import { OrderItemJson } from "@/types/Order.type";
@@ -430,7 +427,7 @@ function useCartGlobal({ enabled = true }: Props) {
 			const {
 				details: { data: items },
 			} = cartGlobal;
-			let dataItemsUpdate = [...items];
+			const dataItemsUpdate = [...items];
 
 			const itemExited = dataItemsUpdate.find(
 				(i) => i.product_id === product_json.id

@@ -1,14 +1,12 @@
 "use client";
 import { Button, Flex, Money, Text } from "@/components/ui";
 import { useCancelToken } from "@/lib/hooks/optimization/useCancelToken";
-import CartRepo from "@/services/api/repositories/CartRepo";
 import CartCalculator from "@/services/utils/CartCalculator";
-import { BaseAccessMode } from "@/types/Base.type";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = ComProps &
 	CartProps & {

@@ -1,4 +1,3 @@
-import { ProductCard } from "@/features/product/list";
 import ProductRepo from "@/services/api/repositories/ProductRepo";
 import { Params } from "@/types/Dynamic.type";
 import PageClient from "./page.client";

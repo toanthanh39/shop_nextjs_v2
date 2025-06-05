@@ -30,7 +30,7 @@ function usePromotion({ staleTime, enabled = true }: Props) {
 					PromotionModel.getPromotionCoupon(promotionsValid);
 
 				// Lấy mã code của từng promotion loại coupon và đưa vào json
-				let getCouponPromises: any[] = [];
+				const getCouponPromises: any[] = [];
 				for (let index = 0; index < promotionCoupons.length; index++) {
 					const pro = promotionCoupons[index];
 					getCouponPromises.push(

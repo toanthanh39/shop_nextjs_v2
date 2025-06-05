@@ -1,6 +1,6 @@
 import { IsUse } from "@/types/Global.type";
 import { OrderJson, OrderPromotion } from "@/types/Order.type";
-import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
+import { PromotionGroup } from "@/types/Promotion.type";
 
 class CartCalculator {
 	static calculateTotalProductPrice(cart: OrderJson) {

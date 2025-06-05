@@ -1,6 +1,5 @@
 import { Flex, Money, Text } from "@/components/ui";
 import { CartItemProps } from "@/types/Cart.type";
-import { OrderItemJson } from "@/types/Order.type";
 import { cn } from "@/utils/utils";
 import { useMemo } from "react";
 

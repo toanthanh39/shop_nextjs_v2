@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui";
 import { CartItemProps } from "@/types/Cart.type";
 import { IsUse } from "@/types/Global.type";
 import { cn, debounce } from "@/utils/utils";
-import { ChangeEvent, FormEvent, useEffect } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { useState } from "react";
 
 type Props = CartItemProps & {

@@ -307,7 +307,7 @@ class OrderCalculator {
 		const orderUpdate: OrderJson = { ...order_old };
 
 		try {
-			let items = orderUpdate.details.data;
+			const items = orderUpdate.details.data;
 
 			const findItemIndexById = (id: OrderId) =>
 				items.findIndex((item) => item.id === id);

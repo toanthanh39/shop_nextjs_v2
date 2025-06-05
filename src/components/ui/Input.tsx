@@ -2,7 +2,6 @@ import React from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/utils";
 import Flex from "./Flex";
-import { CloseIcon } from "../icons";
 
 const inputVariants = cva(
 	"h-full py-1 px-3 relative max-w-100 w-full rounded-sm text-center ",

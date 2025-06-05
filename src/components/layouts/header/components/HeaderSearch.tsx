@@ -8,7 +8,7 @@ import { ProductPrice } from "@/features/product/infor";
 import useProductList from "@/lib/hooks/cache/useProductList";
 import useSiteSetting from "@/lib/hooks/cache/useSiteSetting";
 import Helper from "@/utils/helper";
-import { cn, debounce } from "@/utils/utils";
+import { cn } from "@/utils/utils";
 import { validateInput } from "@/utils/validate";
 import { useState, useTransition } from "react";
 export default function HeaderSearch() {

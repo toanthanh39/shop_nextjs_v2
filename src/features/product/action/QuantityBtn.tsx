@@ -4,7 +4,6 @@ import { Flex, Label } from "@/components/ui";
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
 import { cn } from "@/utils/utils";
-import { useState } from "react";
 
 type Props = ComProps & {
 	product: ProductJson;

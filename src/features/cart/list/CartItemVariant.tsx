@@ -1,6 +1,5 @@
 "use client";
 import { CustomImage, Flex, Text } from "@/components/ui";
-import useProductList from "@/lib/hooks/cache/useProductList";
 import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
 import { CartItemProps } from "@/types/Cart.type";
 import { ProductJson } from "@/types/Product.type";

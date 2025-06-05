@@ -1,6 +1,5 @@
 import { StoryFilter, StoryJson } from "@/types/Story.type";
 import {
-	BaseAccessMode,
 	BaseCollectionJson,
 	BaseRepoParams,
 } from "@/types/Base.type";

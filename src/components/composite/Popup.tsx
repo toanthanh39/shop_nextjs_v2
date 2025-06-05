@@ -2,7 +2,6 @@ import { cn } from "@/utils/utils";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 } from "../ui/shacdn/Dialog";

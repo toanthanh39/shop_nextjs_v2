@@ -1,4 +1,4 @@
-import { Heading, Text } from "@/components/ui";
+import { Heading } from "@/components/ui";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";

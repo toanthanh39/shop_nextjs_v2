@@ -1,13 +1,13 @@
 import { Button, Flex, Text } from "@/components/ui";
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
+import { CartProps } from "@/types/Cart.type";
+import { PromotionJson, PromotionToggleProps } from "@/types/Promotion.type";
 import CartHeading from "../head/CartHeading";
 import CartInfor from "../infor/CartInfor";
 import { CartList } from "../list";
-import { CartProps } from "@/types/Cart.type";
-import CartLayoutSection from "./CartLayoutSection";
-import CartCoupon from "../promotion/CartCoupon";
 import { CartPromoSeasonal } from "../promotion";
-import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
-import { PromotionJson, PromotionToggleProps } from "@/types/Promotion.type";
+import CartCoupon from "../promotion/CartCoupon";
+import CartLayoutSection from "./CartLayoutSection";
 
 type Props = CartProps & {};
 export default function CartLayout({ cart }: Props) {

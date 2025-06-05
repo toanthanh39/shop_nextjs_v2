@@ -11,8 +11,7 @@ import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { IsUse } from "@/types/Global.type";
 import { PromotionJson, PromotionToggleProps } from "@/types/Promotion.type";
-import { debounce } from "@/utils/utils";
-import { CheckIcon, ClockIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 
 type Props = ComProps &
 	CartProps & {

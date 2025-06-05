@@ -1,7 +1,7 @@
 "use client";
 import Popup from "@/components/composite/Popup";
 import { CartIcon } from "@/components/icons";
-import { Button, Flex, LinkElement, Money, Text } from "@/components/ui";
+import { Button, Flex, Money, Text } from "@/components/ui";
 import { ButtonProps } from "@/components/ui/Button";
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import { ComProps } from "@/types/Component";

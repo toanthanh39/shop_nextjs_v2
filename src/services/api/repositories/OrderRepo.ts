@@ -1,14 +1,8 @@
-import {
-	BaseAccessMode,
-	BaseCollectionJson,
-	BaseRepoParams,
-} from "@/types/Base.type";
-import BaseRepository from "./BaseRepository";
-import Helper from "@/utils/helper";
-import { OrderCreate, OrderFilter, OrderJson } from "@/types/Order.type";
 import client from "@/lib/core/client";
-import { PaymentAccessMode } from "@/types/Payment.type";
-import server from "@/lib/core/server";
+import { BaseCollectionJson, BaseRepoParams } from "@/types/Base.type";
+import { OrderCreate, OrderFilter, OrderJson } from "@/types/Order.type";
+import Helper from "@/utils/helper";
+import BaseRepository from "./BaseRepository";
 
 class OrderRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
 	private static instance: OrderRepo;

@@ -23,7 +23,6 @@ import CashflowRepo from "./CashflowRepo";
 import {
 	CashflowGroup,
 	CashflowreceiptsDirection,
-	CashflowreceiptsMethod,
 	CashflowreceiptSource,
 	CashflowreceiptsStatus,
 	CashflowreceiptTarget,

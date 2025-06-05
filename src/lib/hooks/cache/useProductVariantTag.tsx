@@ -1,11 +1,10 @@
 import { HookCacheProps } from "@/types/Component";
-import { IsShowPromotionPrice, ProductFilter } from "@/types/Product.type";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { IsShowPromotionPrice } from "@/types/Product.type";
+import { useQuery } from "@tanstack/react-query";
 import { ProductJson } from "@/types/Product.type";
 import useSiteSetting from "./useSiteSetting";
 import { ProductRelatedJson } from "@/types/Product.type";
 import ProductRepo from "@/services/api/repositories/ProductRepo";
-import { BaseAccessMode } from "@/types/Base.type";
 
 const STALE_TIME = 60 * 1000;
 const RETRY = 2;

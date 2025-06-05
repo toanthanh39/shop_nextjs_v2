@@ -1,6 +1,5 @@
 import React from "react";
 import { RadioBox } from "@/components/ui/Input";
-import { VariantProps } from "class-variance-authority";
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";
 

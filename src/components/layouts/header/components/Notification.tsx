@@ -9,7 +9,6 @@ import Text from "@/components/ui/Text";
 import useNotfication from "@/lib/hooks/cache/useNotfication";
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";
-import Image from "next/image";
 
 export default function Notification({ className }: ComProps) {
 	const { isLoading, results } = useNotfication();

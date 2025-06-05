@@ -5,7 +5,7 @@ import BaseApi from "@/lib/axios/BaseApi";
 import { FooterBottom, FooterMenu } from "@/types/Footer.type";
 import detectSetting from "@/utils/detectSetting";
 import { replaceSingleKey } from "@/utils/markdown";
-import { Text, Heading, Grid, Flex } from "@/components/ui";
+import { Text, Heading, Flex } from "@/components/ui";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
 
 const keys = [

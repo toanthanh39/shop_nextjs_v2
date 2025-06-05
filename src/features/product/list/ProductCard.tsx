@@ -5,10 +5,8 @@ import { Button, Flex } from "@/components/ui";
 import { Card, CardBagde, CardContent, CardImage } from "@/components/ui/Card";
 import LinkElement from "@/components/ui/Link";
 import Money from "@/components/ui/Money";
-import Tag from "@/components/ui/Tag";
 import Text from "@/components/ui/Text";
 import { ProductJson } from "@/types/Product.type";
-import AddToCart from "../action/AddToCart";
 import ProductTags from "./ProductTags";
 
 type Props = {

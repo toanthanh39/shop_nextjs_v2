@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { cva } from "class-variance-authority";
-import { VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/utils";
 import { EmptyIcon } from "../icons";
 import Text from "./Text";

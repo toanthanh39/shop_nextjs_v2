@@ -1,6 +1,5 @@
 import { Heading } from "@/components/ui";
 import StoryRepo from "@/services/api/repositories/StoryRepo";
-import { BaseAccessMode } from "@/types/Base.type";
 import { notFound } from "next/navigation";
 
 async function getData(handle: string) {

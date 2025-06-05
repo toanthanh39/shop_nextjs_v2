@@ -1,9 +1,8 @@
-import { Button, Heading, LinkElement } from "@/components/ui";
+import { Button, Heading } from "@/components/ui";
 import { ComProps } from "@/types/Component";
 import { cn } from "@/utils/utils";
 import YoutubeSlider from "./YoutubeSlider";
 import VideoRepo from "@/services/api/repositories/VideoRepo";
-import { BaseAccessMode } from "@/types/Base.type";
 
 type Props = ComProps & {
 	title?: string;

@@ -1,6 +1,6 @@
 import BaseApi from "@/lib/axios/BaseApi";
 import { HookCacheProps } from "@/types/Component";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import SiteServerRepo from "@/services/api/repositories/SiteRepo";
 
 const STALE_TIME = 60 * 1000;

@@ -3,6 +3,7 @@ import { imageConst } from "@/common/constants/image";
 import OrderModel from "@/common/models/OrderModel";
 import PromotionModel from "@/common/models/PromotionModel";
 
+import { DateStatusResult } from "@/components/composite";
 import Popup from "@/components/composite/Popup";
 import GenericForm from "@/components/form/GenericForm";
 import { CloseIcon } from "@/components/icons";
@@ -13,24 +14,23 @@ import {
 	Flex,
 	Heading,
 	Input,
+	List,
 	Tag,
 	Text,
-	List,
 } from "@/components/ui";
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import usePromotion from "@/lib/hooks/cache/usePromotion";
 import useTimeServer from "@/lib/hooks/cache/useTimeServer";
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
+import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { IsUse } from "@/types/Global.type";
 import { OrderJson } from "@/types/Order.type";
 import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
-import { cn, debounce } from "@/utils/utils";
-import { useEffect, useMemo, useState } from "react";
-import { z } from "zod";
 import Helper from "@/utils/helper";
-import { CartProps } from "@/types/Cart.type";
-import { DateStatusResult } from "@/components/composite";
+import { cn, debounce } from "@/utils/utils";
+import { useMemo, useState } from "react";
+import { z } from "zod";
 
 const getActivePromo = (promo: PromotionJson, cart: OrderJson) => {
 	const allPromoCouponInCart = [
