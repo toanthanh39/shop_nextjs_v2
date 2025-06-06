@@ -9,7 +9,7 @@ import { IsUse } from "@/types/Global.type";
 import { PromotionJson, PromotionToggleProps } from "@/types/Promotion.type";
 
 import { Countdown } from "@/components/composite";
-import { Button, Flex, Heading, List, Tag, Text } from "@/components/ui";
+import { Button, Flex, Heading, List, Space, Tag, Text } from "@/components/ui";
 import { MotionItem } from "@/components/ui/motion";
 
 import usePromotion from "@/lib/hooks/cache/usePromotion";
@@ -19,11 +19,13 @@ import useLoading from "@/lib/hooks/utilities/useLoading";
 type Props = ComProps &
 	CartProps & {
 		onChange?: (p: PromotionJson, type: PromotionToggleProps) => Promise<any>;
+		layout?: React.ComponentType<{ children: React.ReactNode }>;
 	};
 
 export default function CartPromoSeasonal({
 	cart,
 	onChange = async (p: PromotionJson, type: PromotionToggleProps) => null,
+	layout: LayoutComponent,
 }: Props) {
 	const { price_sell: subtotal } = cart;
 	const { data: fullPromotion } = usePromotion({});
@@ -32,30 +34,32 @@ export default function CartPromoSeasonal({
 		PromotionModel.getPromotionSeasonal(fullPromotion ?? [])
 	);
 
-	if (promoSeasonalCarts.length <= 0) return null;
-
 	const { data: timeserver } = useTimeServer({});
 	const [isLoading, handleChange] = useLoading(onChange);
 
-	///////////////////////////////////////////////////////////
+	if (promoSeasonalCarts.length <= 0) return null;
 
+	///////////////////////////////////////////////////////////
+	const Wrapper = LayoutComponent ? LayoutComponent : React.Fragment;
 	return (
-		<List
-			className="flex-col"
-			classNameItem="w-full"
-			dataSource={promoSeasonalCarts}
-			render={(promotion) => {
-				return (
-					<RenderItem
-						cart={cart}
-						key={promotion.id}
-						promotion={promotion}
-						timeserver={timeserver}
-						onChange={handleChange}
-						isLoading={isLoading}
-					/>
-				);
-			}}></List>
+		<Wrapper>
+			<List
+				className="flex-col"
+				classNameItem="w-full"
+				dataSource={promoSeasonalCarts}
+				render={(promotion) => {
+					return (
+						<RenderItem
+							cart={cart}
+							key={promotion.id}
+							promotion={promotion}
+							timeserver={timeserver}
+							onChange={handleChange}
+							isLoading={isLoading}
+						/>
+					);
+				}}></List>
+		</Wrapper>
 	);
 }
 
@@ -90,7 +94,7 @@ const RenderItem = ({
 			? Math.min((cart.price_sell / promotion.req_subtotal) * 100, 100)
 			: 0;
 	return (
-		<div className="relative overflow-hidden bg-white transition-all">
+		<Space className="relative overflow-hidden bg-white transition-all">
 			{/* Status Badge */}
 
 			<Flex direction="col" gap={8} className="relative">
@@ -172,6 +176,6 @@ const RenderItem = ({
 					</Button>
 				)}
 			</Flex>
-		</div>
+		</Space>
 	);
 };

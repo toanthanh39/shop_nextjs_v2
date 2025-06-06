@@ -20,9 +20,7 @@ import Input, { Select } from "@/components/ui/Input";
 import { DatePicker } from "@/components/ui/shacdn/DatePicker";
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
 
-
 import { cn, encodedQueryParams } from "@/utils/utils";
-
 
 import CheckoutLayoutSection from "./CheckoutLayoutSection";
 
@@ -62,7 +60,9 @@ export default function CheckoutForm({ className, order }: Props) {
 	const { pending } = useFormStatus();
 	const router = useRouter();
 
-	const { checkout, isCheckouting } = useCartGlobal({ enabled: false });
+	const { checkout, isCheckouting, isUpdating } = useCartGlobal({
+		enabled: false,
+	});
 	const { data: siteSetting } = useSiteSetting();
 	////////////////////////////////////////
 	const [date, setDate] = useState<Date | undefined>(undefined);
@@ -403,13 +403,11 @@ export default function CheckoutForm({ className, order }: Props) {
 						)}
 						className="list-none w-full block"></List>
 				</CheckoutLayoutSection>
-				<CheckoutLayoutSection>
-					<CartPromoSeasonal
-						// onChange={onChangePromoBody}
-
-						className="w-full"
-						cart={order}></CartPromoSeasonal>
-				</CheckoutLayoutSection>
+				<CartPromoSeasonal
+					// onChange={onChangePromoBody}
+					layout={CheckoutLayoutSection}
+					className="w-full"
+					cart={order}></CartPromoSeasonal>
 				<CheckoutLayoutSection>
 					<CartCoupon className="w-full" cart={order}></CartCoupon>
 				</CheckoutLayoutSection>

@@ -5,7 +5,6 @@ import Helper from "@/utils/helper";
 
 import BaseRepository from "./BaseRepository";
 
-
 type InvoiceJson = OrderJson;
 
 class InvoiceRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
@@ -42,7 +41,7 @@ class InvoiceRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
 
 	async getOne(id: number | string) {
 		return this.getClientOrServer().get<InvoiceJson>(
-			this.getCorrectURL() + "/" + id
+			this.getCorrectURL() + "/token/" + id
 		);
 	}
 

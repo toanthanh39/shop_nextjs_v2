@@ -12,7 +12,7 @@ import { Button, Flex, List, Money, Text } from "@/components/ui";
 import { useCancelToken } from "@/lib/hooks/optimization/useCancelToken";
 import CartCalculator from "@/services/utils/CartCalculator";
 import { cn } from "@/utils/utils";
-
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 
 type Props = ComProps &
 	CartProps & {
@@ -21,12 +21,14 @@ type Props = ComProps &
 export default function CartInfor({
 	className,
 	cart,
-	isLoading,
+	isLoading = false,
 	onSubmit,
 }: Props) {
 	const priceInfor = CartCalculator.getPriceInfor(cart);
 
 	const { newCancelToken, setCancel } = useCancelToken();
+
+	const { isUpdating } = useCartGlobal({});
 
 	/////////////////////////////////////////////////////////
 	const [isPrefeching, setIsPrefetching] = useState(false);
@@ -37,7 +39,7 @@ export default function CartInfor({
 		: () => {
 				setIsPrefetching(true);
 				router.push(`/checkouts/${cart.id}`);
-		  };
+			};
 
 	useEffect(() => {
 		if (!onSubmit) router.prefetch(`/checkouts/${cart.id}`);
@@ -71,7 +73,7 @@ export default function CartInfor({
 							value={priceInfor.promotionDiscount}></Money>
 					</Text.p>
 				</Flex>
-				<CartInfor.CouponList cart={cart}></CartInfor.CouponList>
+				<CouponListRender cart={cart}></CouponListRender>
 			</Flex>
 
 			<Flex justify="between" gap={4}>
@@ -97,7 +99,7 @@ export default function CartInfor({
 			</Flex>
 			<Button
 				loading={isLoading || isPrefeching}
-				disabled={isLoading}
+				disabled={isLoading || isUpdating}
 				type="button"
 				onClick={handleCheckout}
 				variant="primary"
@@ -108,7 +110,7 @@ export default function CartInfor({
 	);
 }
 
-CartInfor.CouponList = ({ cart }: Props) => {
+const CouponListRender = ({ cart }: Props) => {
 	const t = useTranslations("cart.cart_infor");
 	const OrderModelInstance = new OrderModel(cart);
 	const allOrderPromotionCoupon = OrderModelInstance.getPromotionCouponUsed();
@@ -116,7 +118,7 @@ CartInfor.CouponList = ({ cart }: Props) => {
 		allOrderPromotionCoupon
 	);
 
-	if (aggregateDiscountCodes.length === 0) return null;
+	// if (aggregateDiscountCodes.length === 0) return null;
 	return (
 		<List
 			className="flex flex-col pl-4 mt-2"

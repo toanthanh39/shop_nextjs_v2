@@ -22,7 +22,6 @@ export default function CartLayout({ cart }: Props) {
 		pro: PromotionJson,
 		type: PromotionToggleProps
 	) => {
-		console.log("🚀 ~ CartLayout ~ type:", type);
 		try {
 			await addPromotionToCart({
 				action: type,
@@ -62,12 +61,11 @@ export default function CartLayout({ cart }: Props) {
 					</CartLayoutSection>
 				</Flex>
 				<Flex direction="col" gap={16} className="basis-[400px]">
-					<CartLayoutSection>
-						<CartPromoSeasonal
-							cart={cart}
-							onChange={handleChangePromotionCart}
-						/>
-					</CartLayoutSection>
+					<CartPromoSeasonal
+						layout={CartLayoutSection}
+						cart={cart}
+						onChange={handleChangePromotionCart}
+					/>
 
 					<CartLayoutSection>
 						<CartCoupon cart={cart} />

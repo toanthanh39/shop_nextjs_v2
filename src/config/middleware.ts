@@ -20,7 +20,6 @@ export const initSiteSetting = async (
 		const key = `${replaceDomainSetting}_config`;
 
 		const dataSetting = await new SettingRepo().getOne<SystemSetting>(key);
-		console.log("🚀 ~ dataSetting:", dataSetting);
 		const customer_token =
 			_header.get("customer_token") ??
 			(await ServerRepo.getCustomerTokenServer());
@@ -37,16 +36,16 @@ export const initSiteSetting = async (
 		response.headers.append("customer_token", customer_token);
 		response.headers.append("lang", dataSetting.value.lang);
 		response.headers.append("store_id", dataSetting.value.store_id.toString());
-		dataSetting.value?.pagination_limit &&
-			response.headers.append(
-				"pagination_limit",
-				dataSetting.value.pagination_limit.toString()
-			);
-		dataSetting.value?.id_ecomplatforms_for_web &&
-			response.headers.append(
-				"id_ecomplatforms_for_web",
-				dataSetting.value.id_ecomplatforms_for_web.toString()
-			);
+
+		response.headers.append(
+			"pagination_limit",
+			dataSetting.value.pagination_limit
+		);
+
+		response.headers.append(
+			"id_ecomplatforms_for_web",
+			dataSetting.value.id_ecomplatforms_for_web.toString()
+		);
 
 		return response;
 	} catch (error) {

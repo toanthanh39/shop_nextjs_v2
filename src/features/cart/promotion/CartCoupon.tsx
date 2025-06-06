@@ -23,6 +23,7 @@ import {
 	Heading,
 	Input,
 	List,
+	Space,
 	Tag,
 	Text,
 } from "@/components/ui";
@@ -32,11 +33,9 @@ import usePromotion from "@/lib/hooks/cache/usePromotion";
 import useTimeServer from "@/lib/hooks/cache/useTimeServer";
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
 
-
 import { imageConst } from "@/common/constants/image";
 import Helper from "@/utils/helper";
 import { cn, debounce } from "@/utils/utils";
-
 
 const getActivePromo = (promo: PromotionJson, cart: OrderJson) => {
 	const allPromoCouponInCart = [
@@ -92,9 +91,15 @@ export default function CartCoupon({ className, cart }: Props) {
 
 	//////////////////////////////////////////////
 	const handleSubmit = debounce(async (data: FormData) => {
+		console.log("🚀 ~ handleSubmit ~ data:", data);
+
 		try {
 			const promotionCouponToApplies = promotionCoupons.filter((i) =>
 				i.codes?.flatMap((c) => c.code).includes(data.code)
+			);
+			console.log(
+				"🚀 ~ handleSubmit ~ promotionCouponToApplies:",
+				promotionCouponToApplies
 			);
 			if (promotionCouponToApplies.length <= 0) {
 				methods.setError("code", {
@@ -168,7 +173,7 @@ export default function CartCoupon({ className, cart }: Props) {
 
 	//////////////////////////////////////////////
 	return (
-		<>
+		<Space>
 			<GenericForm
 				methods={methods}
 				onSubmit={methods.handleSubmit(handleSubmit)}
@@ -183,7 +188,6 @@ export default function CartCoupon({ className, cart }: Props) {
 					</GenericForm.Item>
 					<GenericForm.Submit
 						disabled={isUpdating}
-						loading={isUpdating}
 						variant="default"
 						size="sm"
 						className="m-0">
@@ -204,6 +208,7 @@ export default function CartCoupon({ className, cart }: Props) {
 						<Tag key={index} variant="primary" className="py-1">
 							{couponUsed.code}{" "}
 							<CloseIcon
+								disabled={isUpdating}
 								size="sm"
 								onClick={() =>
 									onRemoveCode(couponUsed.code, couponUsed.promotion_detail)
@@ -310,6 +315,6 @@ export default function CartCoupon({ className, cart }: Props) {
 					</div>
 				)}
 			</Popup>
-		</>
+		</Space>
 	);
 }
