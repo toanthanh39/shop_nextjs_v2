@@ -1,9 +1,9 @@
 import { BaseCollectionJson } from "./Base.type";
-import { PromotionJson } from "./Promotion.type";
-import { ProductJson } from "./Product.type";
-import { IsUse } from "./Global.type";
 import { CouponAddJson, CouponJson } from "./Coupon.type";
+import { IsUse } from "./Global.type";
 import { PaymentBillingJson, PaymentShippingJson } from "./Payment.type";
+import { ProductJson } from "./Product.type";
+import { PromotionJson } from "./Promotion.type";
 
 // enums
 export enum ORDER_ACTION {

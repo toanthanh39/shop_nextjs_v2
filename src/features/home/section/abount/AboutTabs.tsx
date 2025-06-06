@@ -1,5 +1,10 @@
 "use client";
 
+import { useState } from "react";
+
+import { ComDataSource , ComProps } from "@/types/Component";
+import { AboutSettingJson } from "@/types/Home.type";
+
 import { CustomImage, Flex, Heading, LinkElement, Text } from "@/components/ui";
 import {
 	Tabs,
@@ -7,11 +12,10 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "@/components/ui/shacdn/Tabs";
-import { ComDataSource } from "@/types/Component";
-import { ComProps } from "@/types/Component";
-import { AboutSettingJson } from "@/types/Home.type";
+
+
 import { cn } from "@/utils/utils";
-import { useState } from "react";
+
 
 type Props = ComProps &
 	ComDataSource<AboutSettingJson> & {

@@ -1,8 +1,10 @@
 "use client";
 
+import { ComProps } from "@/types/Component";
+
 import { LogoIcon } from "@/components/icons";
 import { LinkElement } from "@/components/ui";
-import { ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
 
 type Props = ComProps;

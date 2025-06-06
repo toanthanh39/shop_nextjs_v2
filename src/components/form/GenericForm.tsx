@@ -1,5 +1,4 @@
-import { ComProps } from "@/types/Component";
-import { cn } from "@/utils/utils";
+import Form, { FormProps } from "next/form";
 import React from "react";
 import {
 	FormProvider,
@@ -7,9 +6,14 @@ import {
 	FieldValues,
 	useFormContext,
 } from "react-hook-form";
+
+import { ComProps } from "@/types/Component";
+
+import { cn } from "@/utils/utils";
+
 import { Button, Text } from "../ui";
 import { ButtonProps } from "../ui/Button";
-import Form, { FormProps } from "next/form";
+
 type GenericFormProps<T extends FieldValues> = ComProps &
 	Partial<FormProps> & {
 		methods: UseFormReturn<T>; // These methods are created outside

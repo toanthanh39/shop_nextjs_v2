@@ -1,8 +1,11 @@
-import { CashflowCreate, CashflowJson } from "@/types/Cashflow.type";
-import BaseRepository from "./BaseRepository";
-import { BaseCollectionJson } from "@/types/Base.type";
 import client from "@/lib/core/client";
+import { BaseCollectionJson } from "@/types/Base.type";
+import { CashflowCreate, CashflowJson } from "@/types/Cashflow.type";
+
 import Helper from "@/utils/helper";
+
+import BaseRepository from "./BaseRepository";
+
 
 class CashflowRepo extends BaseRepository<CashflowJson> {
 	private readonly pathname = "/cashflowreceipts/public/order";

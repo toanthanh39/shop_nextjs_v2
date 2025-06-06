@@ -1,10 +1,12 @@
-import { SettingConst } from "@/common/constants/setting";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
+import { CommunicationJson } from "@/types/Header.type";
+
 import CustomImage from "@/components/ui/CustomImage";
 import Flex from "@/components/ui/Flex";
 import LinkElement from "@/components/ui/Link";
 import Text from "@/components/ui/Text";
-import SettingRepo from "@/services/api/repositories/SettingRepo";
-import { CommunicationJson } from "@/types/Header.type";
+
+import { SettingConst } from "@/common/constants/setting";
 
 const getDataServer = async () => {
 	try {

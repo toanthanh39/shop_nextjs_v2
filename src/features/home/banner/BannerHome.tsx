@@ -1,8 +1,11 @@
-import { SettingConst } from "@/common/constants/setting";
-import { BannerHomeData } from "@/types/Home.type";
-import { checkActiveDate } from "@/utils/utils";
-import BannerSlider from "./BannerSlider";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
+import { BannerHomeData } from "@/types/Home.type";
+
+import { SettingConst } from "@/common/constants/setting";
+import { checkActiveDate } from "@/utils/utils";
+
+import BannerSlider from "./BannerSlider";
+
 
 async function customFunction() {
 	try {

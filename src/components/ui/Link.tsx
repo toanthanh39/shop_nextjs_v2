@@ -1,7 +1,8 @@
-import React from "react";
-import { cn } from "@/utils/utils";
 import { cva, VariantProps } from "class-variance-authority";
 import Link, { LinkProps } from "next/link";
+import React from "react";
+
+import { cn } from "@/utils/utils";
 
 type LinkAtribute = React.AnchorHTMLAttributes<HTMLAnchorElement>;
 export interface LinkElementProps

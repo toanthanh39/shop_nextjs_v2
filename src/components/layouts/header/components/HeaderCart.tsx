@@ -1,6 +1,7 @@
 "use client";
 import { CartIcon } from "@/components/icons";
 import { Badge, LinkElement } from "@/components/ui";
+
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 
 export default function HeaderCart() {

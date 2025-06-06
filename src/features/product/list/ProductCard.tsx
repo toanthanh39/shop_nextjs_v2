@@ -1,4 +1,5 @@
-import { productConst } from "@/common/constants/product";
+import { ProductJson } from "@/types/Product.type";
+
 import Rating from "@/components/composite/Rating";
 import { HeartIcon } from "@/components/icons";
 import { Button, Flex } from "@/components/ui";
@@ -6,7 +7,10 @@ import { Card, CardBagde, CardContent, CardImage } from "@/components/ui/Card";
 import LinkElement from "@/components/ui/Link";
 import Money from "@/components/ui/Money";
 import Text from "@/components/ui/Text";
-import { ProductJson } from "@/types/Product.type";
+
+import { productConst } from "@/common/constants/product";
+
+
 import ProductTags from "./ProductTags";
 
 type Props = {

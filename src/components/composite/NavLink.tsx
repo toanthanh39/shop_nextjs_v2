@@ -1,7 +1,8 @@
 "use client";
 import { usePathname } from "next/navigation";
-import LinkElement from "../ui/Link";
-import { LinkElementProps } from "../ui/Link";
+
+import LinkElement, { LinkElementProps } from "../ui/Link";
+
 
 export default function NavLink(props: LinkElementProps) {
 	const pathname = usePathname();

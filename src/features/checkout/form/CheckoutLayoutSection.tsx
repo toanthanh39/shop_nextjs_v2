@@ -1,5 +1,7 @@
-import { Flex } from "@/components/ui";
 import { ComProps } from "@/types/Component";
+
+import { Flex } from "@/components/ui";
+
 import { cn } from "@/utils/utils";
 
 type Props = ComProps & {};

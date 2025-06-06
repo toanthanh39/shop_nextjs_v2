@@ -1,13 +1,15 @@
 "use client";
 
-import ProductModel from "@/common/models/ProductModel";
-import { Flex, Grid, Tag, Text } from "@/components/ui";
-import { ProductVariantTag } from "@/lib/hooks/cache/useProductVariantTag";
-import { ComDataSource } from "@/types/Component";
-import { ComProps } from "@/types/Component";
-import { ProductJson } from "@/types/Product.type";
-import { cn } from "@/utils/utils";
 import React from "react";
+
+import ProductModel from "@/common/models/ProductModel";
+import { ComDataSource , ComProps } from "@/types/Component";
+import { ProductJson } from "@/types/Product.type";
+
+import { Flex, Grid, Tag, Text } from "@/components/ui";
+
+import { ProductVariantTag } from "@/lib/hooks/cache/useProductVariantTag";
+import { cn } from "@/utils/utils";
 
 type Props = ComProps &
 	ComDataSource<ProductVariantTag> & {

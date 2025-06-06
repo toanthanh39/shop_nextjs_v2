@@ -1,6 +1,6 @@
 "use client";
-import { RootProviderProps } from "@/types/Shop.type";
-import { ShopProviderProps } from "@/types/Shop.type";
+import { RootProviderProps , ShopProviderProps } from "@/types/Shop.type";
+
 
 type Props = ShopProviderProps & RootProviderProps & {};
 

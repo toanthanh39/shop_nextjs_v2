@@ -1,10 +1,13 @@
 "use client";
-import { CustomImage, Flex, Text } from "@/components/ui";
-import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
+import { useEffect, useMemo, useState } from "react";
+
 import { CartItemProps } from "@/types/Cart.type";
 import { ProductJson } from "@/types/Product.type";
+
+import { CustomImage, Flex, Text } from "@/components/ui";
+
+import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
 import { cn } from "@/utils/utils";
-import { useEffect, useMemo, useState } from "react";
 
 type Props = CartItemProps & {
 	onChange: (v: ProductJson) => Promise<void>;

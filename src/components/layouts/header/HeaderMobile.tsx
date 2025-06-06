@@ -1,6 +1,10 @@
 import { ComProps } from "@/types/Component";
 
+import HeaderNavigation from "./components/HeaderNavigation";
+import Flex from "@/components/ui/Flex";
+
 import { cn } from "@/utils/utils";
+
 import {
 	HeaderCart,
 	HeaderSearch,
@@ -8,8 +12,6 @@ import {
 	Namperfume,
 	Notification,
 } from "./components";
-import Flex from "@/components/ui/Flex";
-import HeaderNavigation from "./components/HeaderNavigation";
 
 type Props = ComProps & {};
 export default function HeaderMobile({ className }: Props) {

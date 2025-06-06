@@ -1,11 +1,13 @@
 "use client";
 
+import { ComProps , ComDataSource } from "@/types/Component";
+import { BrandHomeData } from "@/types/Home.type";
+
 import CustomImage from "@/components/ui/CustomImage";
 import LinkElement from "@/components/ui/Link";
 import Slider from "@/components/widgets/Slider";
-import { ComProps } from "@/types/Component";
-import { ComDataSource } from "@/types/Component";
-import { BrandHomeData } from "@/types/Home.type";
+
+
 import { cn } from "@/utils/utils";
 
 type Props = ComDataSource<BrandHomeData> & ComProps & {};

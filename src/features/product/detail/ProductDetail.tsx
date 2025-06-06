@@ -1,8 +1,12 @@
 "use client";
-import React, { useState } from "react";
 import Image from "next/image";
-import { CustomImage, Flex, Money } from "@/components/ui";
+import React, { useState } from "react";
+
 import { ProductJson } from "@/types/Product.type";
+
+import { CustomImage, Flex, Money } from "@/components/ui";
+
+
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 
 type Props = {

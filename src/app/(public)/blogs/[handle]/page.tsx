@@ -1,6 +1,8 @@
-import { Heading } from "@/components/ui";
-import StoryRepo from "@/services/api/repositories/StoryRepo";
 import { notFound } from "next/navigation";
+
+import StoryRepo from "@/services/api/repositories/StoryRepo";
+
+import { Heading } from "@/components/ui";
 
 async function getData(handle: string) {
 	try {

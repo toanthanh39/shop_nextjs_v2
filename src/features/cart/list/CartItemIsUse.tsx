@@ -1,11 +1,15 @@
 "use client";
 
-import { Checkbox } from "@/components/ui";
+import { ChangeEvent, useEffect , useState } from "react";
+
 import { CartItemProps } from "@/types/Cart.type";
 import { IsUse } from "@/types/Global.type";
+
+import { Checkbox } from "@/components/ui";
+
 import { cn, debounce } from "@/utils/utils";
-import { ChangeEvent, useEffect } from "react";
-import { useState } from "react";
+
+
 
 type Props = CartItemProps & {
 	onChange?: (use: boolean) => Promise<void>;

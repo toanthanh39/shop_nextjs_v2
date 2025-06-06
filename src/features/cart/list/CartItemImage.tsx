@@ -1,5 +1,7 @@
-import { CustomImage } from "@/components/ui";
 import { CartItemProps } from "@/types/Cart.type";
+
+import { CustomImage } from "@/components/ui";
+
 import { cn } from "@/utils/utils";
 
 type Props = CartItemProps & {};

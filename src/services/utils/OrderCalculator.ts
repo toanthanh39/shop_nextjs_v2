@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { IsUse } from "@/types/Global.type";
 import {
 	ActionOrderUpdate,
@@ -13,8 +15,9 @@ import {
 	PromotionGroup,
 	PromotionJson,
 } from "@/types/Promotion.type";
+
 import Helper from "@/utils/helper";
-import { v4 as uuidv4 } from "uuid";
+
 import OrderConvert from "./OrderConvert";
 
 class OrderCalculator {

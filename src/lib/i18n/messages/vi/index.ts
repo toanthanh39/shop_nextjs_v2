@@ -1,5 +1,5 @@
-import product from "./product.json";
 import cart from "./cart.json";
+import product from "./product.json";
 
 const messages = {
 	product,

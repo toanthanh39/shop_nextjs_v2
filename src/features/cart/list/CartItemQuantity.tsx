@@ -1,8 +1,12 @@
 "use client";
-import { Button, Flex, Text } from "@/components/ui";
-import { CartItemProps } from "@/types/Cart.type";
-import { cn, debounce } from "@/utils/utils";
 import { useCallback, useEffect, useState } from "react";
+
+import { CartItemProps } from "@/types/Cart.type";
+
+import { Button, Flex, Text } from "@/components/ui";
+
+import { cn, debounce } from "@/utils/utils";
+
 
 type Props = CartItemProps & {
 	onQuantityChange: (quantity: number) => Promise<boolean>;

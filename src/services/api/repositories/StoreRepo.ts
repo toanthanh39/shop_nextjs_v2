@@ -2,9 +2,11 @@ import {
 	BaseCollectionJson,
 	BaseRepoParams,
 } from "@/types/Base.type";
-import BaseRepository from "./BaseRepository";
-import Helper from "@/utils/helper";
 import { StoreFilter, StoreJson } from "@/types/Store.type";
+
+import Helper from "@/utils/helper";
+
+import BaseRepository from "./BaseRepository";
 
 class StoreRepo extends BaseRepository<StoreJson> implements BaseRepoParams {
 	private static instance: StoreRepo;

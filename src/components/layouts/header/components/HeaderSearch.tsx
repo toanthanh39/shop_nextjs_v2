@@ -1,16 +1,20 @@
 "use client";
+import { useState, useTransition } from "react";
+
+import { ProductPrice } from "@/features/product/infor";
+
 import { CloseIcon, SearchIcon } from "@/components/icons";
 import CustomImage from "@/components/ui/CustomImage";
 import Flex from "@/components/ui/Flex";
 import Input from "@/components/ui/Input";
 import LinkElement from "@/components/ui/Link";
-import { ProductPrice } from "@/features/product/infor";
+
 import useProductList from "@/lib/hooks/cache/useProductList";
 import useSiteSetting from "@/lib/hooks/cache/useSiteSetting";
 import Helper from "@/utils/helper";
 import { cn } from "@/utils/utils";
 import { validateInput } from "@/utils/validate";
-import { useState, useTransition } from "react";
+
 export default function HeaderSearch() {
 	//state
 	const [value, setValue] = useState("");

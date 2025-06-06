@@ -1,7 +1,9 @@
 import { BaseCollectionJson, BaseRepoParams } from "@/types/Base.type";
-import BaseRepository from "./BaseRepository";
-import Helper from "@/utils/helper";
 import { ProductFilter, ProductJson } from "@/types/Product.type";
+
+import Helper from "@/utils/helper";
+
+import BaseRepository from "./BaseRepository";
 
 const TIME_CACHE = 60 * 60;
 

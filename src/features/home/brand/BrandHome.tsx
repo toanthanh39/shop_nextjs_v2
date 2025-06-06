@@ -1,11 +1,15 @@
-import { SettingConst } from "@/common/constants/setting";
-import { BrandHomeData } from "@/types/Home.type";
-import detectSetting from "@/utils/detectSetting";
-import BrandSlider from "./BrandSlider";
-import BrandGrid from "./BrandGrid";
-import Heading from "@/components/ui/Heading";
-import Flex from "@/components/ui/Flex";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
+import { BrandHomeData } from "@/types/Home.type";
+
+import Flex from "@/components/ui/Flex";
+import Heading from "@/components/ui/Heading";
+
+import { SettingConst } from "@/common/constants/setting";
+import detectSetting from "@/utils/detectSetting";
+
+import BrandGrid from "./BrandGrid";
+import BrandSlider from "./BrandSlider";
+
 
 const keys = [
 	SettingConst.home.section_brand_namperfume,

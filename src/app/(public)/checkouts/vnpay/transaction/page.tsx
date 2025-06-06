@@ -1,10 +1,12 @@
 export const dynamic = "force-dynamic";
-import { LoadingIcon } from "@/components/icons";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+
 import PaymentRepo from "@/services/api/repositories/PaymentRepo";
 import { SearchParams } from "@/types/Dynamic.type";
 
-import { redirect } from "next/navigation";
-import { Suspense } from "react";
+
+import { LoadingIcon } from "@/components/icons";
 
 export default async function Page(props: { searchParams: SearchParams }) {
 	const searchParams = await props.searchParams;

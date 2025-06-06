@@ -1,9 +1,12 @@
 "use client";
 
-import { Flex, List } from "@/components/ui";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
+
+import { Flex, List } from "@/components/ui";
+
 import { cn } from "@/utils/utils";
+
 import CartItem from "./CartItem";
 
 type Props = ComProps & CartProps & {};

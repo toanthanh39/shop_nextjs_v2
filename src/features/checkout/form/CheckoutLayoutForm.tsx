@@ -1,8 +1,13 @@
-import { cn } from "@/utils/utils";
 import { ComProps } from "@/types/Component";
-import CheckoutForm from "./CheckoutForm";
-import { Flex } from "@/components/ui";
 import { OrderJson } from "@/types/Order.type";
+
+import { Flex } from "@/components/ui";
+
+import { cn } from "@/utils/utils";
+
+import CheckoutForm from "./CheckoutForm";
+
+
 
 type Props = ComProps & {
 	order: OrderJson;

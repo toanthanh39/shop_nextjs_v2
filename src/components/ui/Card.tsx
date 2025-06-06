@@ -1,9 +1,11 @@
 import { cva, VariantProps } from "class-variance-authority";
-import CustomImage from "./CustomImage";
-import { CustomImageProps } from "./CustomImage";
-import { cn } from "@/utils/utils";
-import Skeleton from "./Skeleton";
+
 import { imageConst } from "@/common/constants/image";
+import { cn } from "@/utils/utils";
+
+import CustomImage, { CustomImageProps } from "./CustomImage";
+import Skeleton from "./Skeleton";
+
 
 const CardVariants = cva("", {
 	variants: {

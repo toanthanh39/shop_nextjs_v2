@@ -1,9 +1,11 @@
-import Heading from "@/components/ui/Heading";
-import CheckoutForm from "@/features/checkout/form/CheckoutForm";
-import { Params } from "@/types/Dynamic.type";
-import CartRepo from "@/services/api/repositories/CartRepo";
 import { notFound } from "next/navigation";
+
+import CheckoutForm from "@/features/checkout/form/CheckoutForm";
+import CartRepo from "@/services/api/repositories/CartRepo";
 import ServerRepo from "@/services/api/repositories/ServerRepo";
+import { Params } from "@/types/Dynamic.type";
+
+import Heading from "@/components/ui/Heading";
 
 const getDetailOrder = async (token: string) => {
 	try {

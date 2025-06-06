@@ -1,18 +1,18 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+
 import OrderModel from "@/common/models/OrderModel";
-import { Button, Flex, List, Money, Text } from "@/components/ui";
-import { useCancelToken } from "@/lib/hooks/optimization/useCancelToken";
-import CartCalculator from "@/services/utils/CartCalculator";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
-import { IsUse } from "@/types/Global.type";
-import { OrderPromotion } from "@/types/Order.type";
-import { PromotionGroup } from "@/types/Promotion.type";
+
+import { Button, Flex, List, Money, Text } from "@/components/ui";
+
+import { useCancelToken } from "@/lib/hooks/optimization/useCancelToken";
+import CartCalculator from "@/services/utils/CartCalculator";
 import { cn } from "@/utils/utils";
-import { Car } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+
 
 type Props = ComProps &
 	CartProps & {

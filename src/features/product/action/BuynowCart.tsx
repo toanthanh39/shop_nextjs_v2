@@ -1,6 +1,8 @@
-import { Button } from "@/components/ui";
-import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import { ProductJson } from "@/types/Product.type";
+
+import { Button } from "@/components/ui";
+
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import { debounce } from "@/utils/utils";
 
 type Props = {

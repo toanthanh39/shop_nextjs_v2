@@ -1,6 +1,9 @@
 import React from "react";
-import { RadioBox } from "@/components/ui/Input";
+
 import { ComProps } from "@/types/Component";
+
+import { RadioBox } from "@/components/ui/Input";
+
 import { cn } from "@/utils/utils";
 
 interface RadioProps extends ComProps {

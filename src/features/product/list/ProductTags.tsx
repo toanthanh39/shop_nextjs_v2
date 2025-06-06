@@ -1,6 +1,7 @@
 import ProductModel from "@/common/models/ProductModel";
-import Tag from "@/components/ui/Tag";
 import { ProductJson } from "@/types/Product.type";
+
+import Tag from "@/components/ui/Tag";
 
 type Props = {
 	product: ProductJson;

@@ -1,6 +1,7 @@
-import { SystemConst } from "@/common/constants/system";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+
+import { SystemConst } from "@/common/constants/system";
 export async function GET() {
 	const result = SystemConst.DEFAULT_SYSTEM_SETTING;
 	try {

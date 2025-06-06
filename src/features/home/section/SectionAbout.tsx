@@ -1,11 +1,13 @@
-import { SettingConst } from "@/common/constants/setting";
-import { AboutSettingJson } from "@/types/Home.type";
-import detectSetting from "@/utils/detectSetting";
-import AboutTabs from "./abount/AboutTabs";
-import { ComProps } from "@/types/Component";
-import { cn } from "@/utils/utils";
 import { translations } from "@/lib/data/locales";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
+import { ComProps } from "@/types/Component";
+import { AboutSettingJson } from "@/types/Home.type";
+
+import { SettingConst } from "@/common/constants/setting";
+import detectSetting from "@/utils/detectSetting";
+import { cn } from "@/utils/utils";
+
+import AboutTabs from "./abount/AboutTabs";
 
 type Props = ComProps;
 const keys = [

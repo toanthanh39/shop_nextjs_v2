@@ -1,11 +1,18 @@
-import { translations } from "@/lib/data/locales";
-import { detectKeyFromSetting } from "@/utils/detectSetting";
 import { notFound } from "next/navigation";
+
+import { translations } from "@/lib/data/locales";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
+
+import Flex from "@/components/ui/Flex";
+
+import { detectKeyFromSetting } from "@/utils/detectSetting";
+import { cn } from "@/utils/utils";
+
 import HeaderTopLeft from "./HeaderTopLeft";
 import HeaderTopRignt from "./HeaderTopRignt";
-import Flex from "@/components/ui/Flex";
-import { cn } from "@/utils/utils";
-import SettingRepo from "@/services/api/repositories/SettingRepo";
+
+
+
 
 const keyTranslates = [...Object.values(translations.header.top)];
 

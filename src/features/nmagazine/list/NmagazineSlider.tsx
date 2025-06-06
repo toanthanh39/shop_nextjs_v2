@@ -1,16 +1,19 @@
 "use client";
 
-import { ComProps } from "@/types/Component";
-import { cn } from "@/utils/utils";
 import dynamic from "next/dynamic";
 
-import { ComDataSource } from "@/types/Component";
-
-import { BrandJson } from "@/types/Brand.type";
-import NmagazineCard from "./NmagazineCard";
 import YoutubeListSkeleton, {
 	YoutubeSkeletonType,
 } from "@/features/channels/youtube/YoutubeListSkeleton";
+import { BrandJson } from "@/types/Brand.type";
+import { ComProps , ComDataSource } from "@/types/Component";
+
+import { cn } from "@/utils/utils";
+
+
+
+import NmagazineCard from "./NmagazineCard";
+
 const SliderDynamic = dynamic(
 	() =>
 		import("@/components/widgets/Slider").then((mod) => ({

@@ -1,9 +1,9 @@
+import PromotionModel from "@/common/models/PromotionModel";
+import { IsUse } from "@/types/Global.type";
 import { RootProviderProps } from "@/types/Shop.type";
 import React from "react";
 import useCartGlobal from "../hooks/cache/useCartGlobal";
 import usePromotion from "../hooks/cache/usePromotion";
-import PromotionModel from "@/common/models/PromotionModel";
-import { IsUse } from "@/types/Global.type";
 
 type Props = RootProviderProps & {};
 export default function CartProvider({ children }: Props) {

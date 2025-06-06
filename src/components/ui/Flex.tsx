@@ -1,7 +1,7 @@
-import { cn } from "@/utils/utils";
 import { cva, VariantProps } from "class-variance-authority";
-import React, { DetailedHTMLProps } from "react";
-import { HTMLAttributes } from "react";
+import React, { DetailedHTMLProps , HTMLAttributes } from "react";
+
+import { cn } from "@/utils/utils";
 
 const variants = cva("flex w-full", {
 	variants: {

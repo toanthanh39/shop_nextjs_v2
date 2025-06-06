@@ -1,10 +1,11 @@
-import BaseApi from "@/lib/axios/BaseApi";
-import { HookCacheProps } from "@/types/Component";
 import { useQuery } from "@tanstack/react-query";
-import PromotionRepo from "@/services/api/repositories/PromotionRepo";
-import { PromotionFilter } from "@/types/Promotion.type";
+
 import PromotionModel from "@/common/models/PromotionModel";
+import BaseApi from "@/lib/axios/BaseApi";
+import PromotionRepo from "@/services/api/repositories/PromotionRepo";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
+import { HookCacheProps } from "@/types/Component";
+import { PromotionFilter } from "@/types/Promotion.type";
 
 const STALE_TIME = 0;
 export const CACHE_PROMOTIONS_HOOK = "cache-promotions";

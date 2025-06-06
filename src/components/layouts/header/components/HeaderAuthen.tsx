@@ -1,9 +1,10 @@
 "use client";
+import { useRouter } from "next/navigation";
+
 import { UserIcon } from "@/components/icons";
 import { Button, Text } from "@/components/ui";
 import CustomImage from "@/components/ui/CustomImage";
 import Flex from "@/components/ui/Flex";
-import { useRouter } from "next/navigation";
 export default function HeaderAuthen() {
 	const router = useRouter();
 	// const { data: session } = useSession();

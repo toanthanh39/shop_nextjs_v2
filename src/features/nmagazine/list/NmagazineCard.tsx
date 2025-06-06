@@ -1,7 +1,8 @@
-import { Text } from "@/components/ui";
-import { Card, CardContent, CardImage } from "@/components/ui/Card";
 import { BrandJson } from "@/types/Brand.type";
 import { ComProps } from "@/types/Component";
+
+import { Text } from "@/components/ui";
+import { Card, CardContent, CardImage } from "@/components/ui/Card";
 
 type Props = ComProps & {
 	data: BrandJson;

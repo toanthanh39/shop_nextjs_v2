@@ -1,7 +1,9 @@
+import { VariantProps } from "class-variance-authority";
+
 import { sizes, variants } from "@/styles/svg-variant";
 import { ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
-import { VariantProps } from "class-variance-authority";
 
 interface StoreIconProps
 	extends VariantProps<typeof variants>,

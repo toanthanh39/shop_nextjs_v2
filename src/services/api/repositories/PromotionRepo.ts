@@ -1,9 +1,12 @@
-import { BaseCollectionJson } from "@/types/Base.type";
-import BaseRepository from "./BaseRepository";
-import Helper from "@/utils/helper";
 import client from "@/lib/core/client";
-import { PromotionFilter, PromotionJson } from "@/types/Promotion.type";
+import { BaseCollectionJson } from "@/types/Base.type";
 import { CouponJson } from "@/types/Coupon.type";
+import { PromotionFilter, PromotionJson } from "@/types/Promotion.type";
+
+import Helper from "@/utils/helper";
+
+import BaseRepository from "./BaseRepository";
+
 
 class PromotionRepo extends BaseRepository<PromotionJson> {
 	private static instance: PromotionRepo;

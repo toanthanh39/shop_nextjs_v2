@@ -1,5 +1,6 @@
-import { cn } from "@/utils/utils";
 import { cva, VariantProps } from "class-variance-authority";
+
+import { cn } from "@/utils/utils";
 
 const pVariants = cva("", {
 	variants: {

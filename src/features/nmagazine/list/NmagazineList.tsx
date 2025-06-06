@@ -1,8 +1,11 @@
-import { ComProps } from "@/types/Component";
-import NamgazineSlider from "./NmagazineSlider";
-import { cn } from "@/utils/utils";
-import { Button, Heading } from "@/components/ui";
 import BrandRepo from "@/services/api/repositories/BrandRepo";
+import { ComProps } from "@/types/Component";
+
+import { Button, Heading } from "@/components/ui";
+
+import { cn } from "@/utils/utils";
+
+import NamgazineSlider from "./NmagazineSlider";
 
 type Props = ComProps & {
 	title?: string;

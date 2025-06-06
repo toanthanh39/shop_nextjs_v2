@@ -1,5 +1,6 @@
-import { debugServer } from "@/config/debug";
 import { AxiosError, AxiosRequestConfig } from "axios";
+
+import { debugServer } from "@/config/debug";
 
 export type Config = RequestInit & {
 	params?: Pick<AxiosRequestConfig, "params">;

@@ -1,10 +1,12 @@
-import { ComProps } from "@/types/Component";
-import { ComDataSource } from "@/types/Component";
-import Flex from "./Flex";
-import { cn } from "@/utils/utils";
-import Empty from "./Empty";
-import { motionConfig } from "@/styles/motion-animate";
 import { motion, AnimatePresence } from "motion/react";
+
+import { motionConfig } from "@/styles/motion-animate";
+import { ComProps , ComDataSource } from "@/types/Component";
+
+import { cn } from "@/utils/utils";
+
+import Empty from "./Empty";
+import Flex from "./Flex";
 
 type Props<D> = ComProps &
 	Required<ComDataSource<D>> & {

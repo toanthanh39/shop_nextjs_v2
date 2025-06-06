@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+
 import BaseApi from "@/lib/axios/BaseApi";
+import StoreRepo from "@/services/api/repositories/StoreRepo";
 import { HookCacheProps } from "@/types/Component";
 import { StoreFilter } from "@/types/Store.type";
-import { useQuery } from "@tanstack/react-query";
-import StoreRepo from "@/services/api/repositories/StoreRepo";
 
 const STALE_TIME = 60 * 1000;
 export const CACHE_STORES_HOOK = "cache-stores";

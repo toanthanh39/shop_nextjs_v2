@@ -1,6 +1,8 @@
 import { ComProps } from "@/types/Component";
-import { Anouncement, HeaderMid, HeaderTop } from "./components";
+
 import { cn } from "@/utils/utils";
+
+import { Anouncement, HeaderMid, HeaderTop } from "./components";
 
 type Props = ComProps & {};
 export default function HeaderDesktop({ className }: Props) {

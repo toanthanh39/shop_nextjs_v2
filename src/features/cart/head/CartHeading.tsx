@@ -1,6 +1,8 @@
-import { Heading } from "@/components/ui";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
+
+import { Heading } from "@/components/ui";
+
 import { cn } from "@/utils/utils";
 
 type Props = ComProps & CartProps & {};

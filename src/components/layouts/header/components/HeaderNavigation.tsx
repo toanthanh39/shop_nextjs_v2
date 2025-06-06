@@ -1,10 +1,14 @@
 "use client";
+import { usePathname } from "next/navigation";
+
+import { ComProps } from "@/types/Component";
+
 import { HeartIcon, LogoIcon, SearchIcon, UserIcon } from "@/components/icons";
 import Flex from "@/components/ui/Flex";
 import Text from "@/components/ui/Text";
-import { ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
-import { usePathname } from "next/navigation";
+
 
 type Props = ComProps;
 export default function HeaderNavigation({ className }: Props) {

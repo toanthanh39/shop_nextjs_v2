@@ -1,7 +1,11 @@
-import { Flex, Money, Text } from "@/components/ui";
-import { CartItemProps } from "@/types/Cart.type";
-import { cn } from "@/utils/utils";
 import { useMemo } from "react";
+
+import { CartItemProps } from "@/types/Cart.type";
+
+import { Flex, Money, Text } from "@/components/ui";
+
+import { cn } from "@/utils/utils";
+
 type Props = CartItemProps & {
 	isNotWithQuantity?: boolean;
 };

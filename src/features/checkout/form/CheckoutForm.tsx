@@ -1,27 +1,37 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useFormStatus } from "react-dom";
+import { z } from "zod";
+
+import { CartInfor } from "@/features/cart/infor";
+import { CartItemPrice } from "@/features/cart/list";
+import { CartPromoSeasonal } from "@/features/cart/promotion";
+import CartCoupon from "@/features/cart/promotion/CartCoupon";
+import { ComProps } from "@/types/Component";
+
+import { OrderJson } from "@/types/Order.type";
 import GenericForm from "@/components/form/GenericForm";
 import Radio from "@/components/form/Radio";
 import { CustomImage, Heading, List, Tag, Text } from "@/components/ui";
 import Flex from "@/components/ui/Flex";
 import Input, { Select } from "@/components/ui/Input";
 import { DatePicker } from "@/components/ui/shacdn/DatePicker";
-import { CartItemPrice } from "@/features/cart/list";
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
-import { ComProps } from "@/types/Component";
-import { OrderJson } from "@/types/Order.type";
+
+
 import { cn, encodedQueryParams } from "@/utils/utils";
-import { useState } from "react";
-import { z } from "zod";
+
+
 import CheckoutLayoutSection from "./CheckoutLayoutSection";
-import { CartInfor } from "@/features/cart/infor";
-import CartCoupon from "@/features/cart/promotion/CartCoupon";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
+
 import { AddressType } from "@/types/Customer.type";
 import { PaymentAccessMode, PaymentAddJsonPublic } from "@/types/Payment.type";
+
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import useSiteSetting from "@/lib/hooks/cache/useSiteSetting";
+
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -32,8 +42,8 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/components/ui/shacdn/AlertDialog";
+
 import BaseApi from "@/lib/axios/BaseApi";
-import { CartPromoSeasonal } from "@/features/cart/promotion";
 
 type Props = ComProps & {
 	order: OrderJson;

@@ -1,12 +1,16 @@
-import { SettingConst } from "@/common/constants/setting";
+import BaseApi from "@/lib/axios/BaseApi";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
+import { FooterBottom, FooterMenu } from "@/types/Footer.type";
+
+import { Text, Heading, Flex } from "@/components/ui";
 import CustomImage from "@/components/ui/CustomImage";
 import LinkElement from "@/components/ui/Link";
-import BaseApi from "@/lib/axios/BaseApi";
-import { FooterBottom, FooterMenu } from "@/types/Footer.type";
+
+import { SettingConst } from "@/common/constants/setting";
 import detectSetting from "@/utils/detectSetting";
 import { replaceSingleKey } from "@/utils/markdown";
-import { Text, Heading, Flex } from "@/components/ui";
-import SettingRepo from "@/services/api/repositories/SettingRepo";
+
+
 
 const keys = [
 	SettingConst.footer.footer_bottom,

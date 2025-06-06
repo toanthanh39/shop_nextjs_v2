@@ -1,8 +1,10 @@
-import ProductRepo from "@/services/api/repositories/ProductRepo";
-import { Params } from "@/types/Dynamic.type";
-import PageClient from "./page.client";
 import { Suspense } from "react";
+
+import ProductRepo from "@/services/api/repositories/ProductRepo";
 import SiteServerRepo from "@/services/api/repositories/SiteRepo";
+import { Params } from "@/types/Dynamic.type";
+
+import PageClient from "./page.client";
 
 async function getDataServer(collection_handle: string) {
 	try {
