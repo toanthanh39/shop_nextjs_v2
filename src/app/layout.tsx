@@ -10,6 +10,7 @@ import { detectLangForServer } from "@/utils/detectServer";
 import BaseApi from "@/lib/axios/BaseApi";
 import { SystemConst } from "@/common/constants/system";
 import { NextIntlClientProvider } from "next-intl";
+import PrelineScriptWrapper from "@/components/scripts/prelineScriptWrapper";
 export async function generateMetadata(): Promise<Metadata> {
 	const meta = await generateMetadataSite();
 	return meta;
@@ -70,6 +71,7 @@ export default async function RootLayout({
 
 				<DevComponents />
 			</body>
+			<PrelineScriptWrapper />
 		</html>
 	);
 }
