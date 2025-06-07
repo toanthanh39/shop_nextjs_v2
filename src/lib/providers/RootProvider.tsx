@@ -1,10 +1,12 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React from "react";
-import ShopProvider from "./ShopProvider";
-import { RootProviderProps } from "@/types/Shop.type";
-import CartProvider from "./CartProvider";
 import { SessionProvider } from "next-auth/react";
+import React from "react";
+
+import { RootProviderProps } from "@/types/Shop.type";
+
+import CartProvider from "./CartProvider";
+import ShopProvider from "./ShopProvider";
 export default function RootProvider({ children }: RootProviderProps) {
 	// const messages = useMessages();
 	const queryClient = new QueryClient({

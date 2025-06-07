@@ -1,17 +1,25 @@
 "use client";
 
 // import Slider from "@/components/widgets/Slider";
-import { ProductJson } from "@/types/Product.type";
-import ProductCard from "./ProductCard";
-import { ComProps } from "@/types/Component";
-import { cn } from "@/utils/utils";
 import dynamic from "next/dynamic";
+import { useState } from "react";
+
+import { ComProps } from "@/types/Component";
+import { ProductJson } from "@/types/Product.type";
+
+import Popup from "@/components/composite/Popup";
+
+import { cn } from "@/utils/utils";
+
+import { ProductQuickView } from "../infor";
+
+import ProductCard from "./ProductCard";
 import ProductListSkeleton, {
 	ProductSkeletonType,
 } from "./ProductListSkeleton";
-import Popup from "@/components/composite/Popup";
-import { useState } from "react";
-import { ProductQuickView } from "../infor";
+
+
+
 const SliderDynamic = dynamic(
 	() =>
 		import("@/components/widgets/Slider").then((mod) => ({

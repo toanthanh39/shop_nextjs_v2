@@ -1,7 +1,7 @@
-import { SystemConst } from "@/common/constants/system";
-import { SystemSetting } from "@/types/Shop.type";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+
+import { SystemConst } from "@/common/constants/system";
 export async function GET() {
 	const result = SystemConst.DEFAULT_SYSTEM_SETTING;
 	try {

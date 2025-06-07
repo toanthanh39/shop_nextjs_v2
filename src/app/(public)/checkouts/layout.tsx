@@ -1,6 +1,8 @@
-import Main from "@/components/layouts/main";
-import { CheckoutHeader } from "@/features/checkout/layout";
 import { ReactNode } from "react";
+
+import { CheckoutHeader } from "@/features/checkout/layout";
+
+import Main from "@/components/layouts/main";
 
 export default async function Layout({ children }: { children: ReactNode }) {
 	return (

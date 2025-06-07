@@ -1,10 +1,13 @@
-import { ComProps } from "@/types/Component";
-import { ComDataSource } from "@/types/Component";
-import Flex from "./Flex";
-import { cn } from "@/utils/utils";
-import Empty from "./Empty";
-import { motionConfig } from "@/styles/motion-animate";
 import { motion, AnimatePresence } from "motion/react";
+
+import { motionConfig } from "@/styles/motion-animate";
+import { ComProps, ComDataSource } from "@/types/Component";
+
+import { cn } from "@/utils/utils";
+
+import Empty from "./Empty";
+import Flex from "./Flex";
+import { ConditionWrapper } from "../conditions";
 
 type Props<D> = ComProps &
 	Required<ComDataSource<D>> & {
@@ -36,20 +39,22 @@ export default function List<D>({
 	}
 
 	return (
-		<Flex as="ul" className={cn(className)}>
-			<AnimatePresence mode="sync">
-				{dataSource.map((item, index) => (
-					<motion.li
-						key={index}
-						className={cn("w-full", classNameItem)}
-						initial={motionConfig.fade.initial}
-						animate={motionConfig.fade.animate}
-						exit={motionConfig.fade.exit}
-						transition={motionConfig.fade.transition}>
-						{render(item, index)}
-					</motion.li>
-				))}
-			</AnimatePresence>
-		</Flex>
+		<ConditionWrapper condition={dataSource.length > 0}>
+			<Flex as="ul" className={cn(className)}>
+				<AnimatePresence mode="sync">
+					{dataSource.map((item, index) => (
+						<motion.li
+							key={index}
+							className={cn("w-full", classNameItem)}
+							initial={motionConfig.fade.initial}
+							animate={motionConfig.fade.animate}
+							exit={motionConfig.fade.exit}
+							transition={motionConfig.fade.transition}>
+							{render(item, index)}
+						</motion.li>
+					))}
+				</AnimatePresence>
+			</Flex>
+		</ConditionWrapper>
 	);
 }

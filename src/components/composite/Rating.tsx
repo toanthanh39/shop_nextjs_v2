@@ -1,8 +1,10 @@
 import { ComProps } from "@/types/Component";
-import { StarIcon } from "../icons";
-import { Flex, Text } from "../ui";
+
 import { cn } from "@/utils/utils";
+
+import { StarIcon } from "../icons";
 import { StarIconProps } from "../icons/StarIcon";
+import { Flex, Text } from "../ui";
 
 type Props = ComProps & {
 	count?: number;

@@ -65,7 +65,6 @@ export function debounce<T extends (...args: any[]) => any>(
 export const delay = (ms: number) =>
 	new Promise((resolve) => setTimeout(resolve, ms));
 
-import { redirect } from "next/navigation";
 
 /**
  * Redirects to a specified path with an encoded message as a query parameter.

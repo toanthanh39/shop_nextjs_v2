@@ -1,7 +1,9 @@
+import { ComProps } from "@/types/Component";
+
 import { CardSkeleton } from "@/components/ui/Card";
 import Flex from "@/components/ui/Flex";
 import Skeleton from "@/components/ui/Skeleton";
-import { ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
 
 type Props = ComProps & {

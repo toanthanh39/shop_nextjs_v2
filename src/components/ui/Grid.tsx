@@ -1,7 +1,7 @@
-import { cn } from "@/utils/utils";
 import { cva, VariantProps } from "class-variance-authority";
-import { DetailedHTMLProps } from "react";
-import { HTMLAttributes } from "react";
+import { DetailedHTMLProps , HTMLAttributes } from "react";
+
+import { cn } from "@/utils/utils";
 
 const variants = cva("grid", {
 	variants: {

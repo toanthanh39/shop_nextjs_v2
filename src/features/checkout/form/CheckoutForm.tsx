@@ -1,29 +1,35 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useFormStatus } from "react-dom";
+import { z } from "zod";
+
+import { CartInfor } from "@/features/cart/infor";
+import { CartItemPrice } from "@/features/cart/list";
+import { CartPromoSeasonal } from "@/features/cart/promotion";
+import CartCoupon from "@/features/cart/promotion/CartCoupon";
+import { ComProps } from "@/types/Component";
+
+import { OrderJson } from "@/types/Order.type";
 import GenericForm from "@/components/form/GenericForm";
 import Radio from "@/components/form/Radio";
-import { CustomImage, Heading, List, Money, Tag, Text } from "@/components/ui";
+import { CustomImage, Heading, List, Tag, Text } from "@/components/ui";
 import Flex from "@/components/ui/Flex";
-import Input, { RadioBox, Select } from "@/components/ui/Input";
+import Input, { Select } from "@/components/ui/Input";
 import { DatePicker } from "@/components/ui/shacdn/DatePicker";
-import { CartItemPrice } from "@/features/cart/list";
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
-import { ComProps } from "@/types/Component";
-import { OrderJson } from "@/types/Order.type";
+
 import { cn, encodedQueryParams } from "@/utils/utils";
-import { useState } from "react";
-import { z } from "zod";
+
 import CheckoutLayoutSection from "./CheckoutLayoutSection";
-import { CartInfor } from "@/features/cart/infor";
-import CartCoupon from "@/features/cart/promotion/CartCoupon";
-import { useFormStatus } from "react-dom";
-import { submitFormData } from "@/actions/cart-action";
-import { useRouter } from "next/navigation";
+
 import { AddressType } from "@/types/Customer.type";
-import CartRepo from "@/services/api/repositories/CartRepo";
 import { PaymentAccessMode, PaymentAddJsonPublic } from "@/types/Payment.type";
+
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import useSiteSetting from "@/lib/hooks/cache/useSiteSetting";
+
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -33,10 +39,9 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger,
 } from "@/components/ui/shacdn/AlertDialog";
+
 import BaseApi from "@/lib/axios/BaseApi";
-import { CartPromoSeasonal } from "@/features/cart/promotion";
 
 type Props = ComProps & {
 	order: OrderJson;
@@ -55,7 +60,9 @@ export default function CheckoutForm({ className, order }: Props) {
 	const { pending } = useFormStatus();
 	const router = useRouter();
 
-	const { checkout, isCheckouting } = useCartGlobal({ enabled: false });
+	const { checkout, isCheckouting, isUpdating } = useCartGlobal({
+		enabled: false,
+	});
 	const { data: siteSetting } = useSiteSetting();
 	////////////////////////////////////////
 	const [date, setDate] = useState<Date | undefined>(undefined);
@@ -396,13 +403,11 @@ export default function CheckoutForm({ className, order }: Props) {
 						)}
 						className="list-none w-full block"></List>
 				</CheckoutLayoutSection>
-				<CheckoutLayoutSection>
-					<CartPromoSeasonal
-						// onChange={onChangePromoBody}
-
-						className="w-full"
-						cart={order}></CartPromoSeasonal>
-				</CheckoutLayoutSection>
+				<CartPromoSeasonal
+					// onChange={onChangePromoBody}
+					layout={CheckoutLayoutSection}
+					className="w-full"
+					cart={order}></CartPromoSeasonal>
 				<CheckoutLayoutSection>
 					<CartCoupon className="w-full" cart={order}></CartCoupon>
 				</CheckoutLayoutSection>

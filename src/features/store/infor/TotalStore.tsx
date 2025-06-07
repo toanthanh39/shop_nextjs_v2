@@ -1,10 +1,12 @@
 "use client";
 
+import { SHOW_WEB } from "@/types/Store.type";
+
 import { StoreIcon } from "@/components/icons";
 import Flex from "@/components/ui/Flex";
 import Text from "@/components/ui/Text";
+
 import useStores from "@/lib/hooks/cache/useStores";
-import { SHOW_WEB } from "@/types/Store.type";
 
 export default function TotalStore() {
 	const { data, isLoading } = useStores({

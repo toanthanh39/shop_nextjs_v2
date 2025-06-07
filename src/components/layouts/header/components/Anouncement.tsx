@@ -1,7 +1,9 @@
-import LinkElement from "@/components/ui/Link";
-import Text from "@/components/ui/Text";
 import { translations } from "@/lib/data/locales";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
+
+import LinkElement from "@/components/ui/Link";
+import Text from "@/components/ui/Text";
+
 import { detectKeyFromSetting } from "@/utils/detectSetting";
 
 const keyTranslates = [...Object.values(translations.header.announcement)];

@@ -1,7 +1,9 @@
+import { cva, VariantProps } from "class-variance-authority";
+
 import { sizes, variants } from "@/styles/svg-variant";
 import { ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
-import { cva, VariantProps } from "class-variance-authority";
 
 const sizesDefault = cva("", {
 	variants: {

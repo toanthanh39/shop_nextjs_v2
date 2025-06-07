@@ -1,11 +1,13 @@
-import { StoryFilter, StoryJson } from "@/types/Story.type";
 import {
-	BaseAccessMode,
 	BaseCollectionJson,
 	BaseRepoParams,
 } from "@/types/Base.type";
-import BaseRepository from "./BaseRepository";
+import { StoryFilter, StoryJson } from "@/types/Story.type";
+
 import Helper from "@/utils/helper";
+
+import BaseRepository from "./BaseRepository";
+
 
 class StoryRepo extends BaseRepository<StoryJson> {
 	private static instance: StoryRepo;

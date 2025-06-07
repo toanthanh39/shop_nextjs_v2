@@ -1,10 +1,10 @@
 import client from "@/lib/core/client";
+import server from "@/lib/core/server";
 import {
 	CreateTransactionVNpayJson,
 	CreateTransactionVNpayProps,
 	CheckVnpayResponse,
 } from "@/types/Payment.type";
-import server from "@/lib/core/server";
 
 class PaymentRepo {
 	private readonly URLS = {

@@ -1,6 +1,8 @@
+import React from "react";
+
 import Helper from "@/utils/helper";
 import { cn } from "@/utils/utils";
-import React from "react";
+
 import Text, { PProps } from "./Text";
 
 export type MoneyProps = PProps & {

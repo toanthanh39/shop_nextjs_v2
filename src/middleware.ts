@@ -1,5 +1,5 @@
-import { headers } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
+
 import { initSiteSetting } from "./config/middleware";
 
 export async function middleware(request: NextRequest) {

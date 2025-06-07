@@ -1,5 +1,5 @@
-import { useRef, useEffect, useCallback } from "react";
 import axios, { CancelToken } from "axios";
+import { useRef, useEffect, useCallback } from "react";
 
 interface CancelTokenFunction {
 	(): CancelToken;

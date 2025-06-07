@@ -1,6 +1,7 @@
+import { VideoJson } from "@/types/Video.type";
+
 import { LinkElement, Text } from "@/components/ui";
 import { Card, CardContent, CardImage } from "@/components/ui/Card";
-import { VideoJson } from "@/types/Video.type";
 
 type Props = {
 	video: VideoJson;

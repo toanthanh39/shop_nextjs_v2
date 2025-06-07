@@ -1,13 +1,14 @@
-import Flex from "@/components/ui/Flex";
+import { notFound } from "next/navigation";
+
 import {
 	PerfumeIntructions,
-	ProductAction,
 	ProductDetail,
 } from "@/features/product/detail";
 import ProductRepo from "@/services/api/repositories/ProductRepo";
 import { Params } from "@/types/Dynamic.type";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+
+import Flex from "@/components/ui/Flex";
+
 
 async function getListProductServer(handle: string) {
 	try {

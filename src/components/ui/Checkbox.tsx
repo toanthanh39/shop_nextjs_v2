@@ -1,7 +1,9 @@
-import { ComProps } from "@/types/Component";
-import { cn } from "@/utils/utils";
 import { cva, VariantProps } from "class-variance-authority";
-import { DetailedHTMLProps, InputHTMLAttributes } from "react";
+import { InputHTMLAttributes } from "react";
+
+import { ComProps } from "@/types/Component";
+
+import { cn } from "@/utils/utils";
 const variants = cva("inline-block py-1 px-2 rounded", {
 	variants: {
 		variant: {

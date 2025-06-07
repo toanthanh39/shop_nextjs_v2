@@ -1,18 +1,25 @@
-import { SettingConst } from "@/common/constants/setting";
-import { ProductCollection } from "@/features/product/list";
-import ProductListSkeleton from "@/features/product/list/ProductListSkeleton";
-import { SectionJson } from "@/types/Home.type";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
+
+import NamperfumeTV from "@/features/channels/youtube/NamperfumeTv";
+import YoutubeListSkeleton from "@/features/channels/youtube/YoutubeListSkeleton";
+import NmagazineList from "@/features/nmagazine/list/NmagazineList";
+import { ProductCollection } from "@/features/product/list";
+import ProductListSkeleton from "@/features/product/list/ProductListSkeleton";
+import SettingRepo from "@/services/api/repositories/SettingRepo";
+import { SectionJson } from "@/types/Home.type";
+
+import { Flex } from "@/components/ui";
+
+import { SettingConst } from "@/common/constants/setting";
+import { checkActiveDate } from "@/utils/utils";
+
 import { BrandHome } from "../brand";
 import BrandHomeSkeleton from "../brand/BrandHomeSkeleton";
-import { checkActiveDate } from "@/utils/utils";
-import { Flex } from "@/components/ui";
+
 import SectionCategory from "./SectionCategory";
-import NamperfumeTV from "@/features/channels/youtube/NamperfumeTv";
-import NmagazineList from "@/features/nmagazine/list/NmagazineList";
-import YoutubeListSkeleton from "@/features/channels/youtube/YoutubeListSkeleton";
-import SettingRepo from "@/services/api/repositories/SettingRepo";
+
+
 const keySettings = SettingConst.home.settings_website_namperfume_net;
 
 async function getDataServer() {

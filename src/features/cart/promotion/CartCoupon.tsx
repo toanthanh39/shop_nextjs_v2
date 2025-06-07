@@ -1,8 +1,17 @@
 "use client";
-import { imageConst } from "@/common/constants/image";
+import { useMemo, useState } from "react";
+import { z } from "zod";
+
 import OrderModel from "@/common/models/OrderModel";
 import PromotionModel from "@/common/models/PromotionModel";
+import { CartProps } from "@/types/Cart.type";
+import { ComProps } from "@/types/Component";
+import { CouponJson } from "@/types/Coupon.type";
+import { IsUse } from "@/types/Global.type";
+import { OrderJson } from "@/types/Order.type";
 
+import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
+import { DateStatusResult } from "@/components/composite";
 import Popup from "@/components/composite/Popup";
 import GenericForm from "@/components/form/GenericForm";
 import { CloseIcon } from "@/components/icons";
@@ -13,27 +22,20 @@ import {
 	Flex,
 	Heading,
 	Input,
-	Tag,
-	Text,
 	List,
 	Space,
+	Tag,
+	Text,
 } from "@/components/ui";
+
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import usePromotion from "@/lib/hooks/cache/usePromotion";
 import useTimeServer from "@/lib/hooks/cache/useTimeServer";
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
-import { ComProps } from "@/types/Component";
-import { IsUse } from "@/types/Global.type";
-import { OrderJson } from "@/types/Order.type";
-import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
-import { cn, debounce } from "@/utils/utils";
-import { useEffect, useMemo, useState } from "react";
-import { z } from "zod";
+
+import { imageConst } from "@/common/constants/image";
 import Helper from "@/utils/helper";
-import { CartProps } from "@/types/Cart.type";
-import { DateStatusResult } from "@/components/composite";
-import { CouponJson } from "@/types/Coupon.type";
-import OrderConvert from "@/services/utils/OrderConvert";
+import { cn, debounce } from "@/utils/utils";
 
 const getActivePromo = (promo: PromotionJson, cart: OrderJson) => {
 	const allPromoCouponInCart = [
@@ -89,9 +91,15 @@ export default function CartCoupon({ className, cart }: Props) {
 
 	//////////////////////////////////////////////
 	const handleSubmit = debounce(async (data: FormData) => {
+		console.log("🚀 ~ handleSubmit ~ data:", data);
+
 		try {
 			const promotionCouponToApplies = promotionCoupons.filter((i) =>
 				i.codes?.flatMap((c) => c.code).includes(data.code)
+			);
+			console.log(
+				"🚀 ~ handleSubmit ~ promotionCouponToApplies:",
+				promotionCouponToApplies
 			);
 			if (promotionCouponToApplies.length <= 0) {
 				methods.setError("code", {
@@ -165,7 +173,7 @@ export default function CartCoupon({ className, cart }: Props) {
 
 	//////////////////////////////////////////////
 	return (
-		<>
+		<Space>
 			<GenericForm
 				methods={methods}
 				onSubmit={methods.handleSubmit(handleSubmit)}
@@ -180,7 +188,6 @@ export default function CartCoupon({ className, cart }: Props) {
 					</GenericForm.Item>
 					<GenericForm.Submit
 						disabled={isUpdating}
-						loading={isUpdating}
 						variant="default"
 						size="sm"
 						className="m-0">
@@ -201,6 +208,7 @@ export default function CartCoupon({ className, cart }: Props) {
 						<Tag key={index} variant="primary" className="py-1">
 							{couponUsed.code}{" "}
 							<CloseIcon
+								disabled={isUpdating}
 								size="sm"
 								onClick={() =>
 									onRemoveCode(couponUsed.code, couponUsed.promotion_detail)
@@ -307,6 +315,6 @@ export default function CartCoupon({ className, cart }: Props) {
 					</div>
 				)}
 			</Popup>
-		</>
+		</Space>
 	);
 }

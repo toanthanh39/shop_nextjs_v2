@@ -1,11 +1,11 @@
 // hooks/useGenericFormMethods.ts
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	useForm,
 	UseFormReturn,
 	FieldValues,
 	UseFormProps,
 } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodSchema } from "zod";
 
 type UseGenericFormMethodsOptions<T extends FieldValues> = {

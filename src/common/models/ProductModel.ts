@@ -1,6 +1,6 @@
-import { ProductTagJson } from "@/types/Product.type";
-import { ProductJson } from "@/types/Product.type";
+import { ProductTagJson , ProductJson } from "@/types/Product.type";
 import { PromotionJson } from "@/types/Promotion.type";
+
 import PromotionModel from "./PromotionModel";
 
 class ProductModel {

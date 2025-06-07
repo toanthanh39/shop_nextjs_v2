@@ -1,11 +1,13 @@
-import Flex from "@/components/ui/Flex";
-import HeaderSearch from "./HeaderSearch";
-import Namperfume from "./Namperfume";
 import TotalStore from "@/features/store/infor/TotalStore";
-import HeaderCart from "./HeaderCart";
+
+import Flex from "@/components/ui/Flex";
+
 import HeaderAuthen from "./HeaderAuthen";
+import HeaderCart from "./HeaderCart";
 import HeaderNmagazine from "./HeaderNmagazine";
+import HeaderSearch from "./HeaderSearch";
 import HeaderWishlist from "./HeaderWishlist";
+import Namperfume from "./Namperfume";
 
 export default function HeaderMid() {
 	return (

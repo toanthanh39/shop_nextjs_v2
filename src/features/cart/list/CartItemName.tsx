@@ -1,5 +1,7 @@
-import { Flex, Text } from "@/components/ui";
 import { CartItemProps } from "@/types/Cart.type";
+
+import { Flex, Text } from "@/components/ui";
+
 import { cn } from "@/utils/utils";
 
 type Props = CartItemProps & {};

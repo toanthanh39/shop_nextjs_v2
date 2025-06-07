@@ -1,6 +1,8 @@
-import { SiteConst } from "@/common/constants/site";
-import { CollectionJson } from "@/types/Collection.type";
 import { Metadata } from "next";
+
+import { CollectionJson } from "@/types/Collection.type";
+
+import { SiteConst } from "@/common/constants/site";
 
 export const metadataProductNotFound = function (): Metadata {
 	return {

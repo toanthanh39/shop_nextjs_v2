@@ -1,5 +1,6 @@
-import server from "@/lib/core/server";
 import { cookies, headers } from "next/headers";
+
+import server from "@/lib/core/server";
 
 class ServerRepo {
 	static readonly URLs = {

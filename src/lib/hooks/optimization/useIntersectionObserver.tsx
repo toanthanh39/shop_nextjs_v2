@@ -1,6 +1,5 @@
 "use client";
-import Helper from "@/utils/helper";
-import { Ref, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 type IntersectionObserverInit = {
 	root?: Element | null;

@@ -1,10 +1,11 @@
 "use client";
 
-import { Flex, Label } from "@/components/ui";
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
+
+import { Flex, Label } from "@/components/ui";
+
 import { cn } from "@/utils/utils";
-import { useState } from "react";
 
 type Props = ComProps & {
 	product: ProductJson;

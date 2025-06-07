@@ -1,8 +1,10 @@
-import React from "react";
-import { sizes, variants } from "@/styles/svg-variant";
-import { Flex } from "../ui";
 import { VariantProps } from "class-variance-authority";
+import React from "react";
+
+import { sizes, variants } from "@/styles/svg-variant";
 import { ComProps } from "@/types/Component";
+
+import { Flex } from "../ui";
 
 interface SplashIconProps
 	extends VariantProps<typeof variants>,

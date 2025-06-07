@@ -1,7 +1,9 @@
 import React from "react";
-import { RadioBox } from "@/components/ui/Input";
-import { VariantProps } from "class-variance-authority";
+
 import { ComProps } from "@/types/Component";
+
+import { RadioBox } from "@/components/ui/Input";
+
 import { cn } from "@/utils/utils";
 
 interface RadioProps extends ComProps {

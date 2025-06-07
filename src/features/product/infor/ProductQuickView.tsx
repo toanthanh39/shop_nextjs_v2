@@ -1,18 +1,26 @@
 "use client";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
-import { use, useEffect, useState } from "react";
-import ProductPrice from "./ProductPrice";
-import { Button, CustomImage, Flex, LinkElement, Text } from "@/components/ui";
-import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
-import ProductListTagVariant from "../list/ProductListTagVariant";
-import Rating from "@/components/composite/Rating";
-import QuantityBtn from "../action/QuantityBtn";
-import ProductGender from "./ProductGender";
-import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
-import { useTranslations } from "next-intl";
+
+
 import Loading from "@/components/composite/Loading";
+import Rating from "@/components/composite/Rating";
+import { CustomImage, Flex, LinkElement, Text } from "@/components/ui";
+
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
+import useProductVariantTag from "@/lib/hooks/cache/useProductVariantTag";
+
 import { AddToCart, BuynowCart } from "../action";
+import QuantityBtn from "../action/QuantityBtn";
+import ProductListTagVariant from "../list/ProductListTagVariant";
+
+
+
+import ProductGender from "./ProductGender";
+import ProductPrice from "./ProductPrice";
 
 type Props = ComProps & {
 	product: ProductJson;

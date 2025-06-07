@@ -4,6 +4,7 @@ export interface ComProps {
 	onClick?: () => void;
 	disabled?: boolean;
 	isLoading?: boolean;
+	layout?: React.ComponentType<{ children: React.ReactNode }>;
 }
 
 export interface ComDataSource<D> {

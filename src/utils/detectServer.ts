@@ -1,5 +1,6 @@
-import { Locale } from "@/types/Locale.type";
 import { headers } from "next/headers";
+
+import { Locale } from "@/types/Locale.type";
 
 const i18n = {
 	defaultLocale: "vi",

@@ -1,6 +1,7 @@
-import { cn } from "@/utils/utils";
 import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
+
+import { cn } from "@/utils/utils";
 
 const hVariants = cva("", {
 	variants: {

@@ -1,13 +1,15 @@
 "use client";
 
-import Popup from "@/components/composite/Popup";
-import { Flex, Grid } from "@/components/ui";
+import { useState } from "react";
+
 import { ProductQuickView } from "@/features/product/infor";
 import { ProductCard } from "@/features/product/list";
 import { ComDataSource } from "@/types/Component";
-import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
-import { useState } from "react";
+
+import Popup from "@/components/composite/Popup";
+import { Flex, Grid } from "@/components/ui";
+
 
 type Props = ComDataSource<ProductJson> & {};
 

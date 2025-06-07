@@ -1,7 +1,9 @@
 import { ComProps } from "@/types/Component";
-import { Flex } from "../ui";
-import { SplashIcon } from "../icons";
+
 import { cn } from "@/utils/utils";
+
+import { SplashIcon } from "../icons";
+import { Flex } from "../ui";
 
 type Props = ComProps & {
 	icon?: React.ReactNode;

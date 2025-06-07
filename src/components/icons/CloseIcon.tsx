@@ -1,7 +1,9 @@
+import { VariantProps } from "class-variance-authority";
+
 import { sizes, variants } from "@/styles/svg-variant";
 import { ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
-import { VariantProps } from "class-variance-authority";
 
 interface CloseIconProps
 	extends ComProps,
@@ -9,12 +11,13 @@ interface CloseIconProps
 		VariantProps<typeof sizes> {}
 
 export default function CloseIcon(props: CloseIconProps) {
-	const { size, variant, onClick, disabled } = props;
+	const { size, variant, onClick, disabled, isLoading } = props;
 	return (
 		<svg
-			onClick={!disabled ? onClick : undefined}
+			onClick={isLoading || !disabled ? onClick : undefined}
 			className={cn("cursor-pointer", variants({ variant }), {
 				"pointer-events-none cursor-not-allowed": disabled,
+				"cursor-progress": isLoading,
 			})}
 			xmlns="http://www.w3.org/2000/svg"
 			width={cn(sizes({ size }))}

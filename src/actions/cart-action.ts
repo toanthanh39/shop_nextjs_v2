@@ -1,6 +1,5 @@
 "use server";
 
-import { encodedQueryParams } from "@/utils/utils";
 
 export const signUpAction = async (formData: FormData) => {
 	const email = formData.get("email")?.toString();

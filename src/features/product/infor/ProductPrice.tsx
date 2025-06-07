@@ -1,10 +1,12 @@
 import PromotionModel from "@/common/models/PromotionModel";
-import Flex from "@/components/ui/Flex";
-import Money, { MoneyProps } from "@/components/ui/Money";
-import Text from "@/components/ui/Text";
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
 import { PromotionGroup } from "@/types/Promotion.type";
+
+import Flex from "@/components/ui/Flex";
+import Money, { MoneyProps } from "@/components/ui/Money";
+import Text from "@/components/ui/Text";
+
 import { cn } from "@/utils/utils";
 
 type Props = ComProps &

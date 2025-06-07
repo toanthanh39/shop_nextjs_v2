@@ -1,6 +1,7 @@
 // src/store/useStore.ts
-import { OrderJson } from "@/types/Order.type";
 import { create } from "zustand";
+
+import { OrderJson } from "@/types/Order.type";
 // Định nghĩa loại của state
 interface CartState {
 	items: { id: number; name: string; quantity: number }[];

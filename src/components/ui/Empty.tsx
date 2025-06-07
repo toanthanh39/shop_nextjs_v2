@@ -1,14 +1,16 @@
 import * as React from "react";
 
-import { cva } from "class-variance-authority";
-import { VariantProps } from "class-variance-authority";
+import { ComDataSource , ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
+
 import { EmptyIcon } from "../icons";
-import Text from "./Text";
-import { ComDataSource } from "@/types/Component";
-import { ComProps } from "@/types/Component";
-import Flex from "./Flex";
 import { EmptyIconProps } from "../icons/EmptyIcon";
+
+import Flex from "./Flex";
+import Text from "./Text";
+
+
 
 // const variants = cva("relative cursor-pointer", {
 // 	variants: {

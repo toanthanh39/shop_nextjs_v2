@@ -1,8 +1,9 @@
 "use client";
 
 import { ComProps } from "@/types/Component";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/shacdn/Popover";
+
 import { Button } from "../ui";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/shacdn/Popover";
 
 type Props = ComProps & {
 	triggerLabel?: React.ReactNode;

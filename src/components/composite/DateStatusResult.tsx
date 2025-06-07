@@ -1,5 +1,5 @@
-import { DateStatusResultJson } from "@/types/Component";
-import { ComProps } from "@/types/Component";
+import { DateStatusResultJson , ComProps } from "@/types/Component";
+
 import { Text } from "../ui";
 
 type Props = ComProps & DateStatusResultJson;

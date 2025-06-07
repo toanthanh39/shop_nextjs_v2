@@ -1,6 +1,8 @@
-import { SettingConst } from "@/common/constants/setting";
-import SettingRepo from "@/services/api/repositories/SettingRepo";
 import { Metadata } from "next";
+
+import SettingRepo from "@/services/api/repositories/SettingRepo";
+
+import { SettingConst } from "@/common/constants/setting";
 
 export const metadataNotFound = function (): Metadata {
 	return {

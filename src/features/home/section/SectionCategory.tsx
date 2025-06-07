@@ -1,6 +1,7 @@
-import { CustomImage, Flex, LinkElement, Text } from "@/components/ui";
 import { ComDataSource } from "@/types/Component";
 import { SectionCategoryJson } from "@/types/Home.type";
+
+import { CustomImage, Flex, LinkElement, Text } from "@/components/ui";
 
 type Props = ComDataSource<SectionCategoryJson>;
 export default function SectionCategory({ dataSource }: Props) {

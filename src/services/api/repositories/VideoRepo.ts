@@ -1,7 +1,9 @@
 import { BaseCollectionJson } from "@/types/Base.type";
-import BaseRepository from "./BaseRepository";
-import Helper from "@/utils/helper";
 import { VideoFilter, VideoJson } from "@/types/Video.type";
+
+import Helper from "@/utils/helper";
+
+import BaseRepository from "./BaseRepository";
 
 const CACHE_TIME = 60 * 60;
 class VideoRepo extends BaseRepository<VideoJson> {

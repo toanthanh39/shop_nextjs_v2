@@ -1,9 +1,12 @@
 "use client";
 
-import { imageConst } from "@/common/constants/image";
+import { BannerHomeData } from "@/types/Home.type";
+
 import CustomImage from "@/components/ui/CustomImage";
 import LinkElement from "@/components/ui/Link";
-import { BannerHomeData } from "@/types/Home.type";
+
+import { imageConst } from "@/common/constants/image";
+
 
 type Props = {
 	data: BannerHomeData;

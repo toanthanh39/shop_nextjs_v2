@@ -1,9 +1,13 @@
 "use client";
+import { useRouter } from "next/navigation";
+
+import { CartLayout } from "@/features/cart/layout";
+
 import { LoadingIcon } from "@/components/icons";
 import { Button, Empty } from "@/components/ui";
-import { CartLayout } from "@/features/cart/layout";
+
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
-import { useRouter } from "next/navigation";
+
 
 export default function Page() {
 	const router = useRouter();

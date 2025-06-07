@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
+
 import { Inter, Noto_Sans, Noto_Serif_Display } from "next/font/google";
 import "./globals.css";
 import "@/styles/css/animation.css";
 
-import RootProvider from "@/lib/providers/RootProvider";
-import DevComponents from "@/features/dev/fixed/DevComponents";
-import { generateMetadataSite } from "@/meta";
-import { detectLangForServer } from "@/utils/detectServer";
-import BaseApi from "@/lib/axios/BaseApi";
-import { SystemConst } from "@/common/constants/system";
 import { NextIntlClientProvider } from "next-intl";
 import PrelineScriptWrapper from "@/components/scripts/prelineScriptWrapper";
+
+import DevComponents from "@/features/dev/fixed/DevComponents";
+import BaseApi from "@/lib/axios/BaseApi";
+import RootProvider from "@/lib/providers/RootProvider";
+import { generateMetadataSite } from "@/meta";
+
+import { SystemConst } from "@/common/constants/system";
+import { detectLangForServer } from "@/utils/detectServer";
 export async function generateMetadata(): Promise<Metadata> {
 	const meta = await generateMetadataSite();
 	return meta;

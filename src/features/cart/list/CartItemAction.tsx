@@ -1,11 +1,15 @@
 "use client";
+import { useState } from "react";
+
+import { CartItemProps } from "@/types/Cart.type";
+import { OrderId } from "@/types/Order.type";
+
 import Popup from "@/components/composite/Popup";
 import { CloseIcon } from "@/components/icons";
 import { Button, Flex, Text } from "@/components/ui";
-import { CartItemProps } from "@/types/Cart.type";
-import { OrderId } from "@/types/Order.type";
+
 import { cn } from "@/utils/utils";
-import { useState } from "react";
+
 
 type Props = CartItemProps & {
 	onDeleteItem: (id: OrderId) => Promise<boolean>;

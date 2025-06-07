@@ -1,7 +1,9 @@
+import { AnimatePresence, motion } from "motion/react";
+
 import { motionConfig } from "@/styles/motion-animate";
 import { ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
-import { AnimatePresence, motion } from "motion/react";
 
 type Props = ComProps & {
 	show?: boolean;

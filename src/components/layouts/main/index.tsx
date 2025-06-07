@@ -1,4 +1,5 @@
 import { ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
 
 type MainProps = ComProps & {

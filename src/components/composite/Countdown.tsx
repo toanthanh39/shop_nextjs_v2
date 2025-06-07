@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Flex, Text } from "../ui";
+
 import { ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
+
+import { Text } from "../ui";
 
 type CountdownProps = ComProps & {
 	timestamp: number;

@@ -1,8 +1,11 @@
 "use client";
-import Slider from "@/components/widgets/Slider";
-import { BannerHomeData } from "@/types/Home.type";
-import BannerItem from "./BannerItem";
 import { ComDataSource } from "@/types/Component";
+import { BannerHomeData } from "@/types/Home.type";
+
+import Slider from "@/components/widgets/Slider";
+
+import BannerItem from "./BannerItem";
+
 
 type Props = ComDataSource<BannerHomeData> & {};
 export default function BannerSlider({ dataSource }: Props) {

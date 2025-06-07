@@ -1,13 +1,14 @@
 "use client";
 
-import { ComProps } from "@/types/Component";
-import { cn } from "@/utils/utils";
 import dynamic from "next/dynamic";
 
-import { ComDataSource } from "@/types/Component";
-import YoutubeCard from "./YoutubeCard";
-
+import { ComProps , ComDataSource } from "@/types/Component";
 import { VideoJson } from "@/types/Video.type";
+
+import { cn } from "@/utils/utils";
+
+
+import YoutubeCard from "./YoutubeCard";
 import YoutubeListSkeleton, {
 	YoutubeSkeletonType,
 } from "./YoutubeListSkeleton";

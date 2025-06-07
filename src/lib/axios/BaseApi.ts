@@ -1,5 +1,6 @@
-import { ErrorDetail, ErrorServer } from "@/types/Error.type";
 import { AxiosError, isAxiosError } from "axios";
+
+import { ErrorDetail, ErrorServer } from "@/types/Error.type";
 
 interface ErrorResponse {
 	statusCode: number;

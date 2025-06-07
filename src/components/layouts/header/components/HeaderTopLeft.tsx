@@ -1,10 +1,14 @@
 "use client";
 
+import { useCallback } from "react";
+
+import { ComDataSource, ComProps } from "@/types/Component";
+
 import Text from "@/components/ui/Text";
 import Slider from "@/components/widgets/Slider";
-import { ComDataSource, ComProps } from "@/types/Component";
+
 import { cn } from "@/utils/utils";
-import { useCallback } from "react";
+
 
 type Props = ComProps & ComDataSource<string> & {};
 export default function HeaderTopLeft({ dataSource, className }: Props) {

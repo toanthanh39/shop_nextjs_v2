@@ -1,29 +1,33 @@
+import {
+	useIsMutating,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
+import { useMemo } from "react";
+
 import BaseApi from "@/lib/axios/BaseApi";
+import CartRepo from "@/services/api/repositories/CartRepo";
 import { HookCacheProps } from "@/types/Component";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import useSiteSetting from "./useSiteSetting";
+import { IsUse } from "@/types/Global.type";
 import {
 	ActionOrderUpdate,
 	ORDER_ACTION,
-	OrderAddCoupon,
 	OrderItemEdit,
-	OrderJson,
-	OrderPromotion,
+	OrderItemJson,
 } from "@/types/Order.type";
-import { IsUse } from "@/types/Global.type";
-import { OrderItemJson } from "@/types/Order.type";
-import CartRepo from "@/services/api/repositories/CartRepo";
-import OrderConvert from "@/services/utils/OrderConvert";
 import { PaymentAddJson } from "@/types/Payment.type";
-
+import { ProductJson } from "@/types/Product.type";
 import {
 	PromotionDiscountType,
 	PromotionJson,
 	PromotionToggleProps,
 } from "@/types/Promotion.type";
-import { useMemo } from "react";
+
 import OrderCalculator from "@/services/utils/OrderCalculator";
-import { ProductJson } from "@/types/Product.type";
+import OrderConvert from "@/services/utils/OrderConvert";
+
+import useSiteSetting from "./useSiteSetting";
 
 type Props = HookCacheProps & {};
 
@@ -60,6 +64,8 @@ export const CACHE_CART_GLOBAL_HOOK = "cart_global";
 export const CACHE_CREATE_CART_GLOBAL = "cart_global";
 export const CACHE_CART_GLOBAL_LOADING = "cart_global_loading";
 
+export const MUTA_UPDATE_LOADING = "MUTA_UPDATE_LOADING";
+
 const cartError = {
 	error_cart_not_exited: "error_cart_not_exited",
 	error_action_invalid: "error_action_invalid",
@@ -80,6 +86,11 @@ function useCartGlobal({ enabled = true }: Props) {
 
 	const CartRepoInstance = new CartRepo({ accessMode: "PUBLIC" });
 	const OrderCalculatorInstance = new OrderCalculator();
+
+	const isUpdateMutating =
+		useIsMutating({
+			mutationKey: [MUTA_UPDATE_LOADING],
+		}) > 0;
 
 	const {
 		data: cart,
@@ -221,6 +232,7 @@ function useCartGlobal({ enabled = true }: Props) {
 	});
 
 	const updateMutation = useMutation({
+		mutationKey: [MUTA_UPDATE_LOADING, cart?.id],
 		mutationFn: async (ac: ActionOrderUpdate) => {
 			try {
 				if (!site) {
@@ -316,11 +328,11 @@ function useCartGlobal({ enabled = true }: Props) {
 
 							// Xử lý update update promotion trên json order dưới hệ thống
 							if (promotion?.is_use === IsUse.USE) {
-								// await CartRepoInstance.addCoupon({
-								// 	order_id: cartGlobal.id,
-								// 	code: coupon.code,
-								// 	customer_token: site.customer_token,
-								// });
+								await CartRepoInstance.addCoupon({
+									order_id: cartGlobal.id,
+									code: coupon.code,
+									customer_token: site.customer_token,
+								});
 							} else {
 								const { discount_type } = promotion;
 
@@ -333,7 +345,11 @@ function useCartGlobal({ enabled = true }: Props) {
 												action: ORDER_ACTION.PROMOTION,
 												promotions: cartGlobal.promotions.map((promo) => {
 													if (promo.promotion_id === promotion.id) {
-														return { ...promo, is_use: IsUse.NOT_USE };
+														return {
+															...promo,
+															is_use: IsUse.NOT_USE,
+															code: coupon.code,
+														};
 													}
 													return promo;
 												}),
@@ -344,22 +360,26 @@ function useCartGlobal({ enabled = true }: Props) {
 
 									case PromotionDiscountType.PRODUCT:
 										{
-											// await CartRepoInstance.update({
-											// 	cart_id: cartGlobal.id,
-											// 	customer_token: site.customer_token,
-											// 	action: ORDER_ACTION.UPDATE,
-											// 	details: cartGlobal.details.data.map((item) => {
-											// 		return {
-											// 			...item,
-											// 			promotions: item.promotions.map((promo) => {
-											// 				if (promo.promotion_id === promotion.id) {
-											// 					return { ...promo, is_use: IsUse.NOT_USE };
-											// 				}
-											// 				return promo;
-											// 			}),
-											// 		};
-											// 	}),
-											// });
+											await CartRepoInstance.update({
+												cart_id: cartGlobal.id,
+												customer_token: site.customer_token,
+												action: ORDER_ACTION.UPDATE,
+												details: cartGlobal.details.data.map((item) => {
+													return {
+														...item,
+														promotions: item.promotions.map((promo) => {
+															if (promo.promotion_id === promotion.id) {
+																return {
+																	...promo,
+																	is_use: IsUse.NOT_USE,
+																	code: coupon.code,
+																};
+															}
+															return promo;
+														}),
+													};
+												}),
+											});
 										}
 
 										break;
@@ -643,7 +663,7 @@ function useCartGlobal({ enabled = true }: Props) {
 			createMutation.isPending ||
 			addMutation.isPending ||
 			updateMutation.isPending,
-		isUpdating: updateMutation.isPending,
+		isUpdating: updateMutation.isPending || isUpdateMutating,
 		isCheckouting: checkoutMutation.isPending,
 		isBuyNow: buyNowMutaion.isPending,
 		disabled,

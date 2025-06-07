@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { IsUse } from "@/types/Global.type";
 import {
 	ActionOrderUpdate,
@@ -13,8 +15,9 @@ import {
 	PromotionGroup,
 	PromotionJson,
 } from "@/types/Promotion.type";
+
 import Helper from "@/utils/helper";
-import { v4 as uuidv4 } from "uuid";
+
 import OrderConvert from "./OrderConvert";
 
 class OrderCalculator {
@@ -312,8 +315,8 @@ class OrderCalculator {
 			discount_value_type === "amount"
 				? discount_value
 				: discount_value_type === "percent"
-				? (discount_value / 100) * item.item_unit_price
-				: 0;
+					? (discount_value / 100) * item.item_unit_price
+					: 0;
 		if (max_applied > 0) {
 			return Math.min(max_applied, result);
 		}
