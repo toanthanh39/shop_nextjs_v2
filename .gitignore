@@ -15,7 +15,7 @@
 **/.vercel
 **/yarn.lock
 **/package-lock.json
-**/.env*
+**/.env.*
 
 # Specific patterns
 # If there's anything specific for shop or wiki, add them here.
