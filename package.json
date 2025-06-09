@@ -12,6 +12,7 @@
   "dependencies": {
     "@hookform/resolvers": "^4.1.0",
     "@next/env": "^15.1.6",
+    "@next/eslint-plugin-next": "^15.3.3",
     "@preline/accordion": "^3.1.0",
     "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-dialog": "^1.1.5",
@@ -54,6 +55,7 @@
     "eslint": "^9.28.0",
     "eslint-config-next": "^15.1.5",
     "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-unused-imports": "^4.1.4",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",

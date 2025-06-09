@@ -44,6 +44,16 @@ const eslintConfig = [
 			"@typescript-eslint/no-empty-interface": "off",
 			"@typescript-eslint/explicit-module-boundary-types": "off",
 			"react/jsx-no-literals": ["warn", { noStrings: true }],
+			"react/no-unknown-property": [
+				"error", // Hoặc "warn" nếu bạn chỉ muốn cảnh báo
+				{
+					ignore: [
+						// Thêm các thuộc tính mà bạn muốn bỏ qua kiểm tra camelCase tại đây nếu có
+						// Ví dụ: nếu bạn có thuộc tính data-test-id hoặc aria-hidden mà bạn không muốn ESLint can thiệp
+						// Nhưng đối với aria-controls và stroke-width, bạn KHÔNG NÊN ignore
+					],
+				},
+			],
 		},
 	},
 

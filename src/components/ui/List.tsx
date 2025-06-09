@@ -5,9 +5,10 @@ import { ComProps, ComDataSource } from "@/types/Component";
 
 import { cn } from "@/utils/utils";
 
+import { ConditionWrapper } from "../conditions";
+
 import Empty from "./Empty";
 import Flex from "./Flex";
-import { ConditionWrapper } from "../conditions";
 
 type Props<D> = ComProps &
 	Required<ComDataSource<D>> & {

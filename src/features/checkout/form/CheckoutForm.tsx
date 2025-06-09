@@ -9,27 +9,17 @@ import { CartInfor } from "@/features/cart/infor";
 import { CartItemPrice } from "@/features/cart/list";
 import { CartPromoSeasonal } from "@/features/cart/promotion";
 import CartCoupon from "@/features/cart/promotion/CartCoupon";
+import BaseApi from "@/lib/axios/BaseApi";
 import { ComProps } from "@/types/Component";
-
+import { AddressType } from "@/types/Customer.type";
 import { OrderJson } from "@/types/Order.type";
+import { PaymentAccessMode, PaymentAddJsonPublic } from "@/types/Payment.type";
+
 import GenericForm from "@/components/form/GenericForm";
 import Radio from "@/components/form/Radio";
 import { CustomImage, Heading, List, Tag, Text } from "@/components/ui";
 import Flex from "@/components/ui/Flex";
 import Input, { Select } from "@/components/ui/Input";
-import { DatePicker } from "@/components/ui/shacdn/DatePicker";
-import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
-
-import { cn, encodedQueryParams } from "@/utils/utils";
-
-import CheckoutLayoutSection from "./CheckoutLayoutSection";
-
-import { AddressType } from "@/types/Customer.type";
-import { PaymentAccessMode, PaymentAddJsonPublic } from "@/types/Payment.type";
-
-import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
-import useSiteSetting from "@/lib/hooks/cache/useSiteSetting";
-
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -40,8 +30,18 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/components/ui/shacdn/AlertDialog";
+import { DatePicker } from "@/components/ui/shacdn/DatePicker";
 
-import BaseApi from "@/lib/axios/BaseApi";
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
+import useSiteSetting from "@/lib/hooks/cache/useSiteSetting";
+import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
+import { cn, encodedQueryParams } from "@/utils/utils";
+
+import CheckoutLayoutSection from "./CheckoutLayoutSection";
+
+
+
+
 
 type Props = ComProps & {
 	order: OrderJson;

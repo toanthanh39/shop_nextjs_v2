@@ -1,19 +1,22 @@
-import { Suspense } from "react";
-
+import { Accordion } from "@/components/ui/preline";
 import { BannerHome } from "../banner";
 import { SectionHome } from "../section";
 import SectionAbout from "../section/SectionAbout";
-import Accordion from "@/components/ui/preline/Accordion";
+import { Dropdown, Popover } from "@/components/ui/preline/overlays";
 
 export default function Body() {
 	return (
 		<>
-			<Accordion></Accordion>
-			{/* <BannerHome />
+			<Dropdown></Dropdown>
+
+			<Accordion />
+
+			<Popover></Popover>
+
+			<BannerHome />
 			<SectionHome />
-			<Suspense>
-				<SectionAbout />
-			</Suspense> */}
+
+			<SectionAbout />
 		</>
 	);
 }

@@ -9,10 +9,10 @@ import { ComProps } from "@/types/Component";
 
 import { Button, Flex, List, Money, Text } from "@/components/ui";
 
+import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 import { useCancelToken } from "@/lib/hooks/optimization/useCancelToken";
 import CartCalculator from "@/services/utils/CartCalculator";
 import { cn } from "@/utils/utils";
-import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
 
 type Props = ComProps &
 	CartProps & {

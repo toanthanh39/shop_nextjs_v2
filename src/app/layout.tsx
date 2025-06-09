@@ -5,15 +5,15 @@ import "./globals.css";
 import "@/styles/css/animation.css";
 
 import { NextIntlClientProvider } from "next-intl";
-import PrelineScriptWrapper from "@/components/scripts/prelineScriptWrapper";
 
-import DevComponents from "@/features/dev/fixed/DevComponents";
 import BaseApi from "@/lib/axios/BaseApi";
 import RootProvider from "@/lib/providers/RootProvider";
 import { generateMetadataSite } from "@/meta";
 
 import { SystemConst } from "@/common/constants/system";
 import { detectLangForServer } from "@/utils/detectServer";
+import Script from "next/script";
+
 export async function generateMetadata(): Promise<Metadata> {
 	const meta = await generateMetadataSite();
 	return meta;
@@ -64,17 +64,14 @@ export default async function RootLayout({
 		<html lang={lang}>
 			<meta charSet="utf-8"></meta>
 			<body
-				className={`${inter.variable} ${notoSans.variable} ${notoSerifDisplay.variable} antialiased  font-inter w-screen overflow-x-hidden dark:bg-black`}>
+				className={`${inter.variable} ${notoSans.variable} ${notoSerifDisplay.variable} antialiased  font-inter w-screen overflow-x-hidden `}>
 				<NextIntlClientProvider locale={lang}>
 					<RootProvider>
 						{children}
 						{modal}
 					</RootProvider>
 				</NextIntlClientProvider>
-
-				<DevComponents />
 			</body>
-			<PrelineScriptWrapper />
 		</html>
 	);
 }

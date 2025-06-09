@@ -1,6 +1,15 @@
 "use client";
-import { RootProviderProps , ShopProviderProps } from "@/types/Shop.type";
+// import DevComponents from "@/features/dev/fixed/DevComponents";
+import PrelineScriptWrapper from "@/components/scripts/prelineScriptWrapper";
 
+import { RootProviderProps, ShopProviderProps } from "@/types/Shop.type";
+import dynamic from "next/dynamic";
+const DevComponents = dynamic(
+	() => import("@/features/dev/fixed/DevComponents"),
+	{
+		ssr: false,
+	}
+);
 
 type Props = ShopProviderProps & RootProviderProps & {};
 
@@ -27,5 +36,11 @@ export default function ShopProvider({ children }: Props) {
 	// 		window.removeEventListener("scroll", debouncedHandleScroll);
 	// 	};
 	// }, []);
-	return <>{children}</>;
+	return (
+		<>
+			{children}
+			<DevComponents />
+			<PrelineScriptWrapper />
+		</>
+	);
 }

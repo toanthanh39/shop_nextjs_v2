@@ -1,12 +1,11 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
-
 // Optional third-party libraries
 import $ from "jquery";
 import _ from "lodash";
+import { usePathname } from "next/navigation";
 import noUiSlider from "nouislider";
+import { useEffect } from "react";
 import "datatables.net";
 import "dropzone/dist/dropzone-min.js";
 import * as VanillaCalendarPro from "vanilla-calendar-pro";
@@ -37,10 +36,30 @@ export default function PrelineScript() {
 	useEffect(() => {
 		setTimeout(() => {
 			if (
+				typeof window !== "undefined" &&
 				window.HSStaticMethods &&
 				typeof window.HSStaticMethods.autoInit === "function"
 			) {
-				window.HSStaticMethods.autoInit();
+				window.HSStaticMethods.autoInit([
+					"dropdown",
+					"tab",
+					"collapse",
+					"accordion",
+					"modal",
+					"offcanvas",
+					"tooltip",
+					"popover",
+					"select",
+					"datepicker",
+					"counter",
+					"countup",
+					"scrollspy",
+					"scroll-animation",
+					"scroll-to-top",
+					"scroll-to-target",
+					"form-validation",
+					"Popover",
+				]);
 			}
 		}, 100);
 	}, [path]);

@@ -11,18 +11,15 @@ import { Flex, Text } from "@/components/ui";
 import ProgressBar from "@/components/ui/ProgressBar";
 
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
-
 import { cn } from "@/utils/utils";
-import CartItemPrice from "./CartItemPrice";
 
-
-
-import CartItemQuantity from "./CartItemQuantity";
-import CartItemImage from "./CartItemImage";
-import CartItemName from "./CartItemName";
 import CartItemAction from "./CartItemAction";
-import CartItemVariant from "./CartItemVariant";
+import CartItemImage from "./CartItemImage";
 import CartItemIsUse from "./CartItemIsUse";
+import CartItemName from "./CartItemName";
+import CartItemPrice from "./CartItemPrice";
+import CartItemQuantity from "./CartItemQuantity";
+import CartItemVariant from "./CartItemVariant";
 
 
 type Props = ComProps & CartItemProps & {};

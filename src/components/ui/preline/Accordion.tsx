@@ -1,3 +1,4 @@
+"use client";
 export default function Accordion() {
 	return (
 		<div className="w-full bg-white rounded-lg shadow-md dark:bg-neutral-800">
@@ -15,9 +16,9 @@ export default function Accordion() {
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round">
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round">
 							<path d="M5 12h14"></path>
 							<path d="M12 5v14"></path>
 						</svg>
@@ -29,9 +30,9 @@ export default function Accordion() {
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round">
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round">
 							<path d="M5 12h14"></path>
 						</svg>
 						Accordion #1
@@ -63,9 +64,9 @@ export default function Accordion() {
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round">
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round">
 							<path d="M5 12h14"></path>
 							<path d="M12 5v14"></path>
 						</svg>
@@ -77,9 +78,9 @@ export default function Accordion() {
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round">
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round">
 							<path d="M5 12h14"></path>
 						</svg>
 						Accordion #2
@@ -111,9 +112,9 @@ export default function Accordion() {
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round">
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round">
 							<path d="M5 12h14"></path>
 							<path d="M12 5v14"></path>
 						</svg>
@@ -125,9 +126,9 @@ export default function Accordion() {
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round">
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round">
 							<path d="M5 12h14"></path>
 						</svg>
 						Accordion #3
