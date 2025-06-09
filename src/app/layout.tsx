@@ -12,7 +12,8 @@ import { generateMetadataSite } from "@/meta";
 
 import { SystemConst } from "@/common/constants/system";
 import { detectLangForServer } from "@/utils/detectServer";
-import Script from "next/script";
+import { auth } from "@/lib/next-authen/authenOption";
+import { SessionProvider } from "next-auth/react";
 
 export async function generateMetadata(): Promise<Metadata> {
 	const meta = await generateMetadataSite();
@@ -60,16 +61,19 @@ export default async function RootLayout({
 	modal: React.ReactNode;
 }>) {
 	const { lang } = await getSetingSite();
+	const session = await auth();
 	return (
 		<html lang={lang}>
 			<meta charSet="utf-8"></meta>
 			<body
 				className={`${inter.variable} ${notoSans.variable} ${notoSerifDisplay.variable} antialiased  font-inter w-screen overflow-x-hidden `}>
 				<NextIntlClientProvider locale={lang}>
-					<RootProvider>
-						{children}
-						{modal}
-					</RootProvider>
+					<SessionProvider session={session}>
+						<RootProvider>
+							{children}
+							{modal}
+						</RootProvider>
+					</SessionProvider>
 				</NextIntlClientProvider>
 			</body>
 		</html>

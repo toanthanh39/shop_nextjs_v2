@@ -1,21 +1,15 @@
-"use client";
-import { useRouter } from "next/navigation";
-
+import { onSignOutAction } from "@/actions/auth-actions";
 import { UserIcon } from "@/components/icons";
 import { Button, Text } from "@/components/ui";
 import CustomImage from "@/components/ui/CustomImage";
 import Flex from "@/components/ui/Flex";
-export default function HeaderAuthen() {
-	const router = useRouter();
-	// const { data: session } = useSession();
+import { auth } from "@/lib/next-authen/authenOption";
+import Link from "next/link";
 
-	const handleRedirect = () => {
-		// if (session) {
-		// 	router.push("/");
-		// } else {
-		// 	router.push("/login");
-		// }
-	};
+export default async function HeaderAuthen() {
+	const session = await auth();
+
+	// Xử lý đăng xuất ở đây, ví dụ gọi API hoặc xóa token
 	// if (session) {
 	// 	return (
 	// 		<div className="relative group pr-4 flex-1 basis-[120px] border-r border-colors-gray-2 ">
@@ -30,22 +24,31 @@ export default function HeaderAuthen() {
 	// 	);
 	// }
 
+	const isAauthenticated = session?.user !== undefined;
+
 	return (
 		<div className="relative group pr-4 flex-1 basis-[120px] border-r border-colors-gray-2 ">
-			<Text
-				as="span"
-				className="w-full whitespace-nowrap flex items-center gap-2 cursor-pointer justify-center"
-				tabIndex={0}
-				aria-label="Login"
-				onClick={handleRedirect}
-				onKeyDown={(e) => {
-					if (e.key === "Enter" || e.key === " ") {
-						handleRedirect();
-					}
-				}}>
-				<UserIcon size="md" />
-				Đăng nhập
-			</Text>
+			{!isAauthenticated && (
+				<Text
+					as="span"
+					className="w-full whitespace-nowrap flex items-center gap-2 cursor-pointer justify-center"
+					tabIndex={0}
+					aria-label="Login">
+					<UserIcon size="md" />
+					Đăng nhập
+				</Text>
+			)}
+
+			{isAauthenticated && (
+				<Text
+					as="span"
+					className="w-full whitespace-nowrap flex items-center gap-2 cursor-pointer justify-center"
+					tabIndex={0}
+					aria-label="Login">
+					<UserIcon size="md" />
+					{session?.user?.name}
+				</Text>
+			)}
 
 			<Flex
 				direction="col"
@@ -58,15 +61,28 @@ export default function HeaderAuthen() {
 						<Text.small>Đăng nhập để tham gia với chúng tôi</Text.small>
 					</Flex>
 				</Flex>
-				<Flex gap={4}>
-					<Button className="flex-1" variant="primary">
-						Đăng nhập
-					</Button>
 
-					<Button className="flex-1" variant="default">
-						Đăng ký
-					</Button>
-				</Flex>
+				{isAauthenticated && (
+					<Flex gap={4}>
+						<form action={onSignOutAction}>
+							<Button type="submit" className="flex-1" variant="primary">
+								Đăng xuất
+							</Button>
+						</form>
+					</Flex>
+				)}
+
+				{!isAauthenticated && (
+					<Flex gap={4}>
+						<Link href={"/login"} className="flex-1" variant="primary">
+							Đăng nhập
+						</Link>
+
+						<Button className="flex-1" variant="default">
+							Đăng ký
+						</Button>
+					</Flex>
+				)}
 			</Flex>
 		</div>
 	);

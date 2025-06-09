@@ -1,6 +1,5 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SessionProvider } from "next-auth/react";
 import React from "react";
 
 import { RootProviderProps } from "@/types/Shop.type";
@@ -21,13 +20,11 @@ export default function RootProvider({ children }: RootProviderProps) {
 
 	return (
 		<React.Fragment>
-			<SessionProvider>
-				<QueryClientProvider client={queryClient}>
-					<ShopProvider>
-						<CartProvider>{children}</CartProvider>
-					</ShopProvider>
-				</QueryClientProvider>
-			</SessionProvider>
+			<QueryClientProvider client={queryClient}>
+				<ShopProvider>
+					<CartProvider>{children}</CartProvider>
+				</ShopProvider>
+			</QueryClientProvider>
 		</React.Fragment>
 	);
 }

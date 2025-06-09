@@ -7,12 +7,6 @@ import { Dropdown, Popover } from "@/components/ui/preline/overlays";
 export default function Body() {
 	return (
 		<>
-			<Dropdown></Dropdown>
-
-			<Accordion />
-
-			<Popover></Popover>
-
 			<BannerHome />
 			<SectionHome />
 

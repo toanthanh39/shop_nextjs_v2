@@ -1,42 +1,47 @@
 import NextAuth, { User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
 	providers: [
 		CredentialsProvider({
-			// The name to display on the sign-in form (e.g., 'Sign in with...')
 			name: "Credentials",
-			id: "provider-unique-id",
-			type: "credentials",
-
-			// The credentials is used to generate a credential input form on the sign-in page
+			// id: "provider-unique-id",
+			// type: "credentials",
 			credentials: {
-				username: { label: "Username", type: "text", placeholder: "jsmith" },
+				email: {
+					label: "Email",
+					type: "email",
+					placeholder: "jsmith@example.com",
+				},
 				password: { label: "Password", type: "password" },
 			},
-
 			async authorize(credentials, req) {
+				console.log("🚀 ~ authorize ~ credentials:", credentials);
 				if (!credentials) {
 					return null;
 				}
-
 				const user: User = {
 					id: "1",
 					name: "J Smith",
 					email: "jsmith@example.com",
 				};
 
+				return user;
+
 				if (
-					credentials.username === "jsmith" &&
+					credentials.username === "jsmith@example.com" &&
 					credentials.password === "password123"
 				) {
-					// If you find the user return user object
 					return user;
 				} else {
-					// If you return null then an error will be displayed advising the user to check their details.
 					return null;
 				}
 			},
+		}),
+		GoogleProvider({
+			clientId: process.env.GOOGLE_CLIENT_ID || "",
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
 		}),
 	],
 
@@ -50,10 +55,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 		async session({ session, token }) {
 			return session;
 		},
+
+		async callback({ session, user, token }) {
+			if (user) {
+				session.user = user;
+			}
+			if (token) {
+				session.jwt = token;
+			}
+			return session;
+		},
 	},
-	// You can add additional options here
 	pages: {
-		signIn: "/account/login",
-		error: "/account/error",
+		signIn: "/login",
+		error: "/error",
 	},
 });
