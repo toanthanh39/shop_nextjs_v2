@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+
+import { signIn } from "@/lib/next-authen/authenOption";
+// import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
 	const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ export default function LoginPage() {
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200">
 			<form
-				action={handleSubmit}
+				action={handleGoogleLogin}
 				className="bg-white/80 shadow-xl rounded-3xl p-8 w-full max-w-md flex flex-col gap-6
 					border border-white/40
 					[box-shadow:8px_8px_24px_#d1d5db,_-8px_-8px_24px_#f3f4f6]
@@ -91,6 +93,7 @@ export default function LoginPage() {
 					<span className="mx-2 text-gray-400 text-sm">hoặc</span>
 					<hr className="flex-grow border-gray-300" />
 				</div>
+
 				<button
 					type="button"
 					onClick={handleGoogleLogin}

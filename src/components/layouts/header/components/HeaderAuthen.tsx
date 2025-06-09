@@ -74,7 +74,7 @@ export default async function HeaderAuthen() {
 
 				{!isAauthenticated && (
 					<Flex gap={4}>
-						<Link href={"/login"} className="flex-1" variant="primary">
+						<Link href={"/login"} className="flex-1">
 							Đăng nhập
 						</Link>
 

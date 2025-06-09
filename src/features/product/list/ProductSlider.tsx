@@ -18,8 +18,6 @@ import ProductListSkeleton, {
 	ProductSkeletonType,
 } from "./ProductListSkeleton";
 
-
-
 const SliderDynamic = dynamic(
 	() =>
 		import("@/components/widgets/Slider").then((mod) => ({

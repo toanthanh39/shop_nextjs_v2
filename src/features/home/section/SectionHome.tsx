@@ -19,7 +19,6 @@ import BrandHomeSkeleton from "../brand/BrandHomeSkeleton";
 
 import SectionCategory from "./SectionCategory";
 
-
 const keySettings = SettingConst.home.settings_website_namperfume_net;
 
 async function getDataServer() {

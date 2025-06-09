@@ -17,14 +17,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 				password: { label: "Password", type: "password" },
 			},
 			async authorize(credentials, req) {
-				console.log("🚀 ~ authorize ~ credentials:", credentials);
 				if (!credentials) {
 					return null;
 				}
 				const user: User = {
-					id: "1",
 					name: "J Smith",
 					email: "jsmith@example.com",
+					image: "",
 				};
 
 				return user;
@@ -40,8 +39,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 			},
 		}),
 		GoogleProvider({
-			clientId: process.env.GOOGLE_CLIENT_ID || "",
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+			clientId: process.env.AUTH_GOOGLE_ID || "",
+			clientSecret: process.env.AUTH_GOOGLE_SECRET || "",
+			authorization: {
+				params: {
+					prompt: "consent",
+					access_type: "offline",
+					response_type: "code",
+				},
+			},
 		}),
 	],
 
@@ -52,8 +58,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 			}
 			return { ...token, ...user };
 		},
-		async session({ session, token }) {
-			return session;
+		async session({ session, token, user }) {
+			return { ...session, ...user };
 		},
 
 		async callback({ session, user, token }) {
@@ -68,6 +74,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 	},
 	pages: {
 		signIn: "/login",
-		error: "/error",
+		// error: "/error",
 	},
 });

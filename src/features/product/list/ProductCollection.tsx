@@ -11,10 +11,6 @@ import { cn } from "@/utils/utils";
 
 import ProductSlider from "./ProductSlider";
 
-
-
-
-
 type Props = ComProps & {
 	title?: string;
 	link?: string;
