@@ -5,7 +5,7 @@ import ServerRepo from "@/services/api/repositories/ServerRepo";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
 import { SystemSetting } from "@/types/Shop.type";
 
-import Helper from "@/utils/helper";
+import Validate from "@/utils/validate";
 
 export const initSiteSetting = async (
 	request: NextRequest,
@@ -16,7 +16,7 @@ export const initSiteSetting = async (
 
 	try {
 		const domain = _header.get("x-forwarded-host")!;
-		const replaceDomainSetting = Helper.validateKey(domain);
+		const replaceDomainSetting = Validate.validateKey(domain);
 		const key = `${replaceDomainSetting}_config`;
 
 		const dataSetting = await new SettingRepo().getOne<SystemSetting>(key);

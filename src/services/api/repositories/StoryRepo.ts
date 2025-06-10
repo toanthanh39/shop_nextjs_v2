@@ -1,6 +1,7 @@
 import {
 	BaseCollectionJson,
 	BaseRepoParams,
+	IBaseRepository,
 } from "@/types/Base.type";
 import { StoryFilter, StoryJson } from "@/types/Story.type";
 
@@ -8,8 +9,7 @@ import Helper from "@/utils/helper";
 
 import BaseRepository from "./BaseRepository";
 
-
-class StoryRepo extends BaseRepository<StoryJson> {
+class StoryRepo extends BaseRepository implements IBaseRepository<StoryJson> {
 	private static instance: StoryRepo;
 	private readonly pathname = this.BASE_URL_V1 + "/stories/public";
 

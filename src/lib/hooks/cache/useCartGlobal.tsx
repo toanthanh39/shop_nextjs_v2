@@ -4,6 +4,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 
 import BaseApi from "@/lib/axios/BaseApi";
@@ -81,10 +82,16 @@ function useCartGlobal({ enabled = true }: Props) {
 		isLoading: isLoadingSite,
 		error: siteError,
 	} = useSiteSetting();
-	// const setLoadingGlobal = useCartStore((state) => state.setLoading);
+
+	const { status: authStatus } = useSession();
+	const isAuthenticated = authStatus === "authenticated";
+
+	/////////////////////////////////
 	const queryClient = useQueryClient();
 
-	const CartRepoInstance = new CartRepo({ accessMode: "PUBLIC" });
+	const CartRepoInstance = new CartRepo({
+		accessMode: isAuthenticated ? "PRIVATE" : "PUBLIC",
+	});
 	const OrderCalculatorInstance = new OrderCalculator();
 
 	const isUpdateMutating =
@@ -101,7 +108,7 @@ function useCartGlobal({ enabled = true }: Props) {
 		queryFn: async () => {
 			try {
 				const res = await CartRepoInstance.getAll({
-					customer_token: site?.customer_token,
+					customer_token: isAuthenticated ? undefined : site?.customer_token,
 				});
 				if (res.items.length <= 0) {
 					return null;
@@ -113,7 +120,7 @@ function useCartGlobal({ enabled = true }: Props) {
 			}
 		},
 		staleTime: STALE_TIME,
-		enabled: !!site?.customer_token && enabled,
+		enabled: !!site?.customer_token && enabled && authStatus !== "loading",
 		refetchOnWindowFocus: "always",
 		retry: 3,
 	});
@@ -424,77 +431,6 @@ function useCartGlobal({ enabled = true }: Props) {
 		},
 	});
 
-	// const updateCouponMutation = useMutation({
-	// 	mutationFn: async ({ action, data }: ActionUpdateCouponProps) => {
-	// 		try {
-	// 			if (!site) {
-	// 				throw new Error(cartError.error_site_global);
-	// 			}
-
-	// 			if (!cart) {
-	// 				throw new Error(cartError.error_cart_not_exited);
-	// 			}
-
-	// 			if (action === "add") {
-	// 				return await CartRepoInstance.addCoupon({
-	// 					order_id: cart.id,
-	// 					code: data.code,
-	// 					customer_token: site.customer_token,
-	// 				});
-	// 			}
-
-	// 			if (action === "remove") {
-	// 				const itemsToRemoveCoupon: OrderItemEdit[] = cart.details.data
-	// 					// .filter((item) =>
-	// 					// 	item.promotions.some((promo) => promo.code === data.code)
-	// 					// )
-	// 					.map((item) => ({
-	// 						order_id: cart.order_id,
-	// 						id: item.id,
-	// 						is_use: item.is_use,
-	// 						item_quantity: item.item_quantity,
-	// 						product_id: item.product_id,
-	// 						promotions: item.promotions.filter(
-	// 							(promo) => promo.code !== data.code
-	// 						),
-	// 					}));
-
-	// 				const promoBodyToRemoveCoupon =
-	// 					data.promotion_detail.discount_type === PromotionDiscountType.CART
-	// 						? cart.promotions.filter((promo) => promo.code !== data.code)
-	// 						: [];
-
-	// 				let result = { ...cart };
-
-	// 				if (promoBodyToRemoveCoupon.length > 0) {
-	// 					result = await CartRepoInstance.update({
-	// 						cart_id: cart.id,
-	// 						customer_token: site.customer_token,
-	// 						action: ORDER_ACTION.PROMOTION,
-	// 						promotions: promoBodyToRemoveCoupon,
-	// 					});
-	// 				}
-
-	// 				if (itemsToRemoveCoupon.length > 0) {
-	// 					result = await CartRepoInstance.update({
-	// 						cart_id: cart.id,
-	// 						customer_token: site.customer_token,
-	// 						action: ORDER_ACTION.UPDATE,
-	// 						details: itemsToRemoveCoupon,
-	// 					});
-	// 				}
-
-	// 				return result;
-	// 			}
-	// 		} catch (error) {
-	// 			throw BaseApi.handleError(error);
-	// 		}
-	// 	},
-	// 	onSuccess: (updatedCart) => {
-	// 		queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], updatedCart);
-	// 	},
-	// });
-
 	const checkoutMutation = useMutation({
 		mutationFn: async (data: PaymentAddJson) => {
 			try {
@@ -631,7 +567,6 @@ function useCartGlobal({ enabled = true }: Props) {
 	});
 
 	/////////////////////////////////
-
 	const disabled = useMemo(() => {
 		return (
 			isLoading ||
@@ -647,7 +582,6 @@ function useCartGlobal({ enabled = true }: Props) {
 	]);
 
 	/////////////////////////////////
-
 	return {
 		cart,
 		isLoading: isLoading || isLoadingSite || isLoadingGlobal,
@@ -667,7 +601,6 @@ function useCartGlobal({ enabled = true }: Props) {
 		isCheckouting: checkoutMutation.isPending,
 		isBuyNow: buyNowMutaion.isPending,
 		disabled,
-		//////////////////////////////
 	};
 }
 

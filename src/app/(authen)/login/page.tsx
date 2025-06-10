@@ -1,43 +1,53 @@
 "use client";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { z } from "zod";
 
-import { signIn } from "@/lib/next-authen/authenOption";
+import GenericForm from "@/components/form/GenericForm";
+
+import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
 // import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
 
-	async function handleSubmit(formData: FormData) {
-		setLoading(true);
-		setError("");
-		const email = formData.get("email") as string;
-		const password = formData.get("password") as string;
+	const validationSchema = z.object({
+		email: z.string().min(1, "First name is required"),
+		password: z.string().min(1, "Last name is required"),
+	});
 
-		const res = await signIn("credentials", {
-			email,
-			password,
-			callbackUrl: "/",
+	type FormData = z.infer<typeof validationSchema>;
+
+	const defaultValues: FormData = {
+		email: "",
+		password: "",
+	};
+
+	const methods = useGenericFormMethods({
+		defaultValues: defaultValues,
+		validationSchema: validationSchema,
+		mode: "onChange",
+	});
+
+	async function onSubmit(formData: FormData) {
+		const { email, password } = formData;
+		await signIn("credentials", {
+			accountid: email,
+			password: password,
+			redirectTo: "/",
 		});
-
-		setLoading(false);
-
-		if (res?.error) {
-			setError("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
-		} else if (res?.ok) {
-			// window.location.href = "/";
-		}
 	}
 
 	const handleGoogleLogin = () => {
-		setLoading(true);
 		signIn("google", { callbackUrl: "/" });
 	};
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200">
-			<form
-				action={handleGoogleLogin}
+			<GenericForm
+				onSubmit={methods.handleSubmit(onSubmit)}
+				methods={methods}
+				onSS
 				className="bg-white/80 shadow-xl rounded-3xl p-8 w-full max-w-md flex flex-col gap-6
 					border border-white/40
 					[box-shadow:8px_8px_24px_#d1d5db,_-8px_-8px_24px_#f3f4f6]
@@ -49,38 +59,32 @@ export default function LoginPage() {
 					Đăng nhập
 				</h2>
 				<div className="flex flex-col gap-2">
-					<label htmlFor="email" className="text-sm font-medium text-gray-700">
-						Email
-					</label>
-					<input
-						id="email"
-						name="email"
-						type="email"
-						required
-						className="rounded-xl px-4 py-2 bg-white/60 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-inner transition
+					<GenericForm.Item name="email" label="	Email">
+						<input
+							id="email"
+							name="email"
+							type="email"
+							required
+							className="rounded-xl px-4 py-2 bg-white/60 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-inner transition
 							[box-shadow:inset_4px_4px_12px_#e0e7ff,inset_-4px_-4px_12px_#fff]"
-						autoComplete="email"
-					/>
+							autoComplete="email"
+						/>
+					</GenericForm.Item>
 				</div>
 				<div className="flex flex-col gap-2">
-					<label
-						htmlFor="password"
-						className="text-sm font-medium text-gray-700">
-						Mật khẩu
-					</label>
-					<input
-						id="password"
-						name="password"
-						type="password"
-						required
-						className="rounded-xl px-4 py-2 bg-white/60 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-inner transition
+					<GenericForm.Item name="password" label="	Mật khẩu">
+						<input
+							id="password"
+							name="password"
+							type="password"
+							required
+							className="rounded-xl px-4 py-2 bg-white/60 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-inner transition
 							[box-shadow:inset_4px_4px_12px_#e0e7ff,inset_-4px_-4px_12px_#fff]"
-						autoComplete="current-password"
-					/>
+							autoComplete="current-password"
+						/>
+					</GenericForm.Item>
 				</div>
-				{error && (
-					<div className="text-red-500 text-sm text-center">{error}</div>
-				)}
+
 				<button
 					type="submit"
 					disabled={loading}
@@ -102,7 +106,7 @@ export default function LoginPage() {
 					<img src="/google.svg" alt="Google" className="w-5 h-5" />
 					Đăng nhập với Google
 				</button>
-			</form>
+			</GenericForm>
 		</div>
 	);
 }

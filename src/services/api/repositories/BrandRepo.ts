@@ -1,6 +1,4 @@
-import {
-	BaseCollectionJson,
-} from "@/types/Base.type";
+import { BaseCollectionJson, IBaseRepository } from "@/types/Base.type";
 import { BrandJson } from "@/types/Brand.type";
 import { StoryFilter } from "@/types/Story.type";
 
@@ -8,9 +6,7 @@ import Helper from "@/utils/helper";
 
 import BaseRepository from "./BaseRepository";
 
-
-
-class BrandRepo extends BaseRepository<BrandJson> {
+class BrandRepo extends BaseRepository implements IBaseRepository<BrandJson> {
 	private static instance: BrandRepo;
 
 	public static getInstance(): BrandRepo {

@@ -13,7 +13,7 @@ import useProductList from "@/lib/hooks/cache/useProductList";
 import useSiteSetting from "@/lib/hooks/cache/useSiteSetting";
 import Helper from "@/utils/helper";
 import { cn } from "@/utils/utils";
-import { validateInput } from "@/utils/validate";
+import Validate from "@/utils/validate";
 
 export default function HeaderSearch() {
 	//state
@@ -36,7 +36,7 @@ export default function HeaderSearch() {
 	///////////////////////////////////////
 	//handle
 	const onChange = (val: string) => {
-		startTransition(() => setValue(validateInput(val)));
+		startTransition(() => setValue(Validate.validateInput(val)));
 	};
 
 	const handleReset = () => {

@@ -1,12 +1,19 @@
 import client from "@/lib/core/client";
-import { BaseCollectionJson, BaseRepoParams } from "@/types/Base.type";
+import {
+	BaseCollectionJson,
+	BaseRepoParams,
+	IBaseRepository,
+} from "@/types/Base.type";
 import { OrderCreate, OrderFilter, OrderJson } from "@/types/Order.type";
 
 import Helper from "@/utils/helper";
 
 import BaseRepository from "./BaseRepository";
 
-class OrderRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
+class OrderRepo
+	extends BaseRepository
+	implements BaseRepoParams, IBaseRepository<OrderJson>
+{
 	private static instance: OrderRepo;
 	private readonly pathname = "/orders";
 

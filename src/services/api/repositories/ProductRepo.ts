@@ -1,4 +1,8 @@
-import { BaseCollectionJson, BaseRepoParams } from "@/types/Base.type";
+import {
+	BaseCollectionJson,
+	BaseRepoParams,
+	IBaseRepository,
+} from "@/types/Base.type";
 import { ProductFilter, ProductJson } from "@/types/Product.type";
 
 import Helper from "@/utils/helper";
@@ -8,8 +12,8 @@ import BaseRepository from "./BaseRepository";
 const TIME_CACHE = 60 * 60;
 
 class ProductRepo
-	extends BaseRepository<ProductJson>
-	implements BaseRepoParams
+	extends BaseRepository
+	implements BaseRepoParams, IBaseRepository<ProductJson>
 {
 	private static instance: ProductRepo;
 	private readonly URLS = {

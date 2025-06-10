@@ -1,13 +1,14 @@
-import client from "@/lib/core/client";
-import { BaseCollectionJson } from "@/types/Base.type";
+import { BaseCollectionJson, IBaseRepository } from "@/types/Base.type";
 import { CashflowCreate, CashflowJson } from "@/types/Cashflow.type";
 
 import Helper from "@/utils/helper";
 
 import BaseRepository from "./BaseRepository";
 
-
-class CashflowRepo extends BaseRepository<CashflowJson> {
+class CashflowRepo
+	extends BaseRepository
+	implements IBaseRepository<CashflowJson>
+{
 	private readonly pathname = "/cashflowreceipts/public/order";
 	private static instance: CashflowRepo;
 
@@ -23,17 +24,20 @@ class CashflowRepo extends BaseRepository<CashflowJson> {
 	}
 
 	async getAll(f: unknown): Promise<BaseCollectionJson<CashflowJson>> {
-		return client.get<BaseCollectionJson<CashflowJson>>(this.pathname, {
-			params: Helper.convertParams(f),
-		});
+		return this.getClientOrServer().get<BaseCollectionJson<CashflowJson>>(
+			this.pathname,
+			{
+				params: Helper.convertParams(f),
+			}
+		);
 	}
 
 	async getOne(id: number | string): Promise<CashflowJson> {
-		return client.get<CashflowJson>(this.pathname + "/" + id);
+		return this.getClientOrServer().get<CashflowJson>(this.pathname + "/" + id);
 	}
 
 	async create(data: CashflowCreate): Promise<CashflowJson> {
-		return client.post<CashflowJson>(this.pathname, data);
+		return this.getClientOrServer().post<CashflowJson>(this.pathname, data);
 	}
 }
 

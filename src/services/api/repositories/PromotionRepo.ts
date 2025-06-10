@@ -1,5 +1,5 @@
 import client from "@/lib/core/client";
-import { BaseCollectionJson } from "@/types/Base.type";
+import { BaseCollectionJson, IBaseRepository } from "@/types/Base.type";
 import { CouponJson } from "@/types/Coupon.type";
 import { PromotionFilter, PromotionJson } from "@/types/Promotion.type";
 
@@ -7,8 +7,10 @@ import Helper from "@/utils/helper";
 
 import BaseRepository from "./BaseRepository";
 
-
-class PromotionRepo extends BaseRepository<PromotionJson> {
+class PromotionRepo
+	extends BaseRepository
+	implements IBaseRepository<PromotionJson>
+{
 	private static instance: PromotionRepo;
 	public static getInstance(): PromotionRepo {
 		if (!PromotionRepo.instance) {

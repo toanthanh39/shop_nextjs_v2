@@ -14,6 +14,15 @@ export enum Alow {
 }
 
 /////////////////////////////////////////////////////////
+
+export interface IBaseRepository<T> {
+	getAll(f: unknown, config?: unknown): Promise<BaseCollectionJson<T>>;
+	getOne(id: number | string, f?: unknown): Promise<T | null>;
+	// create(data: T): Promise<T>;
+	// update(id: number | string, data: Partial<T>): Promise<T>;
+	// delete(id: number | string): Promise<void>;
+}
+
 export type BaseCollectionJson<ModelJson> = {
 	items: ModelJson[];
 	total: number;

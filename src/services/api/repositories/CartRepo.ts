@@ -1,5 +1,9 @@
 import client from "@/lib/core/client";
-import { BaseCollectionJson, BaseRepoParams } from "@/types/Base.type";
+import {
+	BaseCollectionJson,
+	BaseRepoParams,
+	IBaseRepository,
+} from "@/types/Base.type";
 import { CartCreate } from "@/types/Cart.type";
 import {
 	CashflowGroup,
@@ -32,11 +36,14 @@ import CustomerRepo from "./CustomerRepo";
 import OrderRepo from "./OrderRepo";
 import PaymentRepo from "./PaymentRepo";
 
-class CartRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
+class CartRepo
+	extends BaseRepository
+	implements BaseRepoParams, IBaseRepository<OrderJson>
+{
 	private static instance: CartRepo;
 	private readonly URLS = {
 		PUBLIC: "/orders/cart/public",
-		PRIVATE: "/orders/cart/mycart",
+		PRIVATE: "/orders/cart",
 	};
 
 	accessMode: BaseRepoParams["accessMode"];

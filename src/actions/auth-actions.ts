@@ -1,8 +1,9 @@
 "use server";
 
-import { signIn, signOut } from "@/lib/next-authen/authenOption";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+
+import { signIn, signOut } from "@/lib/next-authen/authenOption";
 
 export const onSignOutAction = async () => {
 	"use server";
@@ -24,18 +25,16 @@ export const onCredentialSignInAction = async (formData: FormData) => {
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
 
-	const res = await signIn({
-		email,
+	const res = await signIn("credentials", {
+		account_id: email,
 		password,
 		callbackUrl: "/",
 	});
 };
 
 export const onGoogleSignInAction = async () => {
-	await signIn("google", {
-		callbackUrl: "/", // Đặt URL bạn muốn chuyển hướng đến sau khi đăng nhập thành công
-		// Bạn có thể đặt bất kỳ path nào, ví dụ: '/dashboard', '/profile'
-		// Nếu bạn muốn giữ lại URL người dùng đang truy cập trước khi đăng nhập:
-		// callbackUrl: window.location.href (dùng nếu bạn đang gọi signIn từ một page bất kỳ)
+	await signIn("credentials", {
+		redirect: true,
+		redirectTo: "/",
 	});
 };

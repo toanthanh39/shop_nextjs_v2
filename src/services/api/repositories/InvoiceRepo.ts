@@ -1,4 +1,8 @@
-import { BaseCollectionJson, BaseRepoParams } from "@/types/Base.type";
+import {
+	BaseCollectionJson,
+	BaseRepoParams,
+	IBaseRepository,
+} from "@/types/Base.type";
 import { OrderFilter, OrderJson } from "@/types/Order.type";
 
 import Helper from "@/utils/helper";
@@ -7,7 +11,10 @@ import BaseRepository from "./BaseRepository";
 
 type InvoiceJson = OrderJson;
 
-class InvoiceRepo extends BaseRepository<OrderJson> implements BaseRepoParams {
+class InvoiceRepo
+	extends BaseRepository
+	implements BaseRepoParams, IBaseRepository<InvoiceJson>
+{
 	private static instance: InvoiceRepo;
 	// private accessMode: BaseAccessMode;
 

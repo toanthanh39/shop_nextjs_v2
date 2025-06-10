@@ -43,7 +43,7 @@ const eslintConfig = [
 			"@typescript-eslint/no-empty-object-type": "off",
 			"@typescript-eslint/no-empty-interface": "off",
 			"@typescript-eslint/explicit-module-boundary-types": "off",
-			"react/jsx-no-literals": ["warn", { noStrings: true }],
+			"react/jsx-no-literals": ["off", { noStrings: true }],
 			"react/no-unknown-property": [
 				"error", // Hoặc "warn" nếu bạn chỉ muốn cảnh báo
 				{

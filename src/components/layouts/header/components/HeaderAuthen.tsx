@@ -1,13 +1,15 @@
 import { onSignOutAction } from "@/actions/auth-actions";
+import { SignInButton } from "@/features/auth/button-sigin";
+import { auth } from "@/lib/next-authen/authenOption";
+
 import { UserIcon } from "@/components/icons";
 import { Button, Text } from "@/components/ui";
 import CustomImage from "@/components/ui/CustomImage";
 import Flex from "@/components/ui/Flex";
-import { auth } from "@/lib/next-authen/authenOption";
-import Link from "next/link";
 
 export default async function HeaderAuthen() {
 	const session = await auth();
+	console.log("🚀 ~ HeaderAuthen ~ session:", session);
 
 	// Xử lý đăng xuất ở đây, ví dụ gọi API hoặc xóa token
 	// if (session) {
@@ -46,7 +48,7 @@ export default async function HeaderAuthen() {
 					tabIndex={0}
 					aria-label="Login">
 					<UserIcon size="md" />
-					{session?.user?.name}
+					{session?.user?.user?.full_name}
 				</Text>
 			)}
 
@@ -74,10 +76,16 @@ export default async function HeaderAuthen() {
 
 				{!isAauthenticated && (
 					<Flex gap={4}>
-						<Link href={"/login"} className="flex-1">
-							Đăng nhập
-						</Link>
+						{/* <form action={onGoogleSignInAction}>
+							<Button type="submit">
+								
+								</Button>
 
+						</form> */}
+						{/* <Link href={"/login"} className="flex-1">
+							Đăng nhập
+						</Link> */}
+						<SignInButton></SignInButton>
 						<Button className="flex-1" variant="default">
 							Đăng ký
 						</Button>

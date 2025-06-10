@@ -1,4 +1,4 @@
-import { BaseCollectionJson } from "@/types/Base.type";
+import { BaseCollectionJson, IBaseRepository } from "@/types/Base.type";
 import { VideoFilter, VideoJson } from "@/types/Video.type";
 
 import Helper from "@/utils/helper";
@@ -6,7 +6,7 @@ import Helper from "@/utils/helper";
 import BaseRepository from "./BaseRepository";
 
 const CACHE_TIME = 60 * 60;
-class VideoRepo extends BaseRepository<VideoJson> {
+class VideoRepo extends BaseRepository implements IBaseRepository<VideoJson> {
 	private static instance: VideoRepo;
 	private readonly pathname = "/collections/public/youtube";
 

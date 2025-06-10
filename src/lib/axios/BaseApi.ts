@@ -41,6 +41,8 @@ class BaseApi {
 			statusCode = -1;
 		} else if (this.isErrorObject(axiosError)) {
 			errors = axiosError.errors;
+		} else if (this.isErrorObject2(axiosError)) {
+			errors = axiosError.error;
 		} else {
 			errors.push(JSON.stringify(axiosError));
 		}
@@ -117,6 +119,10 @@ class BaseApi {
 		obj: any
 	): obj is { errors: string[]; statusCode?: number } {
 		return obj && typeof obj === "object" && Array.isArray(obj.errors);
+	}
+
+	private static isErrorObject2(obj: any): obj is { error: string[] } {
+		return obj && typeof obj === "object" && Array.isArray(obj.error);
 	}
 
 	private static isErrorFetchServer(axiosError: unknown) {

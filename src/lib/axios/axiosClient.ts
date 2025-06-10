@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
+import { getSession } from "next-auth/react";
 
 const source = axios.CancelToken.source();
 
@@ -43,9 +44,10 @@ AxiosInstance.interceptors.request.use(async (request) => {
 
 	if (!requestUrl.includes("public") && !requestUrl.includes("login")) {
 		let token = "";
+		const session = await getSession();
 
 		/*set token  */
-		token = "";
+		token = session?.user?.jwt ?? "";
 
 		if (token.length) {
 			request.headers.Authorization = `${token}`;

@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
 		NEXT_PUBLIC_API_HOST_ADMIN: process.env.NEXT_PUBLIC_API_HOST_ADMIN,
 
 		REACT_APP_BASE_URL_V2: process.env.REACT_APP_BASE_URL_V2,
+		AUTH_HOSTNAME_FALLBACK: process.env.AUTH_HOSTNAME_FALLBACK,
 	},
 
 	compiler: {

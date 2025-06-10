@@ -1,5 +1,9 @@
 import client from "@/lib/core/client";
-import { BaseCollectionJson, BaseRepoParams } from "@/types/Base.type";
+import {
+	BaseCollectionJson,
+	BaseRepoParams,
+	IBaseRepository,
+} from "@/types/Base.type";
 import {
 	CustomerEdit,
 	CustomerInforEditJson,
@@ -15,8 +19,8 @@ import Helper from "@/utils/helper";
 import BaseRepository from "./BaseRepository";
 
 class CustomerRepo
-	extends BaseRepository<CustomerJson>
-	implements BaseRepoParams
+	extends BaseRepository
+	implements BaseRepoParams, IBaseRepository<CustomerJson>
 {
 	private static instance: CustomerRepo;
 	accessMode: BaseRepoParams["accessMode"];

@@ -11,7 +11,7 @@ import SiteServerRepo from "./SiteRepo";
 
 const DOMAIN = process.env.NEXT_PUBLIC_API_BASE_DOMAIN;
 const CACHE_TIME = 60 * 60;
-class SettingRepo extends BaseRepository<SettingJson<string>> {
+class SettingRepo extends BaseRepository {
 	private static instance: SettingRepo;
 	private readonly pathname = "/settings/public";
 

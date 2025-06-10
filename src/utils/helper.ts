@@ -101,8 +101,8 @@ class Helper {
 			const conditionNumber = useZeroValue
 				? typeof newParam[prop] === "number" && newParam[prop] < 0
 				: typeof newParam[prop] === "number" &&
-				  !(keyUseZeroValues || []).includes(prop) &&
-				  newParam[prop] <= 0;
+					!(keyUseZeroValues || []).includes(prop) &&
+					newParam[prop] <= 0;
 
 			const conditionString = useZeroValue
 				? typeof newParam[prop] === "string" && newParam[prop].length <= 0
@@ -134,6 +134,21 @@ class Helper {
 		} catch (error) {
 		} finally {
 			return domain;
+		}
+	}
+
+	static getHostName(host?: string) {
+		const markAsEmptyHostnameItems = [
+			"localhost",
+			"betaapp.cropany.com",
+			"localhost:3001",
+		];
+		const hostname = host ?? window.location.hostname;
+		if (hostname === "" || markAsEmptyHostnameItems.includes(hostname)) {
+			return process.env.AUTH_HOSTNAME_FALLBACK!;
+		} else {
+			// return hostname;
+			return process.env.AUTH_HOSTNAME_FALLBACK!;
 		}
 	}
 
@@ -263,34 +278,6 @@ class Helper {
 		return words.trim();
 	}
 
-	static getVariantName(fullname: string) {
-		const fullName = fullname;
-
-		const lastIndex = fullname.lastIndexOf("-");
-
-		return fullName.slice(lastIndex + 1).trim();
-	}
-
-	static getSizeName(fullname: string) {
-		const fullNames = fullname.split(" ");
-
-		const lastIndex = fullname.lastIndexOf("-");
-
-		return fullNames[fullNames.length - 1];
-	}
-
-	static handleFilterActive<T>(
-		state: string | undefined,
-		datas: T[],
-		key: keyof T
-	) {
-		if (!state) return [];
-		return datas.filter((data) => {
-			const arrBrand = state.split(",");
-			return arrBrand.includes(data[key] as string);
-		});
-	}
-
 	static parserStringToNumberInt(value: string | undefined) {
 		let res;
 		if (value) {
@@ -310,22 +297,6 @@ class Helper {
 		}
 
 		return str.trim();
-	}
-
-	static validateKey(str: string) {
-		// Chuyển đổi chuỗi sang chữ thường
-		str = str.toLowerCase();
-
-		// Loại bỏ các dấu tiếng Việt
-		str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-		// Thay thế các ký tự đặc biệt bằng dấu gạch ngang
-		str = str.replace(/[^a-z0-9\s-]/g, "_");
-
-		// Thay thế khoảng trắng và dấu gạch ngang liên tiếp bằng một dấu gạch ngang
-		str = str.trim().replace(/\s+/g, "-").replace(/-+/g, "_");
-
-		return str;
 	}
 
 	static addDomainToSrc(htmlString: string, domain: string) {
