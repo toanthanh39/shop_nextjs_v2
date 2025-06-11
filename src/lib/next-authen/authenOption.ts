@@ -198,7 +198,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 				);
 
 				const resJson = await res.json();
-				console.log("🚀 ~ authorize ~ resJson:", resJson);
 
 				const errors = BaseApi.handleError(resJson);
 

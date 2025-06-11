@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 
 type UseLoadingReturn<T extends (...args: any[]) => Promise<any>> = [
 	boolean,
-	(...args: Parameters<T>) => Promise<ReturnType<T>>
+	(...args: Parameters<T>) => Promise<ReturnType<T>>,
 ];
 
 /**

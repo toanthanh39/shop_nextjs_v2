@@ -3,19 +3,17 @@ import { useRouter } from "next/navigation";
 
 import { CartLayout } from "@/features/cart/layout";
 
-import { LoadingIcon } from "@/components/icons";
 import { Button, Empty } from "@/components/ui";
 
 import useCartGlobal from "@/lib/hooks/cache/useCartGlobal";
-
+import { SplashLoading } from "@/components/composite";
 
 export default function Page() {
 	const router = useRouter();
 	const { cart, isLoading } = useCartGlobal({});
-	console.log("🚀 ~ Page ~ cart:", cart);
 
 	if (isLoading) {
-		return <LoadingIcon />;
+		return <SplashLoading />;
 	}
 
 	if (!cart || cart.details.data.length <= 0) {

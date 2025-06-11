@@ -1,5 +1,8 @@
+"use client";
+
 import Form, { FormProps } from "next/form";
 import React from "react";
+/* eslint-disable import/named */
 import {
 	FormProvider,
 	UseFormReturn,
@@ -106,6 +109,7 @@ GenericForm.Submit = function ({ className, ...props }: FormSubmitProps) {
 		</Button>
 	);
 };
+GenericForm.Submit.displayName = "GenericFormSubmit";
 
 GenericForm.Reset = function ({ className }: ComProps) {
 	const { reset } = useFormContext();
@@ -119,3 +123,5 @@ GenericForm.Reset = function ({ className }: ComProps) {
 		</Button>
 	);
 };
+
+GenericForm.Reset.displayName = "GenericFormReset";

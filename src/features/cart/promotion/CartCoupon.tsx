@@ -8,7 +8,7 @@ import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { CouponJson } from "@/types/Coupon.type";
 import { IsUse } from "@/types/Global.type";
-import { OrderJson } from "@/types/Order.type";
+import { OrderJson, OrderPromotion } from "@/types/Order.type";
 import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
 
 import { DateStatusResult } from "@/components/composite";
@@ -90,16 +90,11 @@ export default function CartCoupon({ className, cart }: Props) {
 
 	//////////////////////////////////////////////
 	const handleSubmit = debounce(async (data: FormData) => {
-		console.log("🚀 ~ handleSubmit ~ data:", data);
-
 		try {
 			const promotionCouponToApplies = promotionCoupons.filter((i) =>
 				i.codes?.flatMap((c) => c.code).includes(data.code)
 			);
-			console.log(
-				"🚀 ~ handleSubmit ~ promotionCouponToApplies:",
-				promotionCouponToApplies
-			);
+
 			if (promotionCouponToApplies.length <= 0) {
 				methods.setError("code", {
 					type: "manual",
@@ -144,15 +139,20 @@ export default function CartCoupon({ className, cart }: Props) {
 	};
 
 	const onRemoveCode = debounce(
-		async (code: string, promotion: PromotionJson) => {
+		async (code: string, o_promotion: OrderPromotion) => {
 			try {
-				const couponCode = promotion.codes?.find((c) => c.code === code);
+				const couponCode = promotionCoupons
+					.flatMap((pc) => pc?.codes ?? [])
+					?.find((c) => c.code === code);
 				if (!couponCode) return;
 				await updateCart({
 					action: "coupon",
 					data: {
 						coupon: couponCode,
-						promotion: { ...promotion, is_use: IsUse.NOT_USE },
+						promotion: {
+							...o_promotion.promotion_detail,
+							is_use: IsUse.NOT_USE,
+						},
 					},
 				});
 			} catch (error) {
@@ -168,7 +168,8 @@ export default function CartCoupon({ className, cart }: Props) {
 			OrderInstance.getPromotionCouponUsed(),
 			"code"
 		);
-	}, [JSON.stringify(cart)]);
+	}, [JSON.stringify(cart.details.data)]);
+	console.log("🚀 ~ promoCouponUsed ~ promoCouponUsed:", promoCouponUsed);
 
 	//////////////////////////////////////////////
 	return (
@@ -209,9 +210,7 @@ export default function CartCoupon({ className, cart }: Props) {
 							<CloseIcon
 								disabled={isUpdating}
 								size="sm"
-								onClick={() =>
-									onRemoveCode(couponUsed.code, couponUsed.promotion_detail)
-								}
+								onClick={() => onRemoveCode(couponUsed.code, couponUsed)}
 							/>
 						</Tag>
 					);

@@ -1,6 +1,8 @@
+/* eslint-disable import/named */
 import { AxiosError, AxiosRequestConfig } from "axios";
 
 import { debugServer } from "@/config/debug";
+import { auth } from "../next-authen/authenOption";
 
 export type Config = RequestInit & {
 	params?: Pick<AxiosRequestConfig, "params">;
@@ -39,15 +41,21 @@ async function server<T>(options: Options): Promise<T> {
 	const { url, method, config } = options;
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
+	if (!["public", "api"].some((i) => url.includes(i))) {
+		const session = await auth();
+		if (session) {
+			config.headers = {
+				...config.headers, // Giữ lại các headers hiện có
+				Authorization: session.user.jwt, // Thêm header Authorization
+			};
+		}
+	}
 	const response = await fetch(processUrl(url, config), {
 		method,
-
 		...mergeConfig({ ...config, signal: controller.signal }),
 	});
 
 	if (!response.ok) {
-		// throw new Error(`HTTP error! status: ${response.status}`);
-
 		let res: any = undefined;
 		try {
 			res = await response.json();

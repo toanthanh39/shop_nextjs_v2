@@ -44,6 +44,8 @@ const eslintConfig = [
 			"@typescript-eslint/no-empty-interface": "off",
 			"@typescript-eslint/explicit-module-boundary-types": "off",
 			"react/jsx-no-literals": ["off", { noStrings: true }],
+			"rules-of-hooks/rules-of-hooks": "off", // Đây là quy tắc bạn muốn tắt
+			// "react-hooks/rules-of-hooks": "off", // Tên quy tắc phổ biến hơn
 			"react/no-unknown-property": [
 				"error", // Hoặc "warn" nếu bạn chỉ muốn cảnh báo
 				{

@@ -58,9 +58,7 @@ class OrderCalculator {
 		const allCollectionIdsInPromotions = promotions
 			.filter((op) => op.is_use === IsUse.USE)
 			.flatMap((promotion) =>
-				promotion.promotion_detail.req_collectionids
-					.split(",")
-					.map((id) => Number(id))
+				promotion.promotion_detail.req_collectionids.split(",").map(Number)
 			);
 
 		if (allCollectionIdsInPromotions.length <= 0) return [];
@@ -363,13 +361,11 @@ class OrderCalculator {
 		order_old: OrderJson,
 		input: ActionOrderUpdate
 	) {
-		const orderUpdate: OrderJson = { ...order_old };
+		const orderUpdate: OrderJson = JSON.parse(JSON.stringify(order_old));
 
 		try {
-			let items = orderUpdate.details.data;
-
 			const findItemIndexById = (id: OrderId) =>
-				items.findIndex((item) => item.id === id);
+				orderUpdate.details.data.findIndex((item) => item.id === id);
 
 			switch (input.action) {
 				case "quantity": {
@@ -388,7 +384,7 @@ class OrderCalculator {
 						throw new Error("product_not_found_in_order_details");
 					}
 
-					items[itemIndex].item_quantity = item_quantity;
+					orderUpdate.details.data[itemIndex].item_quantity = item_quantity;
 
 					break;
 				}
@@ -404,10 +400,8 @@ class OrderCalculator {
 					if (itemIndex === -1) {
 						throw new Error("variant_not_found_in_order_details");
 					}
-					items[itemIndex].product_json = produt_variant_json;
-
-					// Update specific variant details as needed
-					// Example (assuming there is a variant field): items[itemIndex].variant = produt_variant_json;
+					orderUpdate.details.data[itemIndex].product_json =
+						produt_variant_json;
 
 					break;
 				}
@@ -435,7 +429,7 @@ class OrderCalculator {
 								throw new Error("product_not_found_in_order_details");
 							}
 
-							items[itemIndex].is_use = is_use;
+							orderUpdate.details.data[itemIndex].is_use = is_use;
 						}
 					}
 					break;
@@ -449,14 +443,14 @@ class OrderCalculator {
 							throw new Error("invalid_quantity_or_product_details");
 						}
 
-						const indexExited = items.findIndex(
+						const indexExited = orderUpdate.details.data.findIndex(
 							(i) => i.product_id === product_json.id
 						);
-						if (indexExited > 0) {
-							items[indexExited].item_quantity += item_quantity;
+						if (indexExited >= 0) {
+							orderUpdate.details.data[indexExited].item_quantity +=
+								item_quantity;
 						} else {
-							const itemIdRes = items;
-							items.unshift({
+							orderUpdate.details.data.unshift({
 								...this.getDefaultDataItem(product_json),
 								item_quantity: item_quantity,
 							});
@@ -476,7 +470,7 @@ class OrderCalculator {
 								throw new Error("product_not_found_in_order_details");
 							}
 
-							items.splice(itemIndex, 1);
+							orderUpdate.details.data.splice(itemIndex, 1);
 						});
 					}
 
@@ -493,8 +487,14 @@ class OrderCalculator {
 						);
 						let errors: string[] = [];
 
-						errors = this.checkPromotionReqConditions(promotions, orderUpdate);
-						errors = this.checkAllPromotionOnOrderPassedToCalc(orderUpdate);
+						const promotionErrors = this.checkPromotionReqConditions(
+							promotions,
+							orderUpdate
+						);
+						const orderErrors =
+							this.checkAllPromotionOnOrderPassedToCalc(orderUpdate);
+
+						errors = [...promotionErrors, ...orderErrors];
 
 						if (errors.length > 0) {
 							throw new Error(errors[0]);
@@ -535,26 +535,46 @@ class OrderCalculator {
 							promotion.discount_type === PromotionDiscountType.PRODUCT
 						) {
 							// xử lý nếu cho promotion trên tất cả item sản phẩm
-							items = orderUpdate.details.data.map((item) => {
-								const indexPromotionExistedOnItem = item.promotions.findIndex(
-									(p) => p.promotion_id === promotion.id
-								);
+							orderUpdate.details.data = orderUpdate.details.data.map(
+								(item) => {
+									const indexPromotionExistedOnItem = item.promotions.findIndex(
+										(p) => p.promotion_id === promotion.id
+									);
 
-								const updatedPromotions = item.promotions.map((promo) =>
-									promo.promotion_id === promotion.id
-										? { ...promo, code, is_use: promotionOrderToUpdate.is_use }
-										: promo
-								);
+									const updatedPromotions = item.promotions.map((promo) =>
+										promo.promotion_id === promotion.id
+											? {
+													...promo,
+													code,
+													is_use: promotionOrderToUpdate.is_use,
+												}
+											: promo
+									);
 
-								if (indexPromotionExistedOnItem < 0) {
-									updatedPromotions.push(promotionOrderToUpdate);
+									if (indexPromotionExistedOnItem < 0) {
+										updatedPromotions.push(promotionOrderToUpdate);
+									}
+
+									return {
+										...item,
+										promotions: updatedPromotions,
+									};
 								}
+							);
+						}
+						let errors: string[] = [];
 
-								return {
-									...item,
-									promotions: updatedPromotions,
-								};
-							});
+						const promotionErrors = this.checkPromotionReqConditions(
+							[promotionOrderToUpdate],
+							orderUpdate
+						);
+						const orderErrors =
+							this.checkAllPromotionOnOrderPassedToCalc(orderUpdate);
+
+						errors = [...promotionErrors, ...orderErrors];
+
+						if (errors.length > 0) {
+							throw new Error(errors[0]);
 						}
 					}
 					break;
@@ -563,7 +583,6 @@ class OrderCalculator {
 					throw new Error("invalid_action_action_type_not_recognized");
 			}
 
-			orderUpdate.details.data = items;
 			return orderUpdate;
 		} catch (error) {
 			throw error;

@@ -1,6 +1,7 @@
 "use client";
 // import DevComponents from "@/features/dev/fixed/DevComponents";
 import PrelineScriptWrapper from "@/components/scripts/prelineScriptWrapper";
+import { Toaster } from "@/components/ui/shacdn/Sonner";
 
 import { RootProviderProps, ShopProviderProps } from "@/types/Shop.type";
 import dynamic from "next/dynamic";
@@ -41,6 +42,7 @@ export default function ShopProvider({ children }: Props) {
 			{children}
 			<DevComponents />
 			<PrelineScriptWrapper />
+			<Toaster />
 		</>
 	);
 }

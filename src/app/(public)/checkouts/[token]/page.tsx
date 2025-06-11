@@ -6,12 +6,14 @@ import ServerRepo from "@/services/api/repositories/ServerRepo";
 import { Params } from "@/types/Dynamic.type";
 
 import Heading from "@/components/ui/Heading";
+import { auth } from "@/lib/next-authen/authenOption";
 
 const getDetailOrder = async (token: string) => {
 	try {
+		const session = await auth();
 		const customerToken = await ServerRepo.getCustomerTokenServer();
 		const cart = await new CartRepo({
-			accessMode: "PUBLIC",
+			accessMode: session ? "PRIVATE" : "PUBLIC",
 		}).getOne(token, {
 			customer_token: customerToken,
 		});

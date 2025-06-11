@@ -1,8 +1,10 @@
+// eslint-disable-next-line import/named
 import axios, { AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
 import { getSession } from "next-auth/react";
 
 const source = axios.CancelToken.source();
+let sessionCache: any = null;
 
 const AxiosInstance = axios.create({
 	timeout: 1000 * 60,
@@ -44,10 +46,12 @@ AxiosInstance.interceptors.request.use(async (request) => {
 
 	if (!requestUrl.includes("public") && !requestUrl.includes("login")) {
 		let token = "";
-		const session = await getSession();
-
+		if (!sessionCache) {
+			const session = await getSession();
+			sessionCache = session;
+		}
 		/*set token  */
-		token = session?.user?.jwt ?? "";
+		token = sessionCache?.user?.jwt ?? "";
 
 		if (token.length) {
 			request.headers.Authorization = `${token}`;
@@ -80,6 +84,7 @@ AxiosInstance.interceptors.response.use(
 			if (isTokenExpired || isTokenBacklist) {
 				if (!isSignOutCalled) {
 					isSignOutCalled = true;
+					sessionCache = null;
 					// if (window.location.pathname.includes("/pos")) {
 					// 	window.location.href = "/pos";
 					// } else {

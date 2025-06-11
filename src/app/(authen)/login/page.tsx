@@ -35,6 +35,7 @@ export default function LoginPage() {
 			accountid: email,
 			password: password,
 			redirectTo: "/",
+			redirect: true,
 		});
 	}
 
@@ -63,7 +64,7 @@ export default function LoginPage() {
 						<input
 							id="email"
 							name="email"
-							type="email"
+							type="text"
 							required
 							className="rounded-xl px-4 py-2 bg-white/60 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-inner transition
 							[box-shadow:inset_4px_4px_12px_#e0e7ff,inset_-4px_-4px_12px_#fff]"

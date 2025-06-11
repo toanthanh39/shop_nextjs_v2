@@ -99,6 +99,11 @@ function useCartGlobal({ enabled = true }: Props) {
 			mutationKey: [MUTA_UPDATE_LOADING],
 		}) > 0;
 
+	const enableQueryCart =
+		!!site?.customer_token && enabled && authStatus !== "loading";
+	console.log("🚀 ~ useCartGlobal ~ enableQueryCart:", enableQueryCart);
+
+	/////////////////////////////////
 	const {
 		data: cart,
 		isLoading,
@@ -120,7 +125,7 @@ function useCartGlobal({ enabled = true }: Props) {
 			}
 		},
 		staleTime: STALE_TIME,
-		enabled: !!site?.customer_token && enabled && authStatus !== "loading",
+		enabled: enableQueryCart,
 		refetchOnWindowFocus: "always",
 		retry: 3,
 	});
@@ -327,87 +332,87 @@ function useCartGlobal({ enabled = true }: Props) {
 							action: "remove",
 							data: { ids: ids },
 						});
+						break;
 					}
 
-					case "coupon":
-						{
-							const { coupon, promotion } = ac.data;
+					case "coupon": {
+						const { coupon, promotion } = ac.data;
 
-							// Xử lý update update promotion trên json order dưới hệ thống
-							if (promotion?.is_use === IsUse.USE) {
-								await CartRepoInstance.addCoupon({
-									order_id: cartGlobal.id,
-									code: coupon.code,
-									customer_token: site.customer_token,
-								});
-							} else {
-								const { discount_type } = promotion;
+						// Xử lý update update promotion trên json order dưới hệ thống
+						if (promotion?.is_use === IsUse.USE) {
+							await CartRepoInstance.addCoupon({
+								order_id: cartGlobal.id,
+								code: coupon.code,
+								customer_token: site.customer_token,
+							});
+						} else {
+							const { discount_type } = promotion;
 
-								switch (discount_type) {
-									case PromotionDiscountType.CART:
-										{
-											await CartRepoInstance.update({
-												cart_id: cart.id,
-												customer_token: site.customer_token,
-												action: ORDER_ACTION.PROMOTION,
-												promotions: cartGlobal.promotions.map((promo) => {
-													if (promo.promotion_id === promotion.id) {
-														return {
-															...promo,
-															is_use: IsUse.NOT_USE,
-															code: coupon.code,
-														};
-													}
-													return promo;
-												}),
-											});
-										}
-
-										break;
-
-									case PromotionDiscountType.PRODUCT:
-										{
-											await CartRepoInstance.update({
-												cart_id: cartGlobal.id,
-												customer_token: site.customer_token,
-												action: ORDER_ACTION.UPDATE,
-												details: cartGlobal.details.data.map((item) => {
+							switch (discount_type) {
+								case PromotionDiscountType.CART:
+									{
+										await CartRepoInstance.update({
+											cart_id: cart.id,
+											customer_token: site.customer_token,
+											action: ORDER_ACTION.PROMOTION,
+											promotions: cartGlobal.promotions.map((promo) => {
+												if (promo.promotion_id === promotion.id) {
 													return {
-														...item,
-														promotions: item.promotions.map((promo) => {
-															if (promo.promotion_id === promotion.id) {
-																return {
-																	...promo,
-																	is_use: IsUse.NOT_USE,
-																	code: coupon.code,
-																};
-															}
-															return promo;
-														}),
+														...promo,
+														is_use: IsUse.NOT_USE,
+														code: coupon.code,
 													};
-												}),
-											});
-										}
+												}
+												return promo;
+											}),
+										});
+									}
 
-										break;
+									break;
 
-									default:
-										break;
-								}
+								case PromotionDiscountType.PRODUCT:
+									{
+										await CartRepoInstance.update({
+											cart_id: cartGlobal.id,
+											customer_token: site.customer_token,
+											action: ORDER_ACTION.UPDATE,
+											details: cartGlobal.details.data.map((item) => {
+												return {
+													...item,
+													promotions: item.promotions.map((promo) => {
+														if (promo.promotion_id === promotion.id) {
+															return {
+																...promo,
+																is_use: IsUse.NOT_USE,
+																code: coupon.code,
+															};
+														}
+														return promo;
+													}),
+												};
+											}),
+										});
+									}
+
+									break;
+
+								default:
+									break;
 							}
-
-							return OrderCalculatorInstance.recalculateOrderOnUpdate(
-								cartGlobal,
-								{
-									action: "coupon",
-									data: {
-										coupon,
-										promotion,
-									},
-								}
-							);
 						}
+
+						return OrderCalculatorInstance.recalculateOrderOnUpdate(
+							cartGlobal,
+							{
+								action: "coupon",
+								data: {
+									coupon,
+									promotion,
+								},
+							}
+						);
 						break;
+					}
 
 					default:
 						throw new Error("error_action_invalid");
@@ -562,7 +567,7 @@ function useCartGlobal({ enabled = true }: Props) {
 		onSuccess: (updatedCart) => {
 			queryClient.setQueryData([CACHE_CART_GLOBAL_HOOK], updatedCart);
 		},
-		retry: 2,
+		retry: 0,
 		// retryDelay: 2 * 1000,
 	});
 

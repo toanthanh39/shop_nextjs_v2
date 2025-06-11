@@ -1,3 +1,5 @@
+import { SplashLoading } from "@/components/composite";
+
 export default function Loading() {
-	return <div>Loading...</div>;
+	return <SplashLoading />;
 }

@@ -17,7 +17,6 @@ function useSiteSetting() {
 			try {
 				return await siteServerInstance.getSiteSeting();
 			} catch (error) {
-				console.log("🚀 ~ queryFn: ~ error:", error);
 				throw BaseApi.handleError(error);
 			}
 		},

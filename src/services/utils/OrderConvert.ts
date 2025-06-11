@@ -24,7 +24,7 @@ class OrderConvert {
 			.filter((pro) => pro.status)
 			.map((p) => {
 				return Helper.convertParams({
-					is_use: isUse ?? IsUse.USE,
+					is_use: typeof isUse !== "undefined" ? isUse : IsUse.USE,
 					code: "",
 					product_id: productId,
 					promotion_detail: p,
@@ -59,7 +59,7 @@ class OrderConvert {
 					is_use:
 						typeof isUse !== "undefined"
 							? isUse
-							: existingPromo.is_use ?? IsUse.USE,
+							: (existingPromo.is_use ?? IsUse.USE),
 				};
 			}
 			return newPromo;

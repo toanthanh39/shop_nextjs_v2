@@ -12,10 +12,14 @@ import { CartPromoSeasonal } from "../promotion";
 import CartCoupon from "../promotion/CartCoupon";
 
 import CartLayoutSection from "./CartLayoutSection";
+import { toast } from "sonner";
+import BaseApi from "@/lib/axios/BaseApi";
+import { useTranslations } from "next-intl";
 
 type Props = CartProps & {};
 export default function CartLayout({ cart }: Props) {
-	const { addPromotionToCart } = useCartGlobal({});
+	const { addPromotionToCart, isUpdating } = useCartGlobal({});
+	const t = useTranslations("cart.cart_errors");
 
 	//////////////////////////////////////////////////
 	const handleChangePromotionCart = async (
@@ -30,7 +34,7 @@ export default function CartLayout({ cart }: Props) {
 				},
 			});
 		} catch (error) {
-			console.log("🚀 ~ CartLayout ~ error:", error);
+			toast.error(t(BaseApi.handleError(error).errors?.[0], { count: 123 }));
 		}
 	};
 
@@ -62,6 +66,7 @@ export default function CartLayout({ cart }: Props) {
 				</Flex>
 				<Flex direction="col" gap={16} className="basis-[400px]">
 					<CartPromoSeasonal
+						isLoading={isUpdating}
 						layout={CartLayoutSection}
 						cart={cart}
 						onChange={handleChangePromotionCart}

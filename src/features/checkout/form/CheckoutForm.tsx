@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
 import { z } from "zod";
 
 import { CartInfor } from "@/features/cart/infor";
@@ -39,10 +38,6 @@ import { cn, encodedQueryParams } from "@/utils/utils";
 
 import CheckoutLayoutSection from "./CheckoutLayoutSection";
 
-
-
-
-
 type Props = ComProps & {
 	order: OrderJson;
 };
@@ -57,7 +52,7 @@ export default function CheckoutForm({ className, order }: Props) {
 	const { details } = order;
 	////////////////////////////////////////
 
-	const { pending } = useFormStatus();
+	// const { pending } = useFormStatus();
 	const router = useRouter();
 
 	const { checkout, isCheckouting, isUpdating } = useCartGlobal({

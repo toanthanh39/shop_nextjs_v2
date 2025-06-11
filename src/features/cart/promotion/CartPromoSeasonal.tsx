@@ -26,6 +26,7 @@ export default function CartPromoSeasonal({
 	cart,
 	onChange = async (p: PromotionJson, type: PromotionToggleProps) => null,
 	layout: LayoutComponent,
+	isLoading: loading,
 }: Props) {
 	const { price_sell: subtotal } = cart;
 	const { data: fullPromotion } = usePromotion({});
@@ -55,7 +56,7 @@ export default function CartPromoSeasonal({
 							promotion={promotion}
 							timeserver={timeserver}
 							onChange={handleChange}
-							isLoading={isLoading}
+							isLoading={isLoading || loading}
 						/>
 					);
 				}}></List>
@@ -161,9 +162,8 @@ const RenderItem = ({
 				{/* Action Button */}
 				{true && (
 					<Button
-						disabled={!isReqValid}
+						disabled={!isReqValid || isLoading}
 						variant="secondary"
-						loading={isLoading}
 						onClick={() =>
 							onChange?.(promotion, !isApplied ? "aplly " : "remove")
 						}
