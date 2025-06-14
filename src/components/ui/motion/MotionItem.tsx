@@ -1,29 +1,30 @@
 import { AnimatePresence, motion } from "motion/react";
 
-import { motionConfig } from "@/styles/motion-animate";
+import { getMotionConfig, MotionKey } from "@/styles/motion-animate";
 import { ComProps } from "@/types/Component";
 
 import { cn } from "@/utils/utils";
 
 type Props = ComProps & {
+	animate?: MotionKey;
 	show?: boolean;
+	as?: React.ElementType;
 };
 export default function MotionItem({
 	children,
 	className,
+	animate = "slideUp",
 	show = true,
+	as = "div",
 }: Props) {
+	const config = getMotionConfig(animate);
+	const MotionComponent = motion(as);
 	return (
 		<AnimatePresence mode="wait">
 			{show && (
-				<motion.div
-					className={cn(className)}
-					initial={motionConfig.fade.initial}
-					animate={motionConfig.fade.animate}
-					exit={motionConfig.fade.exit}
-					transition={motionConfig.fade.transition}>
+				<MotionComponent className={cn(className)} {...config}>
 					{show && children}
-				</motion.div>
+				</MotionComponent>
 			)}
 		</AnimatePresence>
 	);

@@ -14,19 +14,18 @@ import { MotionItem } from "@/components/ui/motion";
 
 import usePromotion from "@/lib/hooks/cache/usePromotion";
 import useTimeServer from "@/lib/hooks/cache/useTimeServer";
-import useLoading from "@/lib/hooks/utilities/useLoading";
 
 type Props = ComProps &
 	CartProps & {
-		onChange?: (p: PromotionJson, type: PromotionToggleProps) => Promise<any>;
+		onChange?: (p: PromotionJson, type: PromotionToggleProps) => void;
 		layout?: React.ComponentType<{ children: React.ReactNode }>;
 	};
 
 export default function CartPromoSeasonal({
 	cart,
-	onChange = async (p: PromotionJson, type: PromotionToggleProps) => null,
+	onChange,
 	layout: LayoutComponent,
-	isLoading: loading,
+	isLoading,
 }: Props) {
 	const { price_sell: subtotal } = cart;
 	const { data: fullPromotion } = usePromotion({});
@@ -36,7 +35,6 @@ export default function CartPromoSeasonal({
 	);
 
 	const { data: timeserver } = useTimeServer({});
-	const [isLoading, handleChange] = useLoading(onChange);
 
 	if (promoSeasonalCarts.length <= 0) return null;
 
@@ -55,8 +53,8 @@ export default function CartPromoSeasonal({
 							key={promotion.id}
 							promotion={promotion}
 							timeserver={timeserver}
-							onChange={handleChange}
-							isLoading={isLoading || loading}
+							onChange={onChange}
+							isLoading={isLoading}
 						/>
 					);
 				}}></List>
@@ -164,9 +162,10 @@ const RenderItem = ({
 					<Button
 						disabled={!isReqValid || isLoading}
 						variant="secondary"
-						onClick={() =>
-							onChange?.(promotion, !isApplied ? "aplly " : "remove")
-						}
+						onClick={() => {
+							console.log("sfdsf");
+							onChange?.(promotion, !isApplied ? "aplly " : "remove");
+						}}
 						className="w-full transition-all duration-200">
 						{!isReqValid ? (
 							"Chưa đạt điều kiện"

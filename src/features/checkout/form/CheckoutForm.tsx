@@ -1,7 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { CartInfor } from "@/features/cart/infor";
@@ -13,6 +15,7 @@ import { ComProps } from "@/types/Component";
 import { AddressType } from "@/types/Customer.type";
 import { OrderJson } from "@/types/Order.type";
 import { PaymentAccessMode, PaymentAddJsonPublic } from "@/types/Payment.type";
+import { PromotionJson, PromotionToggleProps } from "@/types/Promotion.type";
 
 import GenericForm from "@/components/form/GenericForm";
 import Radio from "@/components/form/Radio";
@@ -52,12 +55,14 @@ export default function CheckoutForm({ className, order }: Props) {
 	const { details } = order;
 	////////////////////////////////////////
 
+	const tCartError = useTranslations("cart.cart_errors");
 	// const { pending } = useFormStatus();
 	const router = useRouter();
 
-	const { checkout, isCheckouting, isUpdating } = useCartGlobal({
-		enabled: false,
-	});
+	const { checkout, isCheckouting, isUpdating, addPromotionToCart } =
+		useCartGlobal({
+			enabled: false,
+		});
 	const { data: siteSetting } = useSiteSetting();
 	////////////////////////////////////////
 	const [date, setDate] = useState<Date | undefined>(undefined);
@@ -180,6 +185,24 @@ export default function CheckoutForm({ className, order }: Props) {
 			}));
 		} finally {
 			setCheckoutStatus((prev) => ({ ...prev, isLoading: false }));
+		}
+	};
+
+	const handleChangePromotionCart = async (
+		pro: PromotionJson,
+		type: PromotionToggleProps
+	) => {
+		try {
+			await addPromotionToCart({
+				action: type,
+				data: {
+					promotions: [pro],
+				},
+			});
+		} catch (error) {
+			const errorKey =
+				BaseApi.handleError(error).errors?.[0] || "unknown_error";
+			toast.error(tCartError(errorKey));
 		}
 	};
 
@@ -399,8 +422,9 @@ export default function CheckoutForm({ className, order }: Props) {
 						className="list-none w-full block"></List>
 				</CheckoutLayoutSection>
 				<CartPromoSeasonal
-					// onChange={onChangePromoBody}
+					onChange={handleChangePromotionCart}
 					layout={CheckoutLayoutSection}
+					isLoading={isUpdating}
 					className="w-full"
 					cart={order}></CartPromoSeasonal>
 				<CheckoutLayoutSection>

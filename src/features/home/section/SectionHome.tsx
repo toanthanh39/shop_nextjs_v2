@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 
 import NamperfumeTV from "@/features/channels/youtube/NamperfumeTv";
@@ -26,7 +25,8 @@ async function getDataServer() {
 		const data = await new SettingRepo().getOne<SectionJson[]>(keySettings);
 		return data;
 	} catch (error) {
-		notFound();
+		return [];
+		// notFound();
 	}
 }
 

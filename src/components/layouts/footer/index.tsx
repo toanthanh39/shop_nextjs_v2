@@ -1,4 +1,5 @@
-import BaseApi from "@/lib/axios/BaseApi";
+import { notFound } from "next/navigation";
+
 import SettingRepo from "@/services/api/repositories/SettingRepo";
 import { FooterBottom, FooterMenu } from "@/types/Footer.type";
 
@@ -9,8 +10,6 @@ import LinkElement from "@/components/ui/Link";
 import { SettingConst } from "@/common/constants/setting";
 import detectSetting from "@/utils/detectSetting";
 import { replaceSingleKey } from "@/utils/markdown";
-
-
 
 const keys = [
 	SettingConst.footer.footer_bottom,
@@ -23,7 +22,8 @@ async function getDataServer() {
 		const res = await new SettingRepo().getAll<unknown>(keys.join(","));
 		return res.items;
 	} catch (error) {
-		throw BaseApi.handleError(error);
+		// throw BaseApi.handleError(error);
+		notFound();
 	}
 }
 

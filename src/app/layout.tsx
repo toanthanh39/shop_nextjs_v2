@@ -4,16 +4,15 @@ import { Inter, Noto_Sans, Noto_Serif_Display } from "next/font/google";
 import "./globals.css";
 import "@/styles/css/animation.css";
 
+import { SessionProvider } from "next-auth/react";
 import { NextIntlClientProvider } from "next-intl";
 
-import BaseApi from "@/lib/axios/BaseApi";
+import { auth } from "@/lib/next-authen/authenOption";
 import RootProvider from "@/lib/providers/RootProvider";
 import { generateMetadataSite } from "@/meta";
 
 import { SystemConst } from "@/common/constants/system";
 import { detectLangForServer } from "@/utils/detectServer";
-import { auth } from "@/lib/next-authen/authenOption";
-import { SessionProvider } from "next-auth/react";
 
 export async function generateMetadata(): Promise<Metadata> {
 	const meta = await generateMetadataSite();
@@ -49,8 +48,9 @@ const getSetingSite = async () => {
 
 		return result;
 	} catch (error) {
-		throw BaseApi.handleError(error);
+		// throw BaseApi.handleError(error);
 	}
+	return result;
 };
 
 export default async function RootLayout({
@@ -68,7 +68,7 @@ export default async function RootLayout({
 			<body
 				className={`${inter.variable} ${notoSans.variable} ${notoSerifDisplay.variable} antialiased  font-inter w-screen overflow-x-hidden `}>
 				<NextIntlClientProvider locale={lang}>
-					<SessionProvider session={session}>
+					<SessionProvider refetchOnWindowFocus={false} session={session}>
 						<RootProvider>
 							{children}
 							{modal}

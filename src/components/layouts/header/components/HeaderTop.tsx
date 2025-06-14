@@ -1,5 +1,3 @@
-import { notFound } from "next/navigation";
-
 import { translations } from "@/lib/data/locales";
 import SettingRepo from "@/services/api/repositories/SettingRepo";
 
@@ -11,9 +9,6 @@ import { cn } from "@/utils/utils";
 import HeaderTopLeft from "./HeaderTopLeft";
 import HeaderTopRignt from "./HeaderTopRignt";
 
-
-
-
 const keyTranslates = [...Object.values(translations.header.top)];
 
 async function getDataServer() {
@@ -23,7 +18,8 @@ async function getDataServer() {
 
 		return data.items;
 	} catch (error) {
-		notFound();
+		// notFound();
+		return [];
 	}
 }
 export default async function HeaderTop() {

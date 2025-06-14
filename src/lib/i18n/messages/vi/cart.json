@@ -6,9 +6,14 @@
     "continue_shopping": "Tiếp tục mua sắm",
     "item_count": "{{count}} sản phẩm trong giỏ hàng",
     "total_price": "Tổng cộng: {{price}}",
-    "coupon_label": "Mã giảm giá"
+    "coupon_label": "Mã giảm giá",
+    "authenticated": {
+      "heading": "Chào mừng trở lại, <guidelines>{name}</guidelines>! Giờ thì hãy hoàn tất đơn hàng của bạn nhé."
+    }
   },
   "cart_errors": {
-    "error_promotion_collection_mismatch": "Giỏ hàng chưa có sản phẩm yêu cầu {count} "
+    "unknown_error": "Hệ thống tạm thời bị gián đoạn. Vui lòng thử lại sau !",
+    "error_promotion_collection_mismatch": "Giỏ hàng chưa có sản phẩm yêu cầu {count} ",
+    "error_quantity_product_no_enough": "Sản phẩm trong giỏ hàng không đủ số lượng"
   }
 }

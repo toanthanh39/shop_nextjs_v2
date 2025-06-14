@@ -13,11 +13,14 @@ export default getRequestConfig(async () => {
 	const cartMessages = await loadMessagesForNamespace(locale, "cart");
 	const productMessages = await loadMessagesForNamespace(locale, "product");
 
+	const globalMessages = await loadMessagesForNamespace(locale, "global");
+
 	return {
 		locale,
 		messages: {
 			cart: cartMessages,
 			product: productMessages,
+			global: globalMessages,
 		},
 	};
 });

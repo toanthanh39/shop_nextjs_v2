@@ -16,7 +16,7 @@ export default function CloseIcon(props: CloseIconProps) {
 		<svg
 			onClick={isLoading || !disabled ? onClick : undefined}
 			className={cn("cursor-pointer", variants({ variant }), {
-				"pointer-events-none cursor-not-allowed": disabled,
+				"pointer-events-none cursor-not-allowed opacity-50": disabled,
 				"cursor-progress": isLoading,
 			})}
 			xmlns="http://www.w3.org/2000/svg"

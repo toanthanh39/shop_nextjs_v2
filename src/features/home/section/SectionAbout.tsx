@@ -7,7 +7,7 @@ import { SettingConst } from "@/common/constants/setting";
 import detectSetting from "@/utils/detectSetting";
 import { cn } from "@/utils/utils";
 
-import AboutTabs from "./abount/AboutTabs";
+import AboutTabs from "./about/AboutTabs";
 
 type Props = ComProps;
 const keys = [

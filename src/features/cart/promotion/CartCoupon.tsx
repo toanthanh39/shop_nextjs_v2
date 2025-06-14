@@ -1,9 +1,12 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import OrderModel from "@/common/models/OrderModel";
 import PromotionModel from "@/common/models/PromotionModel";
+import BaseApi from "@/lib/axios/BaseApi";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { CouponJson } from "@/types/Coupon.type";
@@ -58,6 +61,7 @@ type Props = ComProps & CartProps & {};
 export default function CartCoupon({ className, cart }: Props) {
 	const OrderInstance = new OrderModel(cart);
 
+	const t = useTranslations("cart.cart_errors");
 	const { data: promotions } = usePromotion({});
 	const { data: timeserver } = useTimeServer({ enabled: !!promotions });
 	const { updateCart, isUpdating } = useCartGlobal({});
@@ -156,7 +160,9 @@ export default function CartCoupon({ className, cart }: Props) {
 					},
 				});
 			} catch (error) {
-				console.log("🚀 ~ onRemoveCode ~ error:", error);
+				const errorKey =
+					BaseApi.handleError(error).errors?.[0] || "unknown_error";
+				toast.error(t(errorKey));
 			}
 		},
 		200
@@ -208,6 +214,7 @@ export default function CartCoupon({ className, cart }: Props) {
 						<Tag key={index} variant="primary" className="py-1">
 							{couponUsed.code}{" "}
 							<CloseIcon
+								isLoading={isUpdating}
 								disabled={isUpdating}
 								size="sm"
 								onClick={() => onRemoveCode(couponUsed.code, couponUsed)}

@@ -1,7 +1,7 @@
 import server from "@/lib/core/server";
 import { SystemSetting } from "@/types/Shop.type";
 
-const TIME_CACHE = 1 * 60 * 1000; // 1 minute
+const TIME_CACHE = 5 * 60 * 1000; // 1 minute
 const SITE_HANDLER_TAG = "site_handler_tag";
 class SiteServerRepo {
 	private readonly URLs = {

@@ -1,6 +1,9 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { useMemo } from "react";
+import { toast } from "sonner";
 
+import BaseApi from "@/lib/axios/BaseApi";
 import { CartItemProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { IsUse } from "@/types/Global.type";
@@ -21,9 +24,9 @@ import CartItemPrice from "./CartItemPrice";
 import CartItemQuantity from "./CartItemQuantity";
 import CartItemVariant from "./CartItemVariant";
 
-
 type Props = ComProps & CartItemProps & {};
 export default function CartItem({ item, className }: Props) {
+	const t = useTranslations("cart.cart_errors");
 	const { updateCart, isUpdating } = useCartGlobal({
 		enabled: false,
 	});
@@ -40,7 +43,7 @@ export default function CartItem({ item, className }: Props) {
 			});
 			return true;
 		} catch (error) {
-			console.log("🚀 ~ error:", error);
+			toast.error(t(BaseApi.handleError(error).errors?.[0] || "unknown_error"));
 			return false;
 		}
 	};
@@ -53,6 +56,8 @@ export default function CartItem({ item, className }: Props) {
 			});
 			return true;
 		} catch (error) {
+			toast.error(t(BaseApi.handleError(error).errors?.[0] || "unknown_error"));
+
 			return false;
 		}
 	};
@@ -68,7 +73,11 @@ export default function CartItem({ item, className }: Props) {
 					product_id: variant.id,
 				},
 			});
-		} catch (error) {}
+			return true;
+		} catch (error) {
+			toast.error(t(BaseApi.handleError(error).errors?.[0] || "unknown_error"));
+			return false;
+		}
 	};
 
 	const updateIsUse = async (use: boolean) => {
@@ -84,7 +93,7 @@ export default function CartItem({ item, className }: Props) {
 				],
 			});
 		} catch (error) {
-			console.log("🚀 ~ updateIsUse ~ error:", error);
+			toast.error(t(BaseApi.handleError(error).errors?.[0] || "unknown_error"));
 		}
 	};
 	//////////////////////////////////////////////////
