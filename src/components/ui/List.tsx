@@ -42,7 +42,7 @@ export default function List<D>({
 	return (
 		<ConditionWrapper condition={dataSource.length > 0}>
 			<Flex as="ul" className={cn(className)}>
-				<AnimatePresence mode="sync">
+				<AnimatePresence mode="popLayout">
 					{dataSource.map((item, index) => (
 						<motion.li
 							key={index}

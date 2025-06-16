@@ -4,7 +4,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useMemo } from "react";
 
 import BaseApi from "@/lib/axios/BaseApi";
@@ -84,6 +84,7 @@ function useCartGlobal({ enabled = true }: Props) {
 	} = useSiteSetting();
 
 	const { status: authStatus } = useSession();
+	console.log("🚀 ~ useCartGlobal ~ authStatus:", authStatus);
 	const isAuthenticated = authStatus === "authenticated";
 
 	/////////////////////////////////
@@ -101,7 +102,6 @@ function useCartGlobal({ enabled = true }: Props) {
 
 	const enableQueryCart =
 		!!site?.customer_token && enabled && authStatus !== "loading";
-	console.log("🚀 ~ useCartGlobal ~ enableQueryCart:", enableQueryCart);
 
 	/////////////////////////////////
 	const {
@@ -112,8 +112,13 @@ function useCartGlobal({ enabled = true }: Props) {
 		queryKey: [CACHE_CART_GLOBAL_HOOK],
 		queryFn: async () => {
 			try {
-				const res = await CartRepoInstance.getAll({
-					customer_token: isAuthenticated ? undefined : site?.customer_token,
+				const session = await getSession();
+
+				const CartRepoInstanceNew = new CartRepo({
+					accessMode: session ? "PRIVATE" : "PUBLIC",
+				});
+				const res = await CartRepoInstanceNew.getAll({
+					customer_token: session ? undefined : site?.customer_token,
 				});
 				if (res.items.length <= 0) {
 					return null;
@@ -127,7 +132,7 @@ function useCartGlobal({ enabled = true }: Props) {
 		staleTime: STALE_TIME,
 		enabled: enableQueryCart,
 		refetchOnWindowFocus: "always",
-		retry: 3,
+		retry: 1,
 	});
 
 	const { data: isLoadingGlobal } = useQuery({
@@ -511,6 +516,7 @@ function useCartGlobal({ enabled = true }: Props) {
 	});
 
 	const updatePromotionBodyMutation = useMutation({
+		mutationKey: [MUTA_UPDATE_LOADING],
 		mutationFn: async ({ action, data }: ActionUpdatePromotionBodyProps) => {
 			try {
 				const { promotions } = data;

@@ -29,8 +29,6 @@ async function getListProductServer(fillter: ProductFilter) {
 		}).getAll({ ...fillter, store_id: store_id });
 		return products.items;
 	} catch (error) {
-		console.log("🚀 ~ getListProductServer ~ error:", error);
-
 		return [];
 	}
 }

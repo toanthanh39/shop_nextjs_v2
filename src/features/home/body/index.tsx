@@ -1,4 +1,3 @@
-import { Accordion } from "@/components/ui/preline";
 import { BannerHome } from "../banner";
 import { SectionHome } from "../section";
 import SectionAbout from "../section/SectionAbout";

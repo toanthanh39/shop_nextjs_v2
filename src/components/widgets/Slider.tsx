@@ -1,6 +1,6 @@
 // components/Slider.js
 
-import { Swiper, SwiperSlide , SwiperProps } from "swiper/react";
+import { Swiper, SwiperSlide, SwiperProps } from "swiper/react";
 
 import "swiper/css";
 

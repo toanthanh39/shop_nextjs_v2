@@ -1,8 +1,12 @@
 "use client";
 
-import { UserIcon } from "@/components/icons";
-import { Space, Text } from "@/components/ui";
 import { useSession } from "next-auth/react";
+
+import { SignInButton } from "@/features/auth/SignInButton";
+import SignOutButton from "@/features/auth/SignOutButton";
+
+import { UserIcon } from "@/components/icons";
+import { Flex, Space, Text } from "@/components/ui";
 
 export default function HeaderAuthenClient() {
 	const { data: session, status } = useSession();
@@ -11,16 +15,7 @@ export default function HeaderAuthenClient() {
 
 	return (
 		<Space>
-			{!isAauthenticated && (
-				<Text
-					as="span"
-					className="w-full whitespace-nowrap flex items-center gap-2 cursor-pointer justify-center"
-					tabIndex={0}
-					aria-label="Login">
-					<UserIcon size="md" />
-					Đăng nhập
-				</Text>
-			)}
+			{!isAauthenticated && <SignInButton></SignInButton>}
 
 			{isAauthenticated && (
 				<Text
@@ -31,6 +26,15 @@ export default function HeaderAuthenClient() {
 					<UserIcon size="md" />
 					{session?.user?.name}
 				</Text>
+			)}
+
+			{isAauthenticated && (
+				<Flex
+					direction="col"
+					gap={16}
+					className="group-hover:visible invisible absolute  left-0  p-4  z-header  top-full right-auto -translate-x-1/4 w-max  bg-white border border-colors-gray-2 shadow-lg">
+					<SignOutButton></SignOutButton>
+				</Flex>
 			)}
 		</Space>
 	);

@@ -4,7 +4,7 @@ import BaseApi from "@/lib/axios/BaseApi";
 import SiteServerRepo from "@/services/api/repositories/SiteRepo";
 import { HookCacheProps } from "@/types/Component";
 
-const STALE_TIME = 60 * 1000;
+const STALE_TIME = Infinity;
 const RETRY = 2;
 export const CACHE_PRODUCTS_HOOK = "cache-site";
 
