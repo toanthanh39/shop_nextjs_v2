@@ -72,7 +72,11 @@ const RangeDoubleSlider: React.FC<RangeDoubleSliderProps> = ({
           position: absolute;
           height: 6px;
           border-radius: 3px;
-          background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+          // background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+           background: #d72229;
+
+
+          
           top: 50%;
           transform: translateY(-50%);
           z-index: 2;

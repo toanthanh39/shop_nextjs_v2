@@ -41,7 +41,7 @@ export default function Rating({ count, rate = 5, className }: Props) {
 					<StarIcon {...style} />
 				</span>
 			</div>
-			{count && (
+			{typeof count !== "undefined" && (
 				<Text as="span" className="ml-1" size="default">
 					{count} Lượt đánh giá
 				</Text>

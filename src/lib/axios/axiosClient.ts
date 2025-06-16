@@ -1,8 +1,27 @@
 // eslint-disable-next-line import/named
+import { onSignOutAction } from "@/actions/auth-actions";
 import axios, { AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
 import { getSession } from "next-auth/react";
+import { signOut } from "../next-authen/authenOption";
 
+function checkUrlForPublicAndLogin(url: string) {
+	// Đảm bảo URL là một chuỗi hợp lệ
+	if (typeof url !== "string") {
+		return false;
+	}
+
+	// Chuyển URL về chữ thường để đảm bảo việc tìm kiếm không phân biệt chữ hoa/thường
+	const lowerCaseUrl = url.toLowerCase();
+
+	// Kiểm tra xem URL có chứa cả hai chuỗi "public" và "login" hay không
+	const hasPublic = lowerCaseUrl.includes("public");
+	const hasLogin = lowerCaseUrl.includes("login");
+
+	// Trả về true nếu cả hai điều kiện đều đúng
+	return hasPublic || hasLogin;
+}
+///////////////////////////////////////////////////
 const source = axios.CancelToken.source();
 let sessionCache: any = null;
 
@@ -43,8 +62,12 @@ axiosRetry(AxiosInstance, {
 
 AxiosInstance.interceptors.request.use(async (request) => {
 	const requestUrl = request.url || "";
+	console.log(
+		"🚀 ~ AxiosInstance.interceptors.request.use ~ requestUrl:",
+		requestUrl
+	);
 
-	if (!requestUrl.includes("public") && !requestUrl.includes("login")) {
+	if (checkUrlForPublicAndLogin(requestUrl)) {
 		let token = "";
 		if (!sessionCache) {
 			const session = await getSession();
@@ -85,6 +108,9 @@ AxiosInstance.interceptors.response.use(
 				if (!isSignOutCalled) {
 					isSignOutCalled = true;
 					sessionCache = null;
+					const currentUrl = window.location.pathname;
+					await signOut({ redirect: false, redirectTo: currentUrl });
+					// await signOut();
 					// if (window.location.pathname.includes("/pos")) {
 					// 	window.location.href = "/pos";
 					// } else {

@@ -16,8 +16,7 @@ export default function SignOutButton() {
 	const onSignOut = async () => {
 		try {
 			const currentUrl = window.location.pathname;
-			const data = await onSignOutAction(currentUrl);
-			console.log("🚀 ~ onSignOut ~ data:", data);
+			await onSignOutAction(currentUrl);
 			// Clear react-query cache
 			queryClient.clear();
 			// router.prefetch("/", { kind: PrefetchKind.FULL });

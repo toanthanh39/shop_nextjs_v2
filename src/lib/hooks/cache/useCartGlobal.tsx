@@ -84,15 +84,18 @@ function useCartGlobal({ enabled = true }: Props) {
 	} = useSiteSetting();
 
 	const { status: authStatus } = useSession();
-	console.log("🚀 ~ useCartGlobal ~ authStatus:", authStatus);
+
 	const isAuthenticated = authStatus === "authenticated";
+	console.log("🚀 ~ useCartGlobal ~ isAuthenticated:", isAuthenticated);
 
 	/////////////////////////////////
 	const queryClient = useQueryClient();
 
-	const CartRepoInstance = new CartRepo({
-		accessMode: isAuthenticated ? "PRIVATE" : "PUBLIC",
-	});
+	const CartRepoInstance = useMemo(() => {
+		return new CartRepo({
+			accessMode: isAuthenticated ? "PRIVATE" : "PUBLIC",
+		});
+	}, [isAuthenticated]);
 	const OrderCalculatorInstance = new OrderCalculator();
 
 	const isUpdateMutating =
@@ -112,14 +115,15 @@ function useCartGlobal({ enabled = true }: Props) {
 		queryKey: [CACHE_CART_GLOBAL_HOOK],
 		queryFn: async () => {
 			try {
-				const session = await getSession();
+				// const session = await getSession();
 
-				const CartRepoInstanceNew = new CartRepo({
-					accessMode: session ? "PRIVATE" : "PUBLIC",
+				// const CartRepoInstance = new CartRepo({
+				// 	accessMode: session ? "PRIVATE" : "PUBLIC",
+				// });
+				const res = await CartRepoInstance.getAll({
+					customer_token: isAuthenticated ? undefined : site?.customer_token,
 				});
-				const res = await CartRepoInstanceNew.getAll({
-					customer_token: session ? undefined : site?.customer_token,
-				});
+				console.log("🚀 ~ queryFn: ~ res:", res);
 				if (res.items.length <= 0) {
 					return null;
 				}
@@ -132,7 +136,22 @@ function useCartGlobal({ enabled = true }: Props) {
 		staleTime: STALE_TIME,
 		enabled: enableQueryCart,
 		refetchOnWindowFocus: "always",
-		retry: 1,
+		// retry: 3,
+
+		retry(failureCount, error) {
+			const { statusCode, errors } = BaseApi.handleError(error);
+			console.log("🚀 ~ retry ~ statusCode:", statusCode);
+
+			if (statusCode === 401) {
+				return false;
+			}
+
+			if (failureCount < 3) {
+				return true;
+			}
+
+			return false;
+		},
 	});
 
 	const { data: isLoadingGlobal } = useQuery({
@@ -143,7 +162,6 @@ function useCartGlobal({ enabled = true }: Props) {
 		staleTime: 0,
 		enabled: enabled,
 		// refetchOnWindowFocus: "always",
-		retry: 0,
 		initialData: false,
 	});
 
