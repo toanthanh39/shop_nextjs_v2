@@ -17,8 +17,8 @@ import { OrderJson } from "@/types/Order.type";
 import { PaymentAccessMode, PaymentAddJsonPublic } from "@/types/Payment.type";
 import { PromotionJson, PromotionToggleProps } from "@/types/Promotion.type";
 
-import GenericForm from "@/components/form/GenericForm";
-import Radio from "@/components/form/Radio";
+import GenericForm from "@/components/forms/GenericForm";
+import Radio from "@/components/forms/Radio";
 import { CustomImage, Heading, List, Tag, Text } from "@/components/ui";
 import Flex from "@/components/ui/Flex";
 import Input, { Select } from "@/components/ui/Input";
@@ -40,6 +40,7 @@ import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
 import { cn, encodedQueryParams } from "@/utils/utils";
 
 import CheckoutLayoutSection from "./CheckoutLayoutSection";
+import { LocationSelectors } from "@/components/forms";
 
 type Props = ComProps & {
 	order: OrderJson;
@@ -114,7 +115,6 @@ export default function CheckoutForm({ className, order }: Props) {
 		mode: "onChange",
 	});
 	const method = methods.watch("method");
-
 	const onCheckout = async (data: FormData) => {
 		console.log("Form submitted", data);
 
@@ -247,10 +247,13 @@ export default function CheckoutForm({ className, order }: Props) {
 						/>
 					</GenericForm.Item>
 					<Flex gap={8}>
-						<GenericForm.Item required name="city" label="Tỉnh/Thành phố">
+						{/* <GenericForm.Item required name="city" label="Tỉnh/Thành phố">
 							<Select
 								variant="line"
 								placeholder="Chọn tỉnh/thành phố"
+								onChange={()=>{
+									
+								}}
 								options={[
 									{ value: 9870, label: "Hồ Chí Minh" },
 									{ value: 7323, label: "Đà Nẵng" },
@@ -273,7 +276,15 @@ export default function CheckoutForm({ className, order }: Props) {
 								placeholder="Chọn phường/xã"
 								options={[{ value: 9904, label: "Phường 7" }]}
 							/>
-						</GenericForm.Item>
+						</GenericForm.Item> */}
+
+						<LocationSelectors
+							onChangeProvince={() => {
+								methods.resetField("district");
+								methods.resetField("ward");
+							}}
+							onChangeDistrict={() => methods.resetField("ward")}
+						/>
 					</Flex>
 					<Flex gap={4}>
 						<GenericForm.Item name="addressType">

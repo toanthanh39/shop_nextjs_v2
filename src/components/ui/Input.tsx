@@ -77,13 +77,13 @@ export function Select({
 				defaultValue={props?.defaultValue ?? ""}
 				className="flex-1 outline-none h-full w-full border-none py-1 ">
 				{placeholder && (
-					<option disabled value={""}>
+					<option className="text-gray-200" disabled value={""}>
 						{placeholder}
 					</option>
 				)}
 
-				{options.map((option) => (
-					<option key={option.value} value={option.value}>
+				{options.map((option, index) => (
+					<option key={index} value={option.value}>
 						{option.label}
 					</option>
 				))}

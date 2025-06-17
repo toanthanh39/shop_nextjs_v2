@@ -19,6 +19,7 @@ export default function SignOutButton() {
 			await onSignOutAction(currentUrl);
 			// Clear react-query cache
 			queryClient.clear();
+			window.location.reload();
 			// router.prefetch("/", { kind: PrefetchKind.FULL });
 			// Manually reload page to reset app state and session info
 			// This ensures useSession hook and all client logic updated

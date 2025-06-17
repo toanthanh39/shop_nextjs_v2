@@ -4,7 +4,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 
 import BaseApi from "@/lib/axios/BaseApi";
@@ -86,7 +86,6 @@ function useCartGlobal({ enabled = true }: Props) {
 	const { status: authStatus } = useSession();
 
 	const isAuthenticated = authStatus === "authenticated";
-	console.log("🚀 ~ useCartGlobal ~ isAuthenticated:", isAuthenticated);
 
 	/////////////////////////////////
 	const queryClient = useQueryClient();

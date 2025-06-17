@@ -1,4 +1,4 @@
-import { cva , VariantProps } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { cn } from "@/utils/utils";
@@ -38,6 +38,7 @@ export interface ButtonProps
 	asChild?: boolean;
 	icon?: React.ReactNode;
 	loading?: boolean;
+	block?: boolean;
 }
 
 export default function Button({
@@ -48,6 +49,7 @@ export default function Button({
 	children,
 	icon,
 	loading = false,
+	block = false,
 	...props
 }: ButtonProps) {
 	const Comp = "button";
@@ -55,6 +57,7 @@ export default function Button({
 		<Comp
 			className={cn(buttonVariants({ variant, size, className }), {
 				"cursor-wait": loading,
+				"w-full": block,
 			})}
 			{...props}>
 			{loading ? <LoadingIcon className="mr-1" size="md" /> : icon && icon}

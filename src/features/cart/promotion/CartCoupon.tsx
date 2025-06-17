@@ -16,7 +16,7 @@ import { PromotionGroup, PromotionJson } from "@/types/Promotion.type";
 
 import { DateStatusResult } from "@/components/composite";
 import Popup from "@/components/composite/Popup";
-import GenericForm from "@/components/form/GenericForm";
+import GenericForm from "@/components/forms/GenericForm";
 import { CloseIcon } from "@/components/icons";
 import {
 	Button,
@@ -175,7 +175,6 @@ export default function CartCoupon({ className, cart }: Props) {
 			"code"
 		);
 	}, [JSON.stringify(cart.details.data)]);
-	console.log("🚀 ~ promoCouponUsed ~ promoCouponUsed:", promoCouponUsed);
 
 	//////////////////////////////////////////////
 	return (

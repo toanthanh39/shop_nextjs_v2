@@ -2,8 +2,8 @@
 import { onSignOutAction } from "@/actions/auth-actions";
 import axios, { AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
-import { getSession } from "next-auth/react";
-import { signOut } from "../next-authen/authenOption";
+import { getSession, signOut } from "next-auth/react";
+// import { signOut } from "../next-authen/authenOption";
 
 function checkUrlForPublicAndLogin(url: string) {
 	// Đảm bảo URL là một chuỗi hợp lệ
@@ -62,12 +62,8 @@ axiosRetry(AxiosInstance, {
 
 AxiosInstance.interceptors.request.use(async (request) => {
 	const requestUrl = request.url || "";
-	console.log(
-		"🚀 ~ AxiosInstance.interceptors.request.use ~ requestUrl:",
-		requestUrl
-	);
 
-	if (checkUrlForPublicAndLogin(requestUrl)) {
+	if (!checkUrlForPublicAndLogin(requestUrl)) {
 		let token = "";
 		if (!sessionCache) {
 			const session = await getSession();
@@ -98,7 +94,6 @@ AxiosInstance.interceptors.response.use(
 			if (error.response.status >= 500) {
 				throw new Error("Server Error");
 			}
-
 			const isTokenExpired = error.response.status === 401;
 			const isTokenBacklist =
 				error.response.status === 400 &&
@@ -109,7 +104,8 @@ AxiosInstance.interceptors.response.use(
 					isSignOutCalled = true;
 					sessionCache = null;
 					const currentUrl = window.location.pathname;
-					await signOut({ redirect: false, redirectTo: currentUrl });
+					await signOut();
+
 					// await signOut();
 					// if (window.location.pathname.includes("/pos")) {
 					// 	window.location.href = "/pos";
