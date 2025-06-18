@@ -3,7 +3,7 @@ import SiteServerRepo from "@/services/api/repositories/SiteRepo";
 import { ComProps } from "@/types/Component";
 import { IsShowPromotionPrice, ProductFilter } from "@/types/Product.type";
 
-import { Button } from "@/components/ui";
+import { Text } from "@/components/ui";
 import Heading from "@/components/ui/Heading";
 import LinkElement from "@/components/ui/Link";
 
@@ -24,6 +24,7 @@ type Props = ComProps & {
 async function getListProductServer(fillter: ProductFilter) {
 	try {
 		const { store_id } = await new SiteServerRepo().getSiteSeting();
+		// console.log("🚀 ~ getListProductServer ~ store_id:", store_id);
 		const products = await new ProductRepo({
 			accessMode: "PUBLIC",
 		}).getAll({ ...fillter, store_id: store_id });
@@ -47,18 +48,21 @@ export default async function ProductCollection({
 	return (
 		<section className={cn("relative w-full mb-2 ", className)}>
 			{title && link && (
-				<LinkElement href={link} className="mb-4">
+				<LinkElement
+					href={link}
+					className="mb-4 w-full flex justify-between items-center gap-2 max-md:container-padding">
 					<Heading level={1} variant="productCollection">
 						{title}
 					</Heading>
+
+					{more && (
+						<Text as="span" variant="link">
+							{more.title}
+						</Text>
+					)}
 				</LinkElement>
 			)}
 			<ProductSlider dataSource={data} />
-			{more && (
-				<Button className="mx-auto block mt-2" variant="default">
-					{more.title}
-				</Button>
-			)}
 		</section>
 	);
 }

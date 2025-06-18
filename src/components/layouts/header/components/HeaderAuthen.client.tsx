@@ -2,11 +2,9 @@
 
 import { useSession } from "next-auth/react";
 
-import { SignInButton } from "@/features/auth/SignInButton";
-import SignOutButton from "@/features/auth/SignOutButton";
-
 import { UserIcon } from "@/components/icons";
 import { Flex, Space, Text } from "@/components/ui";
+import { SignInButton, SignOutButton } from "@/features/auth";
 
 export default function HeaderAuthenClient() {
 	const { data: session, status } = useSession();

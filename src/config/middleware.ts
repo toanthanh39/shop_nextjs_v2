@@ -20,6 +20,7 @@ export const initSiteSetting = async (
 		const key = `${replaceDomainSetting}_config`;
 
 		const dataSetting = await new SettingRepo().getOne<SystemSetting>(key);
+		console.log("🚀 ~ dataSetting:", dataSetting);
 		const customer_token =
 			_header.get("customer_token") ??
 			(await ServerRepo.getCustomerTokenServer());

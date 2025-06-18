@@ -1,12 +1,10 @@
 "use client";
 import { useSession } from "next-auth/react";
 
-import { SignInButton } from "@/features/auth/SignInButton";
-import SignOutButton from "@/features/auth/SignOutButton";
-
 import { UserIcon } from "@/components/icons";
 import { Space, Text } from "@/components/ui";
 import Flex from "@/components/ui/Flex";
+import { SignOutButton, SignInButton } from "@/features/auth";
 
 export default function HeaderAuthen() {
 	const { data: session, status } = useSession();

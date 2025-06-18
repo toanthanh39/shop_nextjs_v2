@@ -100,6 +100,18 @@ declare module "next-auth" {
 class InvalidLoginError extends CredentialsSignin {
 	code = this.message;
 }
+
+// --- Định nghĩa class lỗi tùy chỉnh (đặt ở một file riêng như types/errors.ts nếu dùng nhiều) ---
+class AuthError extends Error {
+	constructor(
+		message: string,
+		public code: string = "GENERIC_AUTH_ERROR"
+	) {
+		super(message);
+		this.name = "AuthError";
+	}
+}
+// --- Hết định nghĩa lỗi ---
 export const { auth, handlers, signIn, signOut } = NextAuth({
 	providers: [
 		CredentialsProvider({
@@ -107,105 +119,67 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 			credentials: {
 				accountid: { label: "Account ID", type: "text" },
 				password: { label: "Password", type: "password" },
-
-				dataLogin: { label: "Pre-filled Data", type: "hidden", optional: true }, // Dùng cho trường hợp truyền thẳng user object
+				dataLogin: { label: "Pre-filled Data", type: "hidden", optional: true },
 			},
 			async authorize(credentials) {
-				// return {
-				// 	jwt: "7f8761c5626774ac3124b4d132ff6430",
-				// 	user: {
-				// 		id: 15626,
-				// 		full_name: "Huỳnh Gia Bảo",
-				// 		email: "",
-				// 		date_created: 1679567466,
-				// 		date_modified: 1739175511,
-				// 		date_last_login: 1749570789,
-				// 	},
-				// 	role: "0",
-				// 	status: "SUCCESS",
-				// 	company: {
-				// 		id: 10308,
-				// 		owner: 15511,
-				// 		name: "namperfume",
-				// 		screenname: "admin",
-				// 		domain: "admin.namefragrance.vn",
-				// 		email: "thanhnam.nguyen@beme.vn",
-				// 		phone: "0913579020",
-				// 		region: 0,
-				// 		status: 1,
-				// 		kyc_status: 0,
-				// 		quota: [],
-				// 		base_quota: {
-				// 			_base_: 9223372036854776000,
-				// 			warehouse: 9223372036854776000,
-				// 			store: 9223372036854776000,
-				// 			office: 9223372036854776000,
-				// 			shippinghub: 9223372036854776000,
-				// 			apikey: 9223372036854776000,
-				// 			echannel: 9223372036854776000,
-				// 			productcategory: 9223372036854776000,
-				// 			product: 9223372036854776000,
-				// 			productvariant: 9223372036854776000,
-				// 			filedisk: 9223372036854776000,
-				// 		},
-				// 		customer: {
-				// 			id: 99994444,
-				// 			email: "bao.huynh@beme.vn",
-				// 			phone: "0795803209",
-				// 			status: 1,
-				// 		},
-				// 	},
-				// };
-				// 1. Kiểm tra credentials hợp lệ
-				// const header = await headers();
 				let user: any;
 				if (!credentials || !credentials.accountid) {
-					console.warn("Credentials missing or invalid.");
-					return null; // Trả về null nếu không có thông tin đăng nhập cần thiết
+					throw new AuthError(
+						"Tên đăng nhập hoặc mật khẩu không được để trống.",
+						"MISSING_CREDENTIALS"
+					);
 				}
 
-				// 2. Xử lý trường hợp `dataLogin` (user object đã có sẵn)
-				if (false) {
-					try {
+				try {
+					if (credentials?.dataLogin) {
 						const prefilledUser = JSON.parse(credentials.dataLogin as string);
-						// Cần xác minh prefilledUser có hợp lệ không (ví dụ: có id, email, v.v.)
-						// Đảm bảo prefilledUser có ít nhất một thuộc tính 'id' để Auth.js có thể sử dụng
 						if (prefilledUser && prefilledUser.id) {
 							return prefilledUser;
 						}
-					} catch (e) {
-						console.error("Failed to parse dataLogin:", e);
-						// Có thể throw lỗi để Auth.js báo lỗi invalid credentials
-						throw new Error("Invalid pre-filled login data.");
+					} else {
+						const res = await fetch(
+							`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/customer/login`,
+							{
+								method: "POST",
+								headers: {
+									"Content-Type": "application/json",
+								},
+								body: JSON.stringify({
+									account_id: credentials?.accountid || "",
+									password: credentials?.password || "",
+									platform: 1,
+									hostname: process.env.NEXT_PUBLIC_API_HOST_ADMIN,
+									version: "1.0.0",
+								}),
+							}
+						);
+
+						const resJson = await res.json();
+
+						const errors = BaseApi.handleError(resJson); // <-- Cách xử lý lỗi này có vẻ không phù hợp ở đây
+
+						if (res.ok) {
+							user = resJson;
+							return user;
+						} else {
+							// throw new InvalidLoginError(errors.errors?.[0] || ""); // <-- InvalidLoginError cần được định nghĩa
+
+							throw new AuthError(
+								errors?.[0] ?? "error_unknow",
+								resJson?.code || "LOGIN_FAILED"
+							);
+						}
 					}
-				}
-
-				const res = await fetch(
-					`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/customer/login`,
-					{
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({
-							account_id: credentials?.accountid || "",
-							password: credentials?.password || "",
-							platform: 1,
-							hostname: process.env.NEXT_PUBLIC_API_HOST_ADMIN,
-							version: "1.0.0",
-						}),
+				} catch (error) {
+					if (error instanceof AuthError) {
+						throw error; // Ném lại lỗi AuthError để truyền message và code
 					}
-				);
-
-				const resJson = await res.json();
-
-				const errors = BaseApi.handleError(resJson);
-
-				if (res.ok) {
-					user = resJson;
-					return user;
-				} else {
-					throw new InvalidLoginError(errors.errors?.[0] || "");
+					// Xử lý lỗi Axios hoặc Fetch API khác
+					const apiError = BaseApi.handleError(error); // Giả định BaseApi.handleError trả về { message: string }
+					throw new AuthError(
+						apiError?.message || "Lỗi kết nối đến máy chủ xác thực.",
+						"API_CONNECTION_ERROR"
+					);
 				}
 			},
 		}),
@@ -224,7 +198,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 	],
 
 	callbacks: {
-		async jwt({ token, user }) {
+		async jwt({ token, user, profile }) {
 			if (user) {
 				token.id = user.id;
 			}

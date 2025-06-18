@@ -9,7 +9,7 @@ const pVariants = cva("", {
 			default: "text-colors-gray-5",
 			secondary: "text-colors-gray-4",
 			primary: "text-colors-red-5",
-			link: "text-colors-blue-5 underline-offset-4 hover:underline",
+			link: "text-colors-blue-5 underline-offset-4 hover:underline hover:font-semibold transition-all",
 			primaryReverse: "text-whitesmoke",
 		},
 		size: {
@@ -43,6 +43,7 @@ const smallVariants = cva("", {
 			primaryReverse: "text-whitesmoke",
 		},
 		size: {
+			lg: "text-lg",
 			default: "text-[10px]",
 			sm: "text-sm",
 			md: "text-md",

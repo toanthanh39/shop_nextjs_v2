@@ -14,13 +14,13 @@ export interface LinkElementProps
 	className?: string;
 }
 
-const variants = cva("inline-block hover:text-colors-red-5", {
+const variants = cva("inline-block hover:underline", {
 	variants: {
 		variant: {
 			default: "text-colors-gray-5",
 			primary: "text-colors-red-5",
 			secondary: "text-colors-gray-4",
-			link: "text-colors-blue-5 underline-offset-4 hover:underline",
+			link: "text-colors-blue-5 underline-offset-4 hover:underline hover:text-semibold transition-all",
 			primaryReverse: "text-whitesmoke",
 			active: "text-colors-red-5 font-bold",
 			none: "text-inherit hover:text-inherit",

@@ -9,12 +9,11 @@ import detectSetting from "@/utils/detectSetting";
 
 import BrandGrid from "./BrandGrid";
 import BrandSlider from "./BrandSlider";
-
+import { getTranslations } from "next-intl/server";
 
 const keys = [
 	SettingConst.home.section_brand_namperfume,
 	SettingConst.home.banner_brand,
-	"brand_title",
 ];
 
 async function getDataBrands() {
@@ -25,7 +24,9 @@ async function getDataBrands() {
 			true
 		);
 		return res.items;
-	} catch (error) {}
+	} catch (error) {
+		return [];
+	}
 }
 
 export default async function BrandHome() {
@@ -41,11 +42,12 @@ export default async function BrandHome() {
 		data
 	);
 
-	const title = detectSetting<string>("brand_title", data)?.value;
+	// const title = detectSetting<string>("brand_title", data)?.value;
+	const t = await getTranslations("brand");
 	return (
 		<section className="w-full ">
 			<Heading className="block mb-4" variant={"productCollection"} level={1}>
-				{title && title}
+				{t("title")}
 			</Heading>
 			<Flex className="">
 				{dataBrandSlide && (

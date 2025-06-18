@@ -1,15 +1,27 @@
 "use client";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { z } from "zod";
 
 import GenericForm from "@/components/forms/GenericForm";
 
 import useGenericFormMethods from "@/lib/hooks/form/useGenericFormMethods";
 import { Button, Heading, Input, Space } from "@/components/ui";
+import Toast from "@/components/ui/preline/Toast";
+import { toast } from "sonner";
+import { onServerLogin } from "@/actions/auth-actions";
+import { useFormState } from "react-dom";
 // import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
+	const initialState = {
+		success: false,
+		message: "",
+		code: "",
+	};
+	const [state, formAction] = useActionState(onServerLogin, initialState);
+	console.log("🚀 ~ LoginForm ~ state:", state);
+
 	const [loading, setLoading] = useState(false);
 
 	const validationSchema = z.object({
@@ -35,13 +47,24 @@ export default function LoginForm() {
 
 		setLoading(true);
 		try {
-			await signIn("credentials", {
-				accountid: email,
+			const resLogin = await onServerLogin({
+				account_id: email,
 				password: password,
-				redirectTo: "/",
-				redirect: true,
 			});
+			console.log("🚀 ~ onSubmit ~ resLogin:", resLogin);
+
+			// await signIn("credentials", {
+			// 	accountid: email,
+			// 	password: password,
+			// 	dataLogin: JSON.stringify(resLogin),
+			// 	redirectTo: "/",
+			// 	redirect: true,
+			// });
 		} catch (error) {
+			console.log("🚀 ~ onSubmit ~ error:", error);
+			toast.info(<prev>{JSON.stringify(error)}</prev>, {
+				action: <button>Close</button>,
+			});
 			setLoading(false);
 		}
 	}
@@ -53,7 +76,8 @@ export default function LoginForm() {
 	return (
 		<Space className="min-h-screen flex items-center justify-center">
 			<GenericForm
-				onSubmit={methods.handleSubmit(onSubmit)}
+				// onSubmit={methods.handleSubmit(onSubmit)}
+				action={onServerLogin}
 				methods={methods}
 				className="bg-white/80 shadow-xl rounded-3xl p-8 w-full max-w-md flex flex-col gap-6
           border border-white/40

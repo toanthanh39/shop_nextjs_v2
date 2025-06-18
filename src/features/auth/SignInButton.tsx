@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import { UserIcon } from "@/components/icons";
 import { Text } from "@/components/ui";
 
-export function SignInButton() {
+export default function SignInButton() {
 	const onSignIn = async () => {
 		await signIn("credentials", {
 			redirect: true,

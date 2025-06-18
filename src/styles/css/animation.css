@@ -32,3 +32,84 @@
 		left: 100%;
 	}
 }
+
+/* class animation */
+.p-c-init {
+	-webkit-transform: translateY(60px);
+	transform: translateY(60px);
+	opacity: 0;
+	-webkit-transition:
+		opacity 300ms linear,
+		transform 300ms linear;
+	-webkit-transition:
+		opacity 300ms linear,
+		-webkit-transform 300ms linear;
+	transition:
+		opacity 300ms linear,
+		-webkit-transform 300ms linear;
+	transition:
+		opacity 300ms linear,
+		transform 300ms linear;
+	transition:
+		opacity 300ms linear,
+		transform 300ms linear,
+		-webkit-transform 300ms linear;
+}
+
+.p-c-init.active {
+	opacity: 1;
+	-webkit-transform: translateY(0);
+	transform: translateY(0);
+}
+
+.initial-hidden {
+	opacity: 0;
+	transform: translateY(100px);
+	transition:
+		opacity 0.6s ease-out,
+		transform 0.6s ease-out;
+}
+
+.fade-in {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.slide-in-left-initial {
+	opacity: 0;
+	transform: translateX(-50px);
+	transition:
+		opacity 0.8s ease-out,
+		transform 0.8s ease-out;
+}
+
+.slide-in-left-active {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+/* .fade-enter {
+	opacity: 0.01;
+	transform: translate(0-10px);
+}
+
+.fade-enter-active {
+	opacity: 1;
+	transform: translate(0, 0);
+	transition:
+		opacity 300ms ease-in,
+		transform 300ms ease-in;
+}
+
+.fade-exit {
+	opacity: 1;
+	transform: translate(0, 0);
+}
+
+.fade-exit-active {
+	opacity: 0.01;
+	transform: translate(0, -10px);
+	transition:
+		opacity 300ms ease-in,
+		transform 300ms ease-in;
+} */

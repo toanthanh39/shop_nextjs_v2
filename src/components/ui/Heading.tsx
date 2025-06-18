@@ -11,7 +11,7 @@ const hVariants = cva("", {
 			secondary: "text-colors-gray-4",
 			link: "text-colors-blue-5 underline-offset-4 hover:underline",
 			productCollection:
-				"max-md:container-padding max-md:text-xl md:font-noto max-md:font-semibold text-colors-gray-5 ",
+				"max-md:text-xl md:font-noto max-md:font-semibold text-colors-gray-5 ",
 			white: "text-whitesmoke",
 		},
 		size: {

@@ -80,10 +80,11 @@ export type AccountJson = {
 };
 
 export type LoginPostJson = {
+	account_id: string;
 	password: string;
-	platform: 1;
-	hostname: string;
-	version: string;
+	hostname?: string;
+	version?: string;
+	platform?: 1;
 	no_cache?: 1;
 };
 
@@ -91,8 +92,8 @@ export type LoginEmailPostJson = LoginPostJson & {
 	email: string;
 };
 
-export type LoginInternalIdPostJson = LoginPostJson & {
-	internalid: string;
+export type LoginAccountIdPostJson = LoginPostJson & {
+	account_id: string;
 };
 export type loginACPostJson = {
 	code: string;

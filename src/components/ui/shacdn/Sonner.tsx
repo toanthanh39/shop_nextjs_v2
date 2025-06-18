@@ -11,13 +11,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
 			theme={theme as ToasterProps["theme"]}
 			position="top-right"
 			duration={2000}
-			className="toaster group "
+			// invert={true}
+			className="p-0"
 			richColors
 			style={
 				{
 					// "--normal-bg": "var(--popover)",
-					"--normal-text": "var(--popover-foreground)",
-					"--normal-border": "var(--border)",
+					// "--normal-text": "var(--popover-foreground)",
+					// "--normal-border": "var(--border)",
 				} as React.CSSProperties
 			}
 			{...props}

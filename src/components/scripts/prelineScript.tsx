@@ -59,6 +59,10 @@ export default function PrelineScript() {
 					"scroll-to-target",
 					"form-validation",
 					"Popover",
+					"Toasts",
+					"toasts",
+					"Toast",
+					"toast",
 				]);
 			}
 		}, 100);

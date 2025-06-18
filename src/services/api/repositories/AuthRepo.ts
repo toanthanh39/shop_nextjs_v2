@@ -1,10 +1,7 @@
+import client from "@/lib/core/client";
 import BaseRepository from "./BaseRepository";
 
-import {
-	LoginEmailPostJson,
-	LoginInternalIdPostJson,
-	LoginJson,
-} from "@/types/Auth.type";
+import { LoginJson, LoginPostJson } from "@/types/Auth.type";
 
 class AuthRepo extends BaseRepository {
 	private readonly URLs = {
@@ -14,8 +11,13 @@ class AuthRepo extends BaseRepository {
 		super();
 	}
 
-	async login(data: LoginEmailPostJson | LoginInternalIdPostJson) {
-		return this.getClientOrServer().post<LoginJson>(this.URLs.login, data);
+	async login(data: LoginPostJson) {
+		return client.post<LoginJson>(this.URLs.login, {
+			...data,
+			platform: 1,
+			hostname: process.env.NEXT_PUBLIC_API_HOST_ADMIN,
+			version: "1.0.0",
+		});
 	}
 }
 

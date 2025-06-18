@@ -13,6 +13,7 @@ import { generateMetadataSite } from "@/meta";
 
 import { SystemConst } from "@/common/constants/system";
 import { detectLangForServer } from "@/utils/detectServer";
+import { getMessages } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
 	const meta = await generateMetadataSite();
@@ -62,12 +63,13 @@ export default async function RootLayout({
 }>) {
 	const { lang } = await getSetingSite();
 	const session = await auth();
+	const messages = await getMessages();
 	return (
 		<html lang={lang}>
 			<meta charSet="utf-8"></meta>
 			<body
 				className={`${inter.variable} ${notoSans.variable} ${notoSerifDisplay.variable} antialiased  font-inter w-screen overflow-x-hidden `}>
-				<NextIntlClientProvider locale={lang}>
+				<NextIntlClientProvider locale={lang} messages={messages}>
 					<SessionProvider refetchOnWindowFocus={false} session={session}>
 						<RootProvider>
 							{children}

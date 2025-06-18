@@ -10,17 +10,21 @@ export default getRequestConfig(async () => {
 	const locale = "vi";
 
 	// Load messages dynamically for each namespace
-	const cartMessages = await loadMessagesForNamespace(locale, "cart");
-	const productMessages = await loadMessagesForNamespace(locale, "product");
+	// const [cartMessages, productMessages, globalMessages] = await Promise.all([
+	//   loadMessagesForNamespace(locale, "cart"),
+	//   loadMessagesForNamespace(locale, "product"),
+	// 	loadMessagesForNamespace(locale, "global"),
+	//   loadMessagesForNamespace(locale, "brand"),
 
-	const globalMessages = await loadMessagesForNamespace(locale, "global");
+	// ]);
 
 	return {
 		locale,
 		messages: {
-			cart: cartMessages,
-			product: productMessages,
-			global: globalMessages,
+			cart: await loadMessagesForNamespace(locale, "cart"),
+			product: await loadMessagesForNamespace(locale, "product"),
+			global: await loadMessagesForNamespace(locale, "global"),
+			brand: await loadMessagesForNamespace(locale, "brand"),
 		},
 	};
 });
