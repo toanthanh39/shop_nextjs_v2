@@ -30,7 +30,7 @@ export const buttonVariants = cva(
 interface ToastProps extends ComProps, VariantProps<typeof buttonVariants> {}
 
 export default function Toast(props: ToastProps) {
-	const { variant = "infor" } = props;
+	const { variant = "infor", children } = props;
 
 	switch (variant) {
 		case "error":
@@ -56,7 +56,7 @@ export default function Toast(props: ToastProps) {
 							<p
 								id="hs-toast-error-example-label"
 								className="text-sm text-gray-700 dark:text-neutral-400">
-								This is an error message.
+								{children}
 							</p>
 						</div>
 					</div>
@@ -87,7 +87,7 @@ export default function Toast(props: ToastProps) {
 							<p
 								id="hs-toast-success-example-label"
 								className="text-sm text-gray-700 dark:text-neutral-400">
-								This is a success message.
+								{children}
 							</p>
 						</div>
 					</div>
@@ -148,7 +148,7 @@ export default function Toast(props: ToastProps) {
 							<p
 								id="hs-toast-normal-example-label"
 								className="text-sm text-gray-700 dark:text-neutral-400">
-								This is a normal message.
+								{children}
 							</p>
 						</div>
 					</div>

@@ -40,7 +40,7 @@ const processUrl = (url: string, config?: Config): string => {
 async function server<T>(options: Options): Promise<T> {
 	const { url, method, config } = options;
 	const controller = new AbortController();
-	const timeoutId = setTimeout(() => controller.abort(), 5000);
+	const timeoutId = setTimeout(() => controller.abort(), 10000);
 	if (!["public", "api"].some((i) => url.includes(i))) {
 		const session = await auth();
 		if (session) {
@@ -51,7 +51,7 @@ async function server<T>(options: Options): Promise<T> {
 		}
 	}
 	const response = await fetch(processUrl(url, config), {
-		method,
+		method: method,
 		...mergeConfig({ ...config, signal: controller.signal }),
 	});
 

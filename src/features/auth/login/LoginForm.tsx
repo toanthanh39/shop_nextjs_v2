@@ -1,6 +1,6 @@
 "use client";
 import { signIn } from "next-auth/react";
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 
 import GenericForm from "@/components/forms/GenericForm";
@@ -11,19 +11,15 @@ import Toast from "@/components/ui/preline/Toast";
 import { toast } from "sonner";
 import { onServerLogin } from "@/actions/auth-actions";
 import { useFormState } from "react-dom";
+import AuthRepo from "@/services/api/repositories/AuthRepo";
+import BaseApi from "@/lib/axios/BaseApi";
+import { useTranslations } from "next-intl";
 // import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
-	const initialState = {
-		success: false,
-		message: "",
-		code: "",
-	};
-	const [state, formAction] = useActionState(onServerLogin, initialState);
-	console.log("🚀 ~ LoginForm ~ state:", state);
+	const tError = useTranslations("auth.errors");
 
-	const [loading, setLoading] = useState(false);
-
+	// ---form config
 	const validationSchema = z.object({
 		email: z.string().min(1, "First name is required"),
 		password: z.string().min(1, "Last name is required"),
@@ -41,17 +37,42 @@ export default function LoginForm() {
 		validationSchema: validationSchema,
 		mode: "onChange",
 	});
+	// --- end form config ---
+
+	const [formState, setFormState] = useState({
+		errors: [],
+		loading: false,
+	});
+
+	////////////////////////////////////////////
 
 	async function onSubmit(formData: FormData) {
 		const { email, password } = formData;
-
-		setLoading(true);
+		setFormState((prev) => ({ ...prev, loading: true }));
 		try {
-			const resLogin = await onServerLogin({
+			const resLogin = await new AuthRepo().login({
 				account_id: email,
 				password: password,
 			});
-			console.log("🚀 ~ onSubmit ~ resLogin:", resLogin);
+
+			if (resLogin.status === "SUCCESS") {
+				await signIn("credentials", {
+					accountid: email,
+					password: formData.password,
+					dataLogin: JSON.stringify(resLogin),
+					redirect: true,
+					redirectTo: "/",
+				});
+			}
+
+			// const resLogin = await onServerLogin({
+			// 	account_id: email,
+			// 	password: password,
+			// });
+
+			if (BaseApi.isErrorResponse(resLogin)) {
+				throw BaseApi.handleError(resLogin);
+			}
 
 			// await signIn("credentials", {
 			// 	accountid: email,
@@ -61,11 +82,13 @@ export default function LoginForm() {
 			// 	redirect: true,
 			// });
 		} catch (error) {
-			console.log("🚀 ~ onSubmit ~ error:", error);
-			toast.info(<prev>{JSON.stringify(error)}</prev>, {
-				action: <button>Close</button>,
+			const { errors } = BaseApi.handleError(error);
+			toast(<Toast>{tError(errors?.[0] ?? "error_unknow")}</Toast>, {
+				unstyled: true,
 			});
-			setLoading(false);
+			// setLoading(false);
+		} finally {
+			setFormState((prev) => ({ ...prev, loading: false }));
 		}
 	}
 
@@ -76,8 +99,8 @@ export default function LoginForm() {
 	return (
 		<Space className="min-h-screen flex items-center justify-center">
 			<GenericForm
-				// onSubmit={methods.handleSubmit(onSubmit)}
-				action={onServerLogin}
+				onSubmit={methods.handleSubmit(onSubmit)}
+				// action={onServerLogin}
 				methods={methods}
 				className="bg-white/80 shadow-xl rounded-3xl p-8 w-full max-w-md flex flex-col gap-6
           border border-white/40
@@ -101,10 +124,10 @@ export default function LoginForm() {
 				<Button
 					block
 					type="submit"
-					disabled={loading}
-					loading={loading}
+					disabled={formState.loading}
+					loading={formState.loading}
 					variant="primary">
-					{loading ? "Đang đăng nhập..." : "Đăng nhập"}
+					{formState.loading ? "Đang đăng nhập..." : "Đăng nhập"}
 				</Button>
 				<div className="flex items-center my-2">
 					<hr className="flex-grow border-gray-300" />
@@ -116,7 +139,7 @@ export default function LoginForm() {
 					block
 					type="button"
 					onClick={handleGoogleLogin}
-					disabled={loading}
+					disabled={formState.loading}
 					variant="secondary"
 					className="rounded-xl bg-white border border-gray-300 text-gray-700 font-semibold py-2 shadow hover:bg-gray-100 flex items-center justify-center gap-2 transition">
 					<img src="/google.svg" alt="Google" className="w-5 h-5" />

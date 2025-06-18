@@ -6,7 +6,6 @@ import { cn } from "@/utils/utils";
 import CustomImage, { CustomImageProps } from "./CustomImage";
 import Skeleton from "./Skeleton";
 
-
 const CardVariants = cva("", {
 	variants: {
 		variant: {
@@ -37,10 +36,11 @@ Card.displayName = "Card";
 interface CardImageProps extends CustomImageProps {}
 const CardImage = ({ className, ...props }: CardImageProps) => (
 	<CustomImage
-		className={cn("mx-auto", className)}
+		className={cn("mx-auto w-full h-full", className)}
 		objectFit="cover"
 		loading="lazy"
 		placeholder="blur"
+		sizes="183px"
 		{...props}
 		blurDataURL={imageConst.blur_url}
 	/>

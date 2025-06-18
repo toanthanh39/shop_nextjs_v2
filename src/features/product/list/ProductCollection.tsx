@@ -24,7 +24,6 @@ type Props = ComProps & {
 async function getListProductServer(fillter: ProductFilter) {
 	try {
 		const { store_id } = await new SiteServerRepo().getSiteSeting();
-		// console.log("🚀 ~ getListProductServer ~ store_id:", store_id);
 		const products = await new ProductRepo({
 			accessMode: "PUBLIC",
 		}).getAll({ ...fillter, store_id: store_id });

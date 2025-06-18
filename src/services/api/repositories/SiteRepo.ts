@@ -12,7 +12,7 @@ class SiteServerRepo {
 
 	async getSiteSeting() {
 		return server.get<SystemSetting>(this.URLs.SITE.PRIVATE, {
-			cache: "force-cache",
+			cache: "no-cache",
 			next: {
 				revalidate: TIME_CACHE,
 				tags: [SITE_HANDLER_TAG],

@@ -25,6 +25,7 @@ export default getRequestConfig(async () => {
 			product: await loadMessagesForNamespace(locale, "product"),
 			global: await loadMessagesForNamespace(locale, "global"),
 			brand: await loadMessagesForNamespace(locale, "brand"),
+			auth: await loadMessagesForNamespace(locale, "auth"),
 		},
 	};
 });

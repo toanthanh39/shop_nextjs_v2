@@ -20,7 +20,6 @@ export const initSiteSetting = async (
 		const key = `${replaceDomainSetting}_config`;
 
 		const dataSetting = await new SettingRepo().getOne<SystemSetting>(key);
-		console.log("🚀 ~ dataSetting:", dataSetting);
 		const customer_token =
 			_header.get("customer_token") ??
 			(await ServerRepo.getCustomerTokenServer());
@@ -36,7 +35,7 @@ export const initSiteSetting = async (
 
 		response.headers.append("customer_token", customer_token);
 		response.headers.append("lang", dataSetting.value.lang);
-		response.headers.append("store_id", dataSetting.value.store_id.toString());
+		response.headers.append("store_id", "632001");
 
 		response.headers.append(
 			"pagination_limit",

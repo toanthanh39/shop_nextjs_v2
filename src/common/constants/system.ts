@@ -5,9 +5,9 @@ export const SystemConst = {
 
 	DEFAULT_SYSTEM_SETTING: {
 		lang: "vi",
-		store_id: 60026,
+		store_id: 632001,
 		pagination_limit: 48,
-		customer_token: "046dfa99ba6f4f7f2b818301145392d1",
+		customer_token: "",
 		id_ecomplatforms_for_web: "1",
 	} as SystemSetting,
 } as const;

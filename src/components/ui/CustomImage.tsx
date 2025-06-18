@@ -15,6 +15,7 @@ export interface CustomImageProps {
 	blurDataURL?: string;
 	objectFit?: string;
 	objectPosition?: string;
+	sizes?: string;
 }
 
 const getValidSrc = (src: string, defaultImage: any) => {

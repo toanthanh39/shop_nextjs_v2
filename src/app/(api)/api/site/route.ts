@@ -19,7 +19,6 @@ export async function GET() {
 				headersMap.get("customer_token"),
 				headersMap.get("id_ecomplatforms_for_web"),
 			]);
-		console.log("🚀 ~ GET ~ store_id:", store_id);
 
 		if (!customer_token || customer_token === "") {
 			return NextResponse.json(

@@ -124,57 +124,44 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 			async authorize(credentials) {
 				let user: any;
 				if (!credentials || !credentials.accountid) {
-					throw new AuthError(
-						"Tên đăng nhập hoặc mật khẩu không được để trống.",
-						"MISSING_CREDENTIALS"
-					);
+					console.warn("Credentials missing or invalid.");
+					return null;
 				}
 
 				try {
 					if (credentials?.dataLogin) {
 						const prefilledUser = JSON.parse(credentials.dataLogin as string);
 						if (prefilledUser && prefilledUser.id) {
-							return prefilledUser;
 						}
+						return prefilledUser;
 					} else {
-						const res = await fetch(
-							`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/customer/login`,
-							{
-								method: "POST",
-								headers: {
-									"Content-Type": "application/json",
-								},
-								body: JSON.stringify({
-									account_id: credentials?.accountid || "",
-									password: credentials?.password || "",
-									platform: 1,
-									hostname: process.env.NEXT_PUBLIC_API_HOST_ADMIN,
-									version: "1.0.0",
-								}),
-							}
-						);
-
-						const resJson = await res.json();
-
-						const errors = BaseApi.handleError(resJson); // <-- Cách xử lý lỗi này có vẻ không phù hợp ở đây
-
-						if (res.ok) {
-							user = resJson;
-							return user;
-						} else {
-							// throw new InvalidLoginError(errors.errors?.[0] || ""); // <-- InvalidLoginError cần được định nghĩa
-
-							throw new AuthError(
-								errors?.[0] ?? "error_unknow",
-								resJson?.code || "LOGIN_FAILED"
-							);
-						}
+						// const res = await fetch(
+						// 	`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/customer/login`,
+						// 	{
+						// 		method: "POST",
+						// 		headers: {
+						// 			"Content-Type": "application/json",
+						// 		},
+						// 		body: JSON.stringify({
+						// 			account_id: credentials?.accountid || "",
+						// 			password: credentials?.password || "",
+						// 			platform: 1,
+						// 			hostname: process.env.NEXT_PUBLIC_API_HOST_ADMIN,
+						// 			version: "1.0.0",
+						// 		}),
+						// 	}
+						// );
+						// const resJson = await res.json();
+						// const errors = BaseApi.handleError(resJson); // <-- Cách xử lý lỗi này có vẻ không phù hợp ở đây
+						// if (res.ok) {
+						// 	user = resJson;
+						// 	return user;
+						// } else {
+						// 	// throw new InvalidLoginError(errors.errors?.[0] || ""); // <-- InvalidLoginError cần được định nghĩa
+						// 	return new AuthError(errors?.[0] ?? "error_unkonw");
+						// }
 					}
 				} catch (error) {
-					if (error instanceof AuthError) {
-						throw error; // Ném lại lỗi AuthError để truyền message và code
-					}
-					// Xử lý lỗi Axios hoặc Fetch API khác
 					const apiError = BaseApi.handleError(error); // Giả định BaseApi.handleError trả về { message: string }
 					throw new AuthError(
 						apiError?.message || "Lỗi kết nối đến máy chủ xác thực.",

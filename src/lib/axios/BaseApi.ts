@@ -19,18 +19,26 @@ class BaseApi {
 	}
 
 	static handleError(axiosError: unknown): ErrorResponse {
+		console.log("🚀 ~ BaseApi ~ handleError ~ axiosError:", axiosError);
 		let { statusCode, errors, error_detail, active_phone, time, url } =
 			this.initializeErrorFields();
 
+		if (this.isErrorResponse(axiosError)) return axiosError;
+
 		if (isAxiosError(axiosError)) {
+			console.log("1");
 			return this.extractAxiosErrorDetails(axiosError);
 		}
 
 		if (this.isCustomError(axiosError)) {
+			console.log("2");
+
 			return this.extractCustomErrorDetails(axiosError);
 		}
 
 		if (this.isErrorFetchServer(axiosError)) {
+			console.log("3");
+
 			return this.extractErrorFetchServer(axiosError);
 		}
 
@@ -111,22 +119,30 @@ class BaseApi {
 		};
 	}
 
-	private static isCustomError(obj: any): obj is ErrorServer {
+	static isCustomError(obj: any): obj is ErrorServer {
 		return obj && typeof obj === "object" && Array.isArray(obj.errors);
 	}
 
-	private static isErrorObject(
-		obj: any
+	static isErrorResponse(obj: unknown): obj is ErrorResponse {
+		return (
+			typeof obj === "object" &&
+			obj.hasOwnProperty("errors") &&
+			obj.hasOwnProperty("statusCode")
+		);
+	}
+
+	static isErrorObject(
+		obj: unknown
 	): obj is { errors: string[]; statusCode?: number } {
 		return obj && typeof obj === "object" && Array.isArray(obj.errors);
 	}
 
-	private static isErrorObject2(obj: any): obj is { error: string[] } {
+	static isErrorObject2(obj: unknown): obj is { error: string[] } {
 		return obj && typeof obj === "object" && Array.isArray(obj.error);
 	}
 
-	private static isErrorFetchServer(axiosError: unknown) {
-		const err = axiosError as any;
+	static isErrorFetchServer(axiosError: unknown) {
+		const err = axiosError as unknown;
 		return (
 			err?.hasOwnProperty("isAxiosError") &&
 			err.isAxiosError === false &&
@@ -134,8 +150,8 @@ class BaseApi {
 		);
 	}
 
-	private static extractErrorFetchServer(axiosError: unknown): ErrorResponse {
-		const err = axiosError as any;
+	static extractErrorFetchServer(axiosError: unknown): ErrorResponse {
+		const err = axiosError as unknown;
 		return {
 			...this.initializeErrorFields(),
 			errors: err.response.error,

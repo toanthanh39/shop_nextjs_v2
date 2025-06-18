@@ -4,7 +4,9 @@ import BaseApi from "@/lib/axios/BaseApi";
 import { signIn, signOut } from "@/lib/next-authen/authenOption";
 import AuthRepo from "@/services/api/repositories/AuthRepo";
 import { LoginPostJson } from "@/types/Auth.type";
+import { revalidatePath } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { redirect } from "next/navigation";
 
 export const onSignOutAction = async (callbackUrl?: string) => {
 	// This is a server action, so you can perform server-side operations here.
@@ -15,9 +17,9 @@ export const onSignOutAction = async (callbackUrl?: string) => {
 	// await signOut({ redirect: false });
 
 	// Return a response or redirect as needed.
-	await signOut({ redirect: false, redirectTo: callbackUrl });
-	// revalidatePath("/");
-	// redirect("/");
+	await signOut({ redirect: true, redirectTo: callbackUrl });
+	revalidatePath("/");
+	redirect("/");
 };
 
 export const onCredentialSignInAction = async (formData: FormData) => {
@@ -38,16 +40,22 @@ export const onGoogleSignInAction = async () => {
 	});
 };
 
-export const onServerLogin = async (formData: FormData) => {
-	const email = formData.get("email") as string;
-	const password = formData.get("password") as string;
+export const onServerLogin = async (formData: LoginPostJson) => {
+	console.log("🚀 ~ onServerLogin ~ formData:", formData);
+	// const email = formData.get("email") as string;
+	// const password = formData.get("password") as string;
 	try {
-		// ... (Phần code call API BE đã comment)
+		const resLogin = await new AuthRepo().login({
+			account_id: formData.account_id,
+			password: formData.password,
+		});
+		// return resLogin;
 
-		const res = await signIn("credentials", {
-			accountid: email, // <-- LƯU Ý: Đây có phải là tên đúng trong credentials config không?
-			password: password,
-			redirect: true, // <-- Đã thiết lập đúng để NextAuth tự động redirect
+		await signIn("credentials", {
+			accountid: formData.account_id, // <-- LƯU Ý: Đây có phải là tên đúng trong credentials config không?
+			password: formData.password,
+			dataLogin: JSON.stringify(resLogin),
+			// redirect: true, // <-- Đã thiết lập đúng để NextAuth tự động redirect
 			redirectTo: "/", // <-- NextAuth sẽ chuyển hướng tới đây
 			// callbackUrl: "/", // <-- Thường dùng cho các flow OAuth, không cần thiết khi redirect: true và redirectTo đã có
 		});
@@ -70,19 +78,9 @@ export const onServerLogin = async (formData: FormData) => {
 
 		// Giả định BaseApi.handleError trả về một object { success: boolean, message: string, code?: string }
 		// Nếu không, bạn cần điều chỉnh để nó trả về định dạng đó.
-		const handledError = BaseApi.handleError(error);
+		return BaseApi.handleError(error);
 
 		// Để có thể dùng useFormState trên client, Server Action phải return một giá trị.
 		// Nếu bạn muốn hiển thị toast lỗi, hãy trả về thông báo lỗi ở đây.
-		return {
-			success: false,
-			message:
-				handledError?.errors?.[0] ||
-				"Đã xảy ra lỗi không mong muốn trong quá trình đăng nhập.",
-			code:
-				(error as any)?.type === "CredentialsSignin"
-					? "INVALID_CREDENTIALS"
-					: "UNKNOWN_ERROR", // Ví dụ
-		};
 	}
 };
