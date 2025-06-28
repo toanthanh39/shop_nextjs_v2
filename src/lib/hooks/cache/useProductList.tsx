@@ -12,6 +12,7 @@ export const CACHE_PRODUCTS_HOOK = "cache-products";
 type Props = HookCacheProps & {
 	filters: ProductFilter;
 };
+
 function useProductList({ filters, staleTime, enabled }: Props) {
 	return useQuery({
 		queryKey: [CACHE_PRODUCTS_HOOK, filters.keyword, filters.store_id],

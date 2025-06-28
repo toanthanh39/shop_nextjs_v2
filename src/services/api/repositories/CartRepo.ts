@@ -122,6 +122,10 @@ class CartRepo
 
 	// User public methods
 	private async checkoutPublicCart(data: PaymentAddJsonPublic) {
+		/* 	- Tạo nhanh customer với thông tin đơn hàng
+			- Tạo Order từ giỏ hàng + thông tin khách hàng
+			- Tạo phiếu Thu cho đơn hàng
+			- Checkout đơn hàng */
 		const newCustomer = await new CustomerRepo().quickCreate({
 			phone: data.billing_phone,
 			full_name: data.billing_fullname,

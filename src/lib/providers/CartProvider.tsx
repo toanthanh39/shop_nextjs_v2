@@ -1,6 +1,6 @@
 import React from "react";
 
-import PromotionModel from "@/common/models/PromotionModel";
+import PromotionModel from "@/services/models/PromotionModel";
 import { IsUse } from "@/types/Global.type";
 import { RootProviderProps } from "@/types/Shop.type";
 

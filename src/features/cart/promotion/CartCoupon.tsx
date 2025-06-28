@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import OrderModel from "@/common/models/OrderModel";
-import PromotionModel from "@/common/models/PromotionModel";
+import OrderModel from "@/services/models/OrderModel";
+import PromotionModel from "@/services/models/PromotionModel";
 import BaseApi from "@/lib/axios/BaseApi";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";

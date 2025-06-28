@@ -2,7 +2,7 @@ import { AxiosError, isAxiosError } from "axios";
 
 import { ErrorDetail, ErrorServer } from "@/types/Error.type";
 
-interface ErrorResponse {
+export interface ErrorResponse {
 	statusCode: number;
 	errors: string[];
 	error_detail?: ErrorDetail[];
@@ -19,7 +19,6 @@ class BaseApi {
 	}
 
 	static handleError(axiosError: unknown): ErrorResponse {
-		console.log("🚀 ~ BaseApi ~ handleError ~ axiosError:", axiosError);
 		let { statusCode, errors, error_detail, active_phone, time, url } =
 			this.initializeErrorFields();
 

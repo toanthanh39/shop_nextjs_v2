@@ -13,7 +13,6 @@ class AuthRepo extends BaseRepository {
 	}
 
 	async login(data: LoginPostJson) {
-		console.log("🚀 ~ AuthRepo ~ login ~ data:", data);
 		return client.post<LoginJson>(this.URLs.login, {
 			...data,
 			platform: 1,

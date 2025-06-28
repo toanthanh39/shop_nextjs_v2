@@ -1,8 +1,8 @@
 "use client";
 import { CheckIcon } from "lucide-react";
 
-import OrderModel from "@/common/models/OrderModel";
-import PromotionModel from "@/common/models/PromotionModel";
+import OrderModel from "@/services/models/OrderModel";
+import PromotionModel from "@/services/models/PromotionModel";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 import { IsUse } from "@/types/Global.type";

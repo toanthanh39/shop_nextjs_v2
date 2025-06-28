@@ -46,7 +46,7 @@ export default async function ProductCollection({
 	});
 	return (
 		<section className={cn("relative w-full mb-2 ", className)}>
-			{title && link && (
+			{title && (
 				<LinkElement
 					href={link}
 					className="mb-4 w-full flex justify-between items-center gap-2 max-md:container-padding">

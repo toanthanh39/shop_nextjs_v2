@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import PromotionModel from "@/common/models/PromotionModel";
+import PromotionModel from "@/services/models/PromotionModel";
 import BaseApi from "@/lib/axios/BaseApi";
 import PromotionRepo from "@/services/api/repositories/PromotionRepo";
 import SettingRepo from "@/services/api/repositories/SettingRepo";

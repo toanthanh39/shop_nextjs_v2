@@ -24,6 +24,11 @@ class OrderCalculator {
 	/////////////////////////////////////////////////////////
 	// validate
 
+	/**
+	 * Kiểm tra khuyến mãi hợp lệ để áp dụng cùng nhau trên đơn hàng
+	 * @param o Đối tượng đơn hàng xử lý
+	 * @returns Mảng chứa mã lỗi nếu vi phạm
+	 */
 	private checkAllPromotionOnOrderPassedToCalc(o: OrderJson) {
 		const promoBody = o.promotions.filter((p) => p.is_use === IsUse.USE);
 		const promoOnItems = o.details.data
@@ -40,6 +45,12 @@ class OrderCalculator {
 		return [];
 	}
 
+	/**
+	 * Kiểm tra các điều kiện áp dụng hợp lệ (collections)
+	 * @param promotions Dánh sách khuyến mãi cần kiểm tra
+	 * @param order Đơn hàng cần kiểm tra
+	 * @returns Mảng chứa mã lỗi nếu vi phạm
+	 */
 	private checkPromotionReqConditions(
 		promotions: OrderPromotion[],
 		order: OrderJson
@@ -72,7 +83,11 @@ class OrderCalculator {
 		return hasCommonCollectionId ? [] : ["error_promotion_collection_mismatch"];
 	}
 
-	// get Infor
+	/**
+	 * Trả object mặc định của item trong đơn hàng
+	 * @param product Json sản phẩm init
+	 * @returns object OrderItemJson với các giá trị mặc định
+	 */
 	private getDefaultDataItem(product: ProductJson) {
 		const result: OrderItemJson = {
 			order_id: 0,
@@ -99,6 +114,11 @@ class OrderCalculator {
 		return result;
 	}
 
+	/**
+	 * Lọc danh sách khuyến mãi hợp lệ cho đơn hàng
+	 * @param props data input để lọc khuyến mãi hợp lện cho 2 case (item/body)
+	 * @returns Danh sách khuyến mãi hợp lệ để áp dụng đơn hàng
+	 */
 	private getListOrderPromotionValid(props: ValidatePromotionProps) {
 		try {
 			const {
@@ -172,6 +192,12 @@ class OrderCalculator {
 
 	/////////////////////////////////////////////////////////
 	// calculator
+
+	/**
+	 * Tính tổng tiền cuối của các sản phẩm trong đơn hàng
+	 * @param o Đối tượng đơn hàng cần tính toán
+	 * @returns (number) tổng tiền final
+	 */
 	private calculatorPriceFinalItems(o: OrderJson) {
 		const order = { ...o };
 		const items = order.details.data;
@@ -187,6 +213,11 @@ class OrderCalculator {
 		}
 	}
 
+	/**
+	 * Tính tổng tiền normal các sản phẩm trong đơn hàng
+	 * @param o Đối tượng đơn hàng cần tính toán
+	 * @returns (number) tổng tiền với giá bàn thường * số lượng
+	 */
 	private calculatorPriceSellItems(o: OrderJson) {
 		const order = { ...o };
 		const items = order.details.data;
@@ -202,6 +233,11 @@ class OrderCalculator {
 		}
 	}
 
+	/**
+	 * Tính tổng tiền giảm của khuyến mãi đã áp dụng trên đơn hàng
+	 * @param o Đối tượng đơn hàng cần tính toán
+	 * @returns (number) giá trị tiền giảm
+	 */
 	private calculatorOrderDiscount(o: OrderJson) {
 		const order = { ...o };
 		// const promotionBodys  = PromotionModel.get order.promotions
@@ -236,6 +272,12 @@ class OrderCalculator {
 		}
 	}
 
+	/**
+	 * Tính toán + mapping thông tin sản phẩm,khuyến mãi + toàn bộ fields tiền trên 1 item trong đơn hàng
+	 * @param item Đói tương item cần tính toán
+	 * @param order Đối tượng đơn hàng chứa item cần tính toán
+	 * @returns Json OrderItemJson sau khi đã tính toán
+	 */
 	private calulatorItemInfor(item: OrderItemJson, order: OrderJson) {
 		try {
 			const { price } = item.product_json;
@@ -297,6 +339,12 @@ class OrderCalculator {
 		}
 	}
 
+	/**
+	 * Tính số tiền giảm của 1 promotion trong item đơn hàng
+	 * @param item Đối tượng item nằm trong đơn hàng
+	 * @param orderPromo Khuyến mãi đã áp dụng cho item
+	 * @returns (number) giá trị tiền khuyến mãi giảm
+	 */
 	private calculatorPromotionDiscountOnItem(
 		item: OrderItemJson,
 		orderPromo: OrderPromotion
@@ -321,6 +369,11 @@ class OrderCalculator {
 		return result;
 	}
 
+	/**
+	 * Tính toán tất các thông tin đơn hàng từ json order cung cấp
+	 * @param order Đối tượng đơn hàng cần tính toán
+	 * @returns Thông tin đầy đủ cả đơn hàng đã được tính toán + validate
+	 */
 	private recalculatorOrderFromJson(order: OrderJson) {
 		try {
 			const result: OrderJson = { ...order };
@@ -356,7 +409,12 @@ class OrderCalculator {
 	}
 
 	/////////////////////////////////////////////////////////
-	// mapping
+	/**
+	 * Mapping + validate input update đơn hàng trước khi tính toán
+	 * @param order_old Đối tượng đơn cũ trước khi mapping
+	 * @param input Data mapping theo các case - validate input theo từng case
+	 * @returns Đối tương đơn hàng mới sau khi mapping - chuẩn bị cho việc tính toán tiền
+	 */
 	private mappingDetailOrderFromInput(
 		order_old: OrderJson,
 		input: ActionOrderUpdate

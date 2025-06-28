@@ -122,7 +122,6 @@ function useCartGlobal({ enabled = true }: Props) {
 				const res = await CartRepoInstance.getAll({
 					customer_token: isAuthenticated ? undefined : site?.customer_token,
 				});
-				console.log("🚀 ~ queryFn: ~ res:", res);
 				if (res.items.length <= 0) {
 					return null;
 				}
@@ -139,7 +138,6 @@ function useCartGlobal({ enabled = true }: Props) {
 
 		retry(failureCount, error) {
 			const { statusCode, errors } = BaseApi.handleError(error);
-			console.log("🚀 ~ retry ~ statusCode:", statusCode);
 
 			if (statusCode === 401) {
 				return false;

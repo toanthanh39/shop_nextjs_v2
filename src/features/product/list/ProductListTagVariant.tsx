@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import ProductModel from "@/common/models/ProductModel";
-import { ComDataSource , ComProps } from "@/types/Component";
+import ProductModel from "@/services/models/ProductModel";
+import { ComDataSource, ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
 
 import { Flex, Grid, Tag, Text } from "@/components/ui";

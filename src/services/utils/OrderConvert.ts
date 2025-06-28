@@ -14,6 +14,13 @@ class OrderConvert {
 		return OrderConvert.instance;
 	}
 
+	/**
+	 * Chuyển đổi tất cả đối tượng promotion raw -> promotion order raw
+	 * @param promotions List Khuyến mãi
+	 * @param isUse Thông tin cờ đánh dấu cho pheps tính toán
+	 * @param productId mã ID sản phẩm
+	 * @returns List json  OrderPromotion đã chuyển đổi
+	 */
 	static convertPromotionToOrderPromotion(
 		promotions: PromotionJson[],
 		// quantity?: number = 1,
@@ -35,6 +42,13 @@ class OrderConvert {
 			}) as OrderPromotion[];
 	}
 
+	/**
+	 * Gộp unit list Promotion
+	 * @param newPromotions List promotion mới cần gộp
+	 * @param existingPromotions List promotion đã tồn tại
+	 * @param isUse Thông tin cờ đánh dấu cho pheps tính toán
+	 * @returns  list Unit Promotion
+	 */
 	static mergeOrderPromotions = (
 		newPromotions: PromotionJson[],
 		existingPromotions: OrderPromotion[],

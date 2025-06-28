@@ -1,4 +1,4 @@
-import PromotionModel from "@/common/models/PromotionModel";
+import PromotionModel from "@/services/models/PromotionModel";
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
 import { PromotionGroup } from "@/types/Promotion.type";

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
-import OrderModel from "@/common/models/OrderModel";
+import OrderModel from "@/services/models/OrderModel";
 import { CartProps } from "@/types/Cart.type";
 import { ComProps } from "@/types/Component";
 

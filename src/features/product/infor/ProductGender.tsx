@@ -1,4 +1,4 @@
-import ProductModel from "@/common/models/ProductModel";
+import ProductModel from "@/services/models/ProductModel";
 import { ComProps } from "@/types/Component";
 import { ProductJson } from "@/types/Product.type";
 

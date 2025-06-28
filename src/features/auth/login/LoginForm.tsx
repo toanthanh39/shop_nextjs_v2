@@ -65,28 +65,16 @@ export default function LoginForm() {
 				});
 			}
 
-			// const resLogin = await onServerLogin({
-			// 	account_id: email,
-			// 	password: password,
-			// });
-
 			if (BaseApi.isErrorResponse(resLogin)) {
 				throw BaseApi.handleError(resLogin);
 			}
-
-			// await signIn("credentials", {
-			// 	accountid: email,
-			// 	password: password,
-			// 	dataLogin: JSON.stringify(resLogin),
-			// 	redirectTo: "/",
-			// 	redirect: true,
-			// });
 		} catch (error) {
 			const { errors } = BaseApi.handleError(error);
+			console.log("🚀 ~ onSubmit ~ errors:", errors);
+
 			toast(<Toast>{tError(errors?.[0] ?? "error_unknow")}</Toast>, {
 				unstyled: true,
 			});
-			// setLoading(false);
 		} finally {
 			setFormState((prev) => ({ ...prev, loading: false }));
 		}

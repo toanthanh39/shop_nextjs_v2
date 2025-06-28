@@ -7,7 +7,6 @@ export default function Body() {
 		<>
 			<BannerHome />
 			<SectionHome />
-
 			<SectionAbout />
 		</>
 	);
