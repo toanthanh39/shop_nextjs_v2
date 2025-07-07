@@ -2,7 +2,7 @@
 
 import { LoginJson, LoginPostJson } from "@/types/Auth.type";
 import AuthRepo from "../api/repositories/AuthRepo";
-import { LoginStatus } from "@/types/Loyalty.type";
+import { LoginResponse, LoginStatus } from "@/types/Loyalty.type";
 import BaseApi, { ErrorResponse } from "@/lib/axios/BaseApi";
 
 export class LoyaltyAuthHandler {
@@ -152,7 +152,7 @@ export class LoyaltyAuthHandler {
 	 * Xử lý hành động sau khi đăng nhập dựa trên status
 	 * @param loginResponse
 	 */
-	static handlePostLogin(loginResponse: LoginJson): void {
+	static handlePostLogin(loginResponse: LoginResponse): void {
 		switch (loginResponse.status) {
 			case LoginStatus.SUCCESS:
 				this.handleSuccessfulLogin(loginResponse);

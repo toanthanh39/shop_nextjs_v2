@@ -7,3 +7,10 @@ export enum LoginStatus {
 	INVALID_CREDENTIALS = "INVALID_CREDENTIALS",
 	UNKNOWN_ERROR = "UNKNOWN_ERROR",
 }
+/////////////////////////////
+
+export type LoginResponse = {
+	status: LoginStatus;
+	messsage: string;
+	redirectUrl?: string;
+};

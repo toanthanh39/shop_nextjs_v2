@@ -1,8 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shop E-commerce & POS System
 
-## Getting Started
+Dự án website bán hàng kết hợp hệ thống POS được xây dựng bằng Next.js (v15) với App Router và React (v19).
 
-First, run the development server:
+## Công nghệ sử dụng
+
+- **Next.js (v15)**: Framework React hỗ trợ SSR, SSG, và ISR
+- **React (v19)**: Thư viện JavaScript để xây dựng giao diện người dùng
+- **Tailwind CSS**: Utility-first CSS framework
+- **Recoil**: Quản lý state cho ứng dụng React
+- **Axios & Fetch**: Thư viện và API để thực hiện HTTP requests
+- **TanStack Query (React Query)**: Quản lý data fetching và caching
+- **shadcn/ui**: Thư viện UI components được xây dựng trên Tailwind CSS
+
+## Yêu cầu hệ thống
+
+- Node.js (v18 trở lên)
+- npm, yarn, pnpm hoặc bun
+
+## Cài đặt và khởi chạy
+
+### 1. Cài đặt dependencies
+
+```bash
+npm install
+# hoặc
+yarn install
+# hoặc
+pnpm install
+```
+
+### 2. Chạy development server
 
 ```bash
 npm run dev
@@ -14,26 +41,100 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở [http://localhost:3000](http://localhost:3000) để xem kết quả.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Chạy với Docker
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Build image
+docker build -t shop-nextjs-v2 --build-arg NODE_ENV=development .
 
-## Learn More
+# Run container
+docker run -p 3000:3000 -e NODE_ENV=development shop-nextjs-v2
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Cấu trúc dự án
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/                # App Router (Next.js)
+├── common/             # Constants và utilities dùng chung
+├── components/         # Reusable components
+├── config/             # Cấu hình (middleware, debug, etc.)
+├── features/           # Modules chức năng theo domain
+├── lib/                # Utility functions, Axios config
+  ├── hooks/          # Custom hooks (React Query, Recoil, etc.)
+  └── recoil/         # Recoil state management
+├── services/           # API services và global functions
+├── styles/             # Global styles, Tailwind config
+├── types/              # TypeScript types và interfaces
+└── utils/              # Helper functions
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Quy định Tailwind CSS
 
-## Deploy on Vercel
+### Color Palette
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```javascript
+colors: {
+  gray: {
+  1: "#f6e9e9",
+  2: "#f7f7f7",
+  3: "#d8d7d8",
+  4: "#898889",
+  5: "#3a393a",
+  },
+  red: {
+  5: "#d72229",
+  },
+  blue: {
+  5: "#004b8f",
+  },
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Quy tắc sử dụng
+
+1. **Thứ tự class**: Layout > Spacing > Typography > Colors > Others
+2. **Responsive**: Sử dụng `sm:`, `md:`, `lg:`, `xl:` prefixes
+3. **Dark mode**: Sử dụng `dark:` prefix
+4. **Tránh inline styles**: Ưu tiên utility classes
+
+### Ví dụ
+
+```html
+<div
+	class="flex justify-between items-center mt-4 p-6 text-sm bg-white dark:bg-gray-5 rounded-lg shadow-md">
+	<p class="text-lg font-semibold text-gray-800 dark:text-white">
+		Hello, World!
+	</p>
+</div>
+```
+
+## Quy định Component UI
+
+- Components phải tuân thủ chuẩn coding convention
+- Sử dụng TypeScript cho type safety
+- Implement responsive design
+- Hỗ trợ dark mode
+- Tối ưu hóa performance và accessibility
+
+## Scripts khả dụng
+
+- `npm run dev`: Chạy development server
+- `npm run build`: Build production
+- `npm run start`: Chạy production server
+- `npm run lint`: Kiểm tra code style
+
+## Deployment
+
+Dự án có thể deploy trên:
+
+- [Vercel Platform](https://vercel.com/new)
+- Docker containers
+- Các platform khác hỗ trợ Next.js
+
+Xem thêm [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) để biết chi tiết.
 
 # Next.js Project
 
